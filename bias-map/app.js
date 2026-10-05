@@ -24,12 +24,25 @@ const PRESETS={
 };
 const PRESET_TOTAL=Object.keys(PRESETS).length;
 const CATALOG='https://raw.githubusercontent.com/rikomuze/oshi-visual-6/main/images/';
-const state={member:null,preset:null,photos:[],selectedId:null,projectId:null,createdAt:null,epoch:0};
+const state={member:'ALL',preset:null,photos:[],selectedId:null,projectId:null,createdAt:null,epoch:0};
 const pending=new Set();
 const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
 const uid=()=>crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2);
 const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 const catalogUrl=(member,n)=>CATALOG+member.toLowerCase()+'/'+String(n).padStart(2,'0')+(member==='RYUKI'&&n!==6?'.png':'.jpg');
+function buildMemberMarkers(){
+ const cols=3, rows=3;
+ return MEMBERS.map((name,i)=>({
+  id:'member-'+name.toLowerCase(),
+  src:catalogUrl(name,20),
+  label:name,
+  member:name,
+  x:(i%cols+1)/(cols+1),
+  y:(Math.floor(i/cols)+1)/(rows+1),
+  size:52,
+  _placed:true
+ }));
+}
 const status=t=>{$('#appStatus').textContent=t;};
 const photoStatus=t=>{$('#photoStatus').textContent=t;};
 function show(id){
@@ -44,9 +57,9 @@ function show(id){
 }
 $$('[data-back]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.back)));
 $('#startNew').onclick=()=>{
- state.epoch++;pending.clear();Object.assign(state,{member:null,preset:null,photos:[],selectedId:null,projectId:null,createdAt:null});
+ state.epoch++;pending.clear();Object.assign(state,{member:'ALL',preset:null,photos:buildMemberMarkers(),selectedId:null,projectId:null,createdAt:null});
  ['Top','Bottom','Left','Right'].forEach(k=>$('#custom'+k).value='');
- syncMembers();syncPresets();renderPhotoList();setSource('catalog');show('screen-member');
+ syncPresets();show('screen-map');
 };
 function syncMembers(){
  $$('.member-button').forEach(b=>{const on=b.dataset.member===state.member;b.classList.toggle('is-selected',on);b.setAttribute('aria-pressed',String(on));});
@@ -90,7 +103,7 @@ function initPresets(){
   $('#presetList').appendChild(card);
  });
 }
-$('#toPhotos').onclick=()=>{if(validPreset())show('screen-photos');};
+$('#toPhotos').onclick=()=>{if(!validPreset())return;if(state.photos.length!==MEMBERS.length)state.photos=buildMemberMarkers();enterEditor();};
 function setSource(source){
  const catalog=source==='catalog';$('#catalogSection').hidden=!catalog;$('#uploadSection').hidden=catalog;
  [['#useCatalog',catalog],['#useUpload',!catalog]].forEach(([id,on])=>{$(id).classList.toggle('is-selected',on);$(id).setAttribute('aria-pressed',String(on));});
@@ -166,7 +179,7 @@ function applyAxes(){
 function layoutInitial(){const cols=Math.min(3,state.photos.length),rows=Math.ceil(state.photos.length/cols);state.photos.forEach((p,i)=>{if(p._placed)return;p.x=(i%cols+1)/(cols+1);p.y=(Math.floor(i/cols)+1)/(rows+1);p._placed=true;});}
 function enterEditor(){
  if(!state.photos.length||pending.size)return;
- applyAxes();layoutInitial();$('#summaryMember').textContent=state.member;$('#summaryMap').textContent=currentAxes().name;
+ applyAxes();layoutInitial();$('#summaryMember').textContent='8 MEMBERS';$('#summaryMap').textContent=currentAxes().name;
  $('#allSizeRange').value=state.photos[0].size;show('screen-editor');
 }
 $('#toEditor').onclick=enterEditor;
@@ -176,7 +189,7 @@ function renderMap(){
  state.photos.forEach((p,i)=>{
   constrain(p);const b=document.createElement('button');b.type='button';b.className='map-photo';b.dataset.id=p.id;b.setAttribute('aria-label','写真 '+(i+1)+'を選択');b.setAttribute('aria-pressed',String(p.id===state.selectedId));
   b.style.left=p.x*100+'%';b.style.top=p.y*100+'%';
-  const pic=document.createElement('span');pic.className='pic';const img=document.createElement('img');img.src=p.src;img.alt='';img.draggable=false;pic.appendChild(img);b.appendChild(pic);box.appendChild(b);
+  const pic=document.createElement('span');pic.className='pic';const img=document.createElement('img');img.src=p.src;img.alt='';img.draggable=false;pic.appendChild(img);b.appendChild(pic);const tag=document.createElement('span');tag.className='member-tag';tag.textContent=p.label||'';b.appendChild(tag);box.appendChild(b);
  });updateSizes();selectPhoto(state.selectedId);
 }
 function updateSizes(){
@@ -216,7 +229,7 @@ async function drawResult(){
  const c=$('#resultCanvas'),ctx=c.getContext('2d'),a=currentAxes(),mx=110,my=145,mw=860,mh=860,cx=540,cy=my+mh/2;
  ctx.clearRect(0,0,1080,1080);ctx.fillStyle='#f7f5ed';ctx.fillRect(0,0,1080,1080);
  ctx.fillStyle='#ded7ff';ctx.fillRect(62,27,190,34);ctx.fillStyle='#282536';ctx.font='700 18px "Zen Kaku Gothic New",sans-serif';ctx.textAlign='left';ctx.fillText('BIAS MAP',74,51);
- ctx.font='900 42px "Zen Kaku Gothic New",sans-serif';ctx.fillText(state.member||'BIAS',62,111);
+ ctx.font='900 42px "Zen Kaku Gothic New",sans-serif';ctx.fillText('MEMBER MAP',62,111);
  ctx.textAlign='right';ctx.font='700 20px "Zen Kaku Gothic New",sans-serif';ctx.fillText(a.name,1018,102);
  ctx.fillStyle='#282536';ctx.fillRect(mx+5,my+6,mw,mh);ctx.fillStyle='#fff';ctx.fillRect(mx,my,mw,mh);ctx.strokeStyle='#282536';ctx.lineWidth=2;ctx.strokeRect(mx,my,mw,mh);
  ctx.strokeStyle='#b9b2c8';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(cx,my);ctx.lineTo(cx,my+mh);ctx.moveTo(mx,cy);ctx.lineTo(mx+mw,cy);ctx.stroke();
@@ -229,7 +242,8 @@ async function drawResult(){
  ctx.fillStyle='#282536';ctx.font='700 21px "Zen Kaku Gothic New",sans-serif';ctx.textAlign='center';ctx.fillText(a.top,cx,my-12);ctx.fillText(a.bottom,cx,my+mh+29);
  ctx.save();ctx.translate(mx-31,cy);ctx.rotate(-Math.PI/2);ctx.fillText(a.left,0,0);ctx.restore();ctx.save();ctx.translate(mx+mw+31,cy);ctx.rotate(Math.PI/2);ctx.fillText(a.right,0,0);ctx.restore();
  state.photos.forEach((p,i)=>{const size=p.size/400*mw,frame=3/400*mw,x=mx+p.x*mw-size/2,y=my+p.y*mh-size/2;
-  ctx.save();ctx.fillStyle='#282536';ctx.fillRect(x+2,y+3,size,size);ctx.fillStyle='#fff';ctx.fillRect(x,y,size,size);cover(ctx,images[i],x+frame,y+frame,size-2*frame);ctx.restore();
+  ctx.save();ctx.fillStyle='#282536';ctx.fillRect(x+2,y+3,size,size);ctx.fillStyle='#fff';ctx.fillRect(x,y,size,size);cover(ctx,images[i],x+frame,y+frame,size-2*frame);
+  const label=p.label||'';if(label){ctx.font='700 15px "Zen Kaku Gothic New",sans-serif';ctx.textAlign='center';const tw=ctx.measureText(label).width+18,lh=24,lx=x+size/2-tw/2,ly=y+size-22;ctx.fillStyle='rgba(40,37,54,.88)';ctx.fillRect(lx,ly,tw,lh);ctx.fillStyle='#fff';ctx.fillText(label,x+size/2,ly+17);}ctx.restore();
  });ctx.fillStyle='#625f6d';ctx.textAlign='right';ctx.font='500 14px "Zen Kaku Gothic New",sans-serif';ctx.fillText('PLAY ROOM',1018,1061);
 }
 $('#toPreview').onclick=()=>busy($('#toPreview'),'画像をつくっています…',async()=>{await drawResult();show('screen-preview');$('#saveStatus').textContent='';});
@@ -240,7 +254,7 @@ function closeFallback(){$('#fallback').hidden=true;fallbackFocus?.focus();}
 $('#closeFallback').onclick=closeFallback;$('#fallback').onclick=e=>{if(e.target===$('#fallback'))closeFallback();};
 window.addEventListener('keydown',e=>{if($('#fallback').hidden)return;if(e.key==='Escape')closeFallback();if(e.key==='Tab'){e.preventDefault();$('#closeFallback').focus();}});
 $('#saveImage').onclick=()=>busy($('#saveImage'),'画像を保存しています…',async()=>{
- await drawResult();const blob=await canvasBlob(),file=new File([blob],(state.member||'bias').toLowerCase()+'-bias-map.png',{type:'image/png'});
+ await drawResult();const blob=await canvasBlob(),file=new File([blob],'member-bias-map.png',{type:'image/png'});
  if(navigator.canShare&&navigator.canShare({files:[file]})){
   try{await navigator.share({files:[file],title:'BIAS MAP'});$('#saveStatus').textContent='画像を共有しました';return;}catch(e){if(e.name==='AbortError')return;showFallback();return;}
  }
@@ -272,15 +286,15 @@ async function renderSavedProjects(){
  }catch(e){status(e.message);}
 }
 function openProject(p){
- state.epoch++;pending.clear();state.member=MEMBERS.includes(p.member)?p.member:MEMBERS[0];state.preset=PRESETS[p.preset]?p.preset:'custom';state.projectId=p.id;state.createdAt=p.createdAt;
- state.photos=(p.photos||[]).filter(x=>x.src).slice(0,9).map(x=>({...x,id:x.id||uid(),x:Number.isFinite(x.x)?x.x:.5,y:Number.isFinite(x.y)?x.y:.5,size:Math.min(100,Math.max(40,+x.size||58)),_placed:true}));state.selectedId=null;
+ state.epoch++;pending.clear();state.member='ALL';state.preset=PRESETS[p.preset]?p.preset:'custom';state.projectId=p.id;state.createdAt=p.createdAt;
+ state.photos=(p.photos||[]).filter(x=>x.src).slice(0,9).map(x=>({...x,id:x.id||uid(),x:Number.isFinite(x.x)?x.x:.5,y:Number.isFinite(x.y)?x.y:.5,size:Math.min(100,Math.max(40,+x.size||52)),_placed:true}));if(state.photos.length!==MEMBERS.length||!state.photos.every(x=>x.member||MEMBERS.includes(x.label)))state.photos=buildMemberMarkers();state.selectedId=null;
  if(state.preset==='custom') ['Top','Bottom','Left','Right'].forEach(k=>$('#custom'+k).value=p.axes?.[k.toLowerCase()]||'');
- syncMembers();syncPresets();renderPhotoList();applyAxes();$('#summaryMember').textContent=state.member;$('#summaryMap').textContent=currentAxes().name;$('#allSizeRange').value=state.photos[0]?.size||58;
+ syncMembers();syncPresets();renderPhotoList();applyAxes();$('#summaryMember').textContent='8 MEMBERS';$('#summaryMap').textContent=currentAxes().name;$('#allSizeRange').value=state.photos[0]?.size||58;
  show(state.photos.length?'screen-editor':'screen-photos');
 }
 $('#saveProject').onclick=()=>busy($('#saveProject'),'MAPを保存しています…',async()=>{
- const project={id:state.projectId||'bias-'+uid(),createdAt:state.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString(),member:state.member,preset:state.preset,axes:currentAxes(),photos:state.photos.map(p=>({...p}))};
+ const project={id:state.projectId||'bias-'+uid(),createdAt:state.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString(),member:'ALL',preset:state.preset,axes:currentAxes(),photos:state.photos.map(p=>({...p}))};
  await dbAction('readwrite',store=>store.put(project));state.projectId=project.id;state.createdAt=project.createdAt;$('#saveStatus').textContent='この端末にMAPを保存しました。トップから再編集できます。';await renderSavedProjects();
 });
-initMembers();initPresets();renderPhotoList();syncMembers();syncPresets();show('screen-start');renderSavedProjects();
+initPresets();state.photos=buildMemberMarkers();renderPhotoList();syncPresets();show('screen-start');renderSavedProjects();
 })();
