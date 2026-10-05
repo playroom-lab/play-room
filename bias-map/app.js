@@ -205,46 +205,42 @@ function selectPhoto(id){
  $('#sizeRange').disabled=!p;$('#deleteSelected').disabled=!p;$('#selectedHint').textContent=p?'選択した写真のサイズを調整できます':'写真をタップすると、個別にサイズを調整できます';if(p)$('#sizeRange').value=p.size;
  $$('.map-photo').forEach(el=>{const on=el.dataset.id===state.selectedId;el.classList.toggle('is-selected',on);el.setAttribute('aria-pressed',String(on));});
 }
-let drag=null,ignoreBoardClick=false;
+let drag=null;
 function startMemberDrag(e){
  if(e.button>0)return;
- const el=e.target.closest('.map-photo,.tray-photo');if(!el)return;
- const p=state.photos.find(x=>x.id===el.dataset.id);if(!p)return;
+ const source=e.target.closest('.map-photo,.tray-photo');if(!source)return;
+ const p=state.photos.find(x=>x.id===source.dataset.id);if(!p)return;
  e.preventDefault();selectPhoto(p.id);
- const r=$('#mapCanvas').getBoundingClientRect();
- drag={p,id:e.pointerId,startX:e.clientX,startY:e.clientY,moved:false,
-  offsetX:p._placed?e.clientX-r.left-p.x*r.width:0,
-  offsetY:p._placed?e.clientY-r.top-p.y*r.height:0};
- try{el.setPointerCapture(e.pointerId);}catch(_){}
+ const mapRect=$('#mapCanvas').getBoundingClientRect(),sourceRect=source.getBoundingClientRect();
+ const ghost=source.cloneNode(true);
+ ghost.className='drag-ghost';ghost.removeAttribute('aria-pressed');
+ ghost.style.width=sourceRect.width+'px';ghost.style.height=sourceRect.height+'px';
+ document.body.appendChild(ghost);
+ const offsetX=e.clientX-sourceRect.left,offsetY=e.clientY-sourceRect.top;
+ ghost.style.transform='translate3d('+(e.clientX-offsetX)+'px,'+(e.clientY-offsetY)+'px,0)';
+ source.classList.add('is-dragging');
+ drag={p,id:e.pointerId,source,ghost,mapRect,offsetX,offsetY,lastX:e.clientX,lastY:e.clientY};
+ try{source.setPointerCapture(e.pointerId);}catch(_){}
 }
 $('#memberTray').addEventListener('pointerdown',startMemberDrag);
 $('#mapPhotos').addEventListener('pointerdown',startMemberDrag);
 window.addEventListener('pointermove',e=>{
  if(!drag||drag.id!==e.pointerId)return;
- if(Math.hypot(e.clientX-drag.startX,e.clientY-drag.startY)<5&&!drag.moved)return;
- drag.moved=true;e.preventDefault();
- const r=$('#mapCanvas').getBoundingClientRect();
- if(e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom){
-  drag.p.x=(e.clientX-r.left-drag.offsetX)/r.width;
-  drag.p.y=(e.clientY-r.top-drag.offsetY)/r.height;
-  drag.p._placed=true;constrain(drag.p);
-  if(!drag.token){
-   drag.token=document.createElement('button');drag.token.type='button';drag.token.className='map-photo';drag.token.dataset.id=drag.p.id;
-   const pic=document.createElement('span');pic.className='pic';const img=document.createElement('img');img.src=drag.p.src;img.alt='';img.draggable=false;pic.appendChild(img);drag.token.appendChild(pic);$('#mapPhotos').appendChild(drag.token);
-  }
-  const width=$('#mapCanvas').clientWidth||400,pic=drag.token.querySelector('.pic');
-  pic.style.width=pic.style.height=drag.p.size/400*width+'px';pic.style.padding=3/400*width+'px';
-  drag.token.style.left=drag.p.x*100+'%';drag.token.style.top=drag.p.y*100+'%';
- }
+ e.preventDefault();drag.lastX=e.clientX;drag.lastY=e.clientY;
+ const d=drag;
+ requestAnimationFrame(()=>{if(d!==drag)return;d.ghost.style.transform='translate3d('+(d.lastX-d.offsetX)+'px,'+(d.lastY-d.offsetY)+'px,0)';});
 },{passive:false});
-window.addEventListener('pointerup',e=>{
- if(!drag||drag.id!==e.pointerId)return;
- const d=drag,r=$('#mapCanvas').getBoundingClientRect();
- const inside=e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom;
- if(d.moved&&inside){d.p.x=(e.clientX-r.left-d.offsetX)/r.width;d.p.y=(e.clientY-r.top-d.offsetY)/r.height;d.p._placed=true;constrain(d.p);}
- drag=null;renderMap();
-});
-window.addEventListener('pointercancel',()=>{drag=null;});
+function finishDrag(e){
+ if(!drag||e.pointerId!==undefined&&drag.id!==e.pointerId)return;
+ const d=drag,r=d.mapRect,x=e.clientX??d.lastX,y=e.clientY??d.lastY;
+ const inside=x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom;
+ if(inside){
+  d.p.x=(x-r.left)/r.width;d.p.y=(y-r.top)/r.height;d.p._placed=true;constrain(d.p);
+ }
+ d.source.classList.remove('is-dragging');d.ghost.remove();drag=null;renderMap();
+}
+window.addEventListener('pointerup',finishDrag);
+window.addEventListener('pointercancel',e=>{if(!drag)return;drag.source.classList.remove('is-dragging');drag.ghost.remove();drag=null;renderMap();});
 $('#mapPhotos').onclick=e=>{const el=e.target.closest('.map-photo');if(el)selectPhoto(el.dataset.id);};
 $('#memberTray').onclick=e=>{const el=e.target.closest('.tray-photo');if(el)selectPhoto(el.dataset.id);};
 $('#mapPhotos').onkeydown=e=>{
