@@ -2,24 +2,24 @@
 'use strict';
 const MEMBERS=['KAIRYU','NAOYA','RAN','SEITO','RYUKI','TAKUTO','HAYATO','EIKI'];
 const PRESETS={
- island:{no:'01',name:'無人島に1つだけ持っていく',top:'実用性を優先',bottom:'好きを優先',left:'自分のため',right:'みんなのため'},
- dinner:{no:'02',name:'夕飯の意見が割れた',top:'自分の意見を通す',bottom:'みんなに合わせる',left:'すぐ決める',right:'じっくり悩む'},
- birthday:{no:'03',name:'メンバーの誕生日サプライズ',top:'企画・準備を仕切る',bottom:'当日の盛り上げ役',left:'完璧に仕込む',right:'アドリブで盛り上げる'},
- secret:{no:'04',name:'ひみつの趣味がバレた',top:'開き直って語る',bottom:'できれば隠したい',left:'みんなに広める',right:'ひとりで楽しむ'},
- lost:{no:'05',name:'道に迷った',top:'自分が先頭に立つ',bottom:'誰かについていく',left:'地図で調べる',right:'人に聞く'},
- afterparty:{no:'06',name:'打ち上げの終盤',top:'まだ盛り上がる',bottom:'そろそろ帰る',left:'聞き役',right:'話し役'},
- battery:{no:'07',name:'スマホの充電が残り1%',top:'すぐ対処する',bottom:'もう諦める',left:'誰かに頼る',right:'自力でなんとかする'},
- karaage:{no:'08',name:'から揚げが最後の一個',top:'遠慮する',bottom:'迷わずいただく',left:'みんなで分ける',right:'自分が食べる'},
- photo:{no:'09',name:'写真を撮ってもらう',top:'ポーズを決める',bottom:'自然体で写る',left:'納得いくまで撮る',right:'一発でOK'},
- movie:{no:'10',name:'感動映画のラストシーン',top:'涙が出る',bottom:'泣かずに見る',left:'感想を語りたい',right:'余韻に浸りたい'},
- capsule:{no:'11',name:'タイムカプセルに手紙を書く',top:'未来の自分へ宣言',bottom:'今の思い出を残す',left:'しっかり長文',right:'ひとことだけ'},
- convenience:{no:'12',name:'コンビニで新商品を見つけた',top:'すぐ買ってみる',bottom:'まず様子を見る',left:'自分で楽しむ',right:'みんなに教える'},
- packing:{no:'13',name:'旅行の荷造り',top:'前日までに準備',bottom:'出発直前に準備',left:'念のため多め',right:'必要最低限'},
- omikuji:{no:'14',name:'おみくじで大吉が出た',top:'素直に信じて喜ぶ',bottom:'軽く受け流す',left:'みんなに見せる',right:'自分だけで楽しむ'},
- gift:{no:'15',name:'友達の家に手土産を持っていく',top:'事前にじっくり選ぶ',bottom:'当日その場で選ぶ',left:'定番を選ぶ',right:'珍しいものを選ぶ'},
- regular:{no:'16',name:'好きなお店の常連になった',top:'新メニューに挑戦',bottom:'いつもの定番',left:'店員さんと話す',right:'静かに過ごす'},
- hideout:{no:'17',name:'とっておきの隠れ家を見つけた',top:'みんなに教えたい',bottom:'自分だけの秘密',left:'何度も通う',right:'ときどき行く'},
- hobby:{no:'18',name:'新しい趣味を始めるなら',top:'道具から揃える',bottom:'まず体験する',left:'ひとりで極める',right:'仲間と楽しむ'},
+ island:{no:'01',name:'無人島に持ってくものは？',top:'実用性を優先',bottom:'好きを優先',left:'自分のため',right:'みんなのため'},
+ dinner:{no:'02',name:'夕飯の意見が割れたら？',top:'自分の意見を通す',bottom:'みんなに合わせる',left:'すぐ決める',right:'じっくり悩む'},
+ birthday:{no:'03',name:'誕生日サプライズするなら？',top:'企画・準備を仕切る',bottom:'当日の盛り上げ役',left:'完璧に仕込む',right:'アドリブで盛り上げる'},
+ secret:{no:'04',name:'ひみつの趣味がバレたら？',top:'開き直って語る',bottom:'できれば隠したい',left:'みんなに広める',right:'ひとりで楽しむ'},
+ lost:{no:'05',name:'道に迷ったら？',top:'自分が先頭に立つ',bottom:'誰かについていく',left:'地図で調べる',right:'人に聞く'},
+ afterparty:{no:'06',name:'打ち上げ、そろそろ終盤',top:'まだ盛り上がる',bottom:'そろそろ帰る',left:'聞き役',right:'話し役'},
+ battery:{no:'07',name:'スマホの充電、残り1％！',top:'すぐ対処する',bottom:'もう諦める',left:'誰かに頼る',right:'自力でなんとかする'},
+ karaage:{no:'08',name:'から揚げ、最後の1個！',top:'遠慮する',bottom:'迷わずいただく',left:'みんなで分ける',right:'自分が食べる'},
+ photo:{no:'09',name:'写真を撮ってもらうなら？',top:'ポーズを決める',bottom:'自然体で写る',left:'納得いくまで撮る',right:'一発でOK'},
+ movie:{no:'10',name:'感動映画のラスト、どうなる？',top:'涙が出る',bottom:'泣かずに見る',left:'感想を語りたい',right:'余韻に浸りたい'},
+ capsule:{no:'11',name:'タイムカプセルに手紙を書くなら？',top:'未来の自分へ宣言',bottom:'今の思い出を残す',left:'しっかり長文',right:'ひとことだけ'},
+ convenience:{no:'12',name:'コンビニで新商品を見つけたら？',top:'すぐ買ってみる',bottom:'まず様子を見る',left:'自分で楽しむ',right:'みんなに教える'},
+ packing:{no:'13',name:'旅行の荷造り、いつやる？',top:'前日までに準備',bottom:'出発直前に準備',left:'念のため多め',right:'必要最低限'},
+ omikuji:{no:'14',name:'おみくじで大吉が出たら？',top:'素直に信じて喜ぶ',bottom:'軽く受け流す',left:'みんなに見せる',right:'自分だけで楽しむ'},
+ gift:{no:'15',name:'手土産を持っていくなら？',top:'事前にじっくり選ぶ',bottom:'当日その場で選ぶ',left:'定番を選ぶ',right:'珍しいものを選ぶ'},
+ regular:{no:'16',name:'好きなお店の常連になったら？',top:'新メニューに挑戦',bottom:'いつもの定番',left:'店員さんと話す',right:'静かに過ごす'},
+ hideout:{no:'17',name:'とっておきの隠れ家を見つけたら？',top:'みんなに教えたい',bottom:'自分だけの秘密',left:'何度も通う',right:'ときどき行く'},
+ hobby:{no:'18',name:'新しい趣味を始めるなら？',top:'道具から揃える',bottom:'まず体験する',left:'ひとりで極める',right:'仲間と楽しむ'},
  custom:{no:'19',name:'CUSTOM',top:'',bottom:'',left:'',right:''}
 };
 const PRESET_TOTAL=Object.keys(PRESETS).length;
@@ -227,13 +227,20 @@ window.addEventListener('pointermove',e=>{
  if(e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom){
   drag.p.x=(e.clientX-r.left-drag.offsetX)/r.width;
   drag.p.y=(e.clientY-r.top-drag.offsetY)/r.height;
-  drag.p._placed=true;constrain(drag.p);renderMap();
+  drag.p._placed=true;constrain(drag.p);
+  if(!drag.token){
+   drag.token=document.createElement('button');drag.token.type='button';drag.token.className='map-photo';drag.token.dataset.id=drag.p.id;
+   const pic=document.createElement('span');pic.className='pic';const img=document.createElement('img');img.src=drag.p.src;img.alt='';img.draggable=false;pic.appendChild(img);drag.token.appendChild(pic);$('#mapPhotos').appendChild(drag.token);
+  }
+  const width=$('#mapCanvas').clientWidth||400,pic=drag.token.querySelector('.pic');
+  pic.style.width=pic.style.height=drag.p.size/400*width+'px';pic.style.padding=3/400*width+'px';
+  drag.token.style.left=drag.p.x*100+'%';drag.token.style.top=drag.p.y*100+'%';
  }
 },{passive:false});
 window.addEventListener('pointerup',e=>{
  if(!drag||drag.id!==e.pointerId)return;
  const moved=drag.moved;drag=null;
- if(moved){ignoreBoardClick=true;setTimeout(()=>ignoreBoardClick=false,0);}
+ if(moved){ignoreBoardClick=true;renderMap();setTimeout(()=>ignoreBoardClick=false,0);}
 });
 window.addEventListener('pointercancel',()=>{drag=null;});
 $('#mapPhotos').onclick=e=>{const el=e.target.closest('.map-photo');if(el)selectPhoto(el.dataset.id);};
