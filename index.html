@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>PLAY ROOM｜推し活の遊び場</title>
+  <meta name="description" content="推しガチャ、衣装選手権、BIAS MAP、推しビジュ、9マス、診断などをまとめた推し活の遊び場。">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#f7f5ed">
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--sky:#cfe3ff;--paper:#f7f5ed;--ink:#282536;--muted:#625f6d;--pink:#ffd5df;--lime:#dcefa5;--violet:#ded7ff;--line:#d5d1d9;--hand:'Klee One','Hiragino Sans',sans-serif;--font:'Zen Kaku Gothic New','Hiragino Sans','Yu Gothic',sans-serif}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.7;-webkit-text-size-adjust:100%}
+    a{color:inherit;text-decoration:none}
+    a:focus-visible{outline:3px solid #8051bd;outline-offset:6px}
+    .wrap{width:min(100% - 40px,1040px);margin-inline:auto}
+    .nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 0;border-bottom:1px solid var(--line)}
+    .nav-brand{font-size:0.875rem;font-weight:700;letter-spacing:.045em}
+    .nav-back{font-family:var(--hand);font-weight:600;font-size:0.875rem;border-bottom:1px solid var(--ink)}
+    .hero{position:relative;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;padding:46px 0 30px}
+    .hero>div{min-width:0}
+    .room-label{display:inline-block;margin:0 0 13px;padding:3px 10px;background:var(--ink);color:var(--paper);font-size:0.875rem;font-weight:700;letter-spacing:.12em;transform:rotate(-3deg)}
+    h1{margin:0;font-size:clamp(2.125rem,6vw,3.875rem);font-weight:900;line-height:1.2;letter-spacing:.01em}
+    h1 span{position:relative;isolation:isolate;white-space:normal}
+    h1 span:after{content:'';position:absolute;z-index:-1;left:-2%;right:-2%;bottom:7%;height:24%;background:var(--pink);transform:rotate(-1.8deg)}
+    .hero-note{margin:12px 0 0;font-family:var(--hand);font-size:1.0rem;font-weight:600}
+    .room-number{flex-shrink:0;margin:0 2px 6px 0;border:1.5px solid var(--ink);padding:9px 16px;text-align:center;transform:rotate(5deg);font-size:0.8125rem;letter-spacing:.13em;line-height:1.4}
+    .room-number strong{display:block;font-size:2.125rem;font-weight:500;letter-spacing:.02em;line-height:1.2}
+    .tools{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;padding:12px 0 36px}
+    @media(max-width:1000px) and (min-width:761px){.tools{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    .tool{display:flex;flex-direction:column;position:relative;background:#fff;border:1.5px solid var(--ink);border-radius:5px;box-shadow:4px 5px 0 var(--ink);transition:transform .18s ease,box-shadow .18s ease}
+    .tool:hover{transform:translateY(-4px);box-shadow:4px 9px 0 var(--ink)}
+    .tool:active{transform:translate(3px,3px);box-shadow:1px 2px 0 var(--ink)}
+    .preview{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;height:218px;border-bottom:1.5px solid var(--ink);border-radius:3px 3px 0 0;padding:25px}
+    .gacha .preview{background:var(--pink)}
+    .outfit .preview{background:var(--lime)}
+    .bias .preview{background:var(--violet);padding:20px 15px}
+    .train .preview{background:var(--sky)}
+    .visual6 .preview{background:#ffe7ef}
+    .best9 .preview{background:#dfeaff}
+    .best9-performance .preview{background:#ece5ff}
+    .diagnosis .preview{background:#fff0c9}
+    .photo{display:block;width:100%;height:100%;object-fit:cover;object-position:center;border:6px solid #fff;box-shadow:0 3px 7px #28253626}
+    .gacha .photo{transform:rotate(-5deg);max-width:250px;object-position:center 34%}
+    .outfit .photo{transform:rotate(4deg);width:128px;object-position:center 30%}
+    .preview-label{position:absolute;right:9px;bottom:9px;margin:0;padding:2px 8px;background:#fff;border:1px solid var(--ink);font-size:0.8125rem;font-weight:700;letter-spacing:.04em;transform:rotate(-3deg)}
+    .tool-copy{min-width:0;overflow-wrap:anywhere;display:flex;flex-direction:column;flex:1;padding:20px}
+    .eyebrow{flex-wrap:wrap;display:flex;align-items:center;gap:10px;margin:0 0 8px;font-size:0.8125rem;font-weight:700;letter-spacing:.07em;color:var(--muted)}
+    .number{color:var(--ink);font-size:1.0rem}
+    .tool h2{margin:0;font-size:1.5rem;line-height:1.4;font-weight:900}
+    .tool-desc{margin:10px 0 20px;font-size:1.0rem;line-height:1.7;color:var(--muted)}
+    .open{display:block;margin-top:auto;padding:8px 15px;align-self:flex-start;border:1px solid var(--ink);border-radius:30px;font-size:0.875rem;font-weight:700;line-height:1.5}
+    .gacha .open{background:var(--pink)}
+    .outfit .open{background:var(--lime)}
+    .bias .open{background:var(--violet)}
+    .train .open{background:var(--sky)}
+    .visual6 .open{background:#ffe7ef}
+    .best9 .open{background:#dfeaff}
+    .best9-performance .open{background:#ece5ff}
+    .diagnosis .open{background:#fff0c9}
+    .chat-preview{display:flex;flex-direction:column;gap:7px;width:100%;max-width:220px;transform:rotate(-3deg)}
+    .chat-preview span{display:block;max-width:82%;padding:6px 11px;border-radius:14px;font-size:0.8125rem;font-weight:700;line-height:1.4;background:#fff;box-shadow:0 2px 5px #28253620}
+    .chat-preview span.me{align-self:flex-end;background:#8de055}
+    .chat-preview span.sys{align-self:center;background:var(--ink);color:var(--paper);font-size:0.6875rem;border-radius:4px;letter-spacing:.04em}
+    .map-preview{width:100%;height:100%;max-width:240px;filter:drop-shadow(0 3px 5px #28253620);transform:rotate(-3deg)}
+    .bottom-note{margin:8px 0 26px;text-align:center;font-family:var(--hand);font-weight:600;font-size:1.0rem}
+    footer{padding:20px 0 30px;border-top:1px dashed var(--line);text-align:center;color:var(--muted);font-size:0.8125rem}
+    footer p{margin:0}
+    footer .credit{margin-top:4px;font-size:0.75rem;letter-spacing:.07em}
+    @media(max-width:760px){
+      .wrap{width:min(100% - 32px,520px)}
+      .nav{padding:17px 0;gap:10px}
+      .nav-brand{font-size:0.8125rem;letter-spacing:.01em}
+      .hero{padding:30px 0 19px;gap:10px}
+      h1{font-size:2.25rem}
+      .hero-note{font-size:0.875rem;margin-top:10px}
+      .room-label{font-size:0.75rem;margin-bottom:12px}
+      .room-number{padding:7px 10px;font-size:0.75rem;margin-bottom:4px}
+      .room-number strong{font-size:1.75rem}
+      .tools{grid-template-columns:1fr;gap:18px;padding:8px 3px 26px 0}
+      .tool{display:grid;grid-template-columns:112px minmax(0,1fr);box-shadow:3px 4px 0 var(--ink)}
+      .preview{height:auto;min-height:176px;border-bottom:0;border-right:1.5px solid var(--ink);border-radius:3px 0 0 3px;padding:13px 10px}
+      .gacha .photo{height:114px;width:85px;object-position:39% center;border-width:4px}
+      .outfit .photo{height:139px;width:81px;border-width:4px}
+      .preview-label{right:5px;bottom:10px;font-size:0.75rem;padding:0 5px}
+      .bias .preview{padding:10px 4px}
+      .chat-preview{max-width:96px;gap:5px}
+      .chat-preview span{font-size:0.625rem;padding:4px 7px;border-radius:10px}
+      .map-preview{width:108px;height:134px;max-width:none}
+      .tool-copy{padding:13px 14px}
+      .eyebrow{font-size:0.75rem;margin-bottom:4px;gap:7px;letter-spacing:.03em}
+      .number{font-size:0.875rem}
+      .tool h2{font-size:1.3125rem}
+      .tool-desc{font-size:0.875rem;line-height:1.65;margin:5px 0 10px}
+      .open{padding:4px 13px;font-size:0.875rem}
+      .bottom-note{font-size:0.875rem;margin:2px 0 22px}
+    }
+    @media(max-width:359px){
+      h1{font-size:1.9375rem}
+      .room-number{display:none}
+      .tool{grid-template-columns:92px minmax(0,1fr)}
+      .tool-copy{padding:12px}
+      .tool h2{font-size:1.1875rem}
+      .gacha .photo{width:70px}
+      .outfit .photo{width:65px}
+      .map-preview{width:90px}
+    }
+    @media(prefers-reduced-motion:reduce){.tool{transition:none}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="nav" aria-label="PLAY ROOM navigation">
+      <a class="nav-brand" href="./">PLAY ROOM</a>
+      <a class="nav-back" href="https://rikomuze.github.io/muze-tool-box/">TOOL BOXへ</a>
+    </nav>
+    <header class="hero">
+      <div>
+        <p class="room-label">PLAY ROOM</p>
+        <h1>推し活の<span>あそび場。</span></h1>
+        <p class="hero-note">ちょっと寄り道、推しと遊ぼう。</p>
+      </div>
+      <p class="room-number">TOOLS<strong>08</strong></p>
+    </header>
+    <main>
+      <div class="tools" aria-label="遊びツール一覧">
+        <a class="tool gacha" href="./gacha/" aria-labelledby="gacha-title" aria-describedby="gacha-desc">
+          <div class="preview" aria-hidden="true">
+            <img class="photo" src="https://rikomuze.github.io/mazzel-gacha/photos/group/01.jpg" alt="" width="400" height="300">
+            <span class="preview-label">自引きしたい！</span>
+          </div>
+          <div class="tool-copy">
+            <p class="eyebrow"><span class="number">01</span> OPEN &amp; COLLECT</p>
+            <h2 id="gacha-title">推しガチャ開封所</h2>
+            <p class="tool-desc" id="gacha-desc">銀袋を開けて、推しを自引き。ひとりでも、お友達とでも。</p>
+            <span class="open">開封しにいく</span>
+          </div>
+        </a>
+
+        <a class="tool outfit" href="./outfit/" aria-labelledby="outfit-title" aria-describedby="outfit-desc">
+          <div class="preview" aria-hidden="true">
+            <img class="photo" src="https://rikomuze.github.io/mazzel-outfit/photos/naoya/07.jpg" alt="" width="180" height="240">
+            <span class="preview-label">好きな衣装 TOP 5</span>
+          </div>
+          <div class="tool-copy">
+            <p class="eyebrow"><span class="number">02</span> PICK YOUR FAVORITE</p>
+            <h2 id="outfit-title">衣装選手権</h2>
+            <p class="tool-desc" id="outfit-desc">どっちの衣装が好き？選んでいくと、自分だけのTOP5に。</p>
+            <span class="open">選びにいく</span>
+          </div>
+        </a>
+
+        <a class="tool bias" href="./bias-map/" aria-labelledby="bias-title" aria-describedby="bias-desc">
+          <div class="preview" aria-hidden="true">
+            <svg class="map-preview" viewBox="0 0 220 205" xmlns="http://www.w3.org/2000/svg">
+              <rect x="1" y="1" width="218" height="203" rx="3" fill="white"/>
+              <path d="M110 31V175 M35 103H184" fill="none" stroke="#aaa2bb" stroke-width="1"/>
+              <g fill="#62576e" font-size="14" text-anchor="middle" font-family="sans-serif">
+                <text x="110" y="23">彼氏感</text><text x="110" y="194">神々しい</text>
+                <text x="27" y="84">メロい</text><text x="183" y="125">かわいい</text>
+              </g>
+              <circle cx="79" cy="65" r="15" fill="#ffd5df" stroke="#c797a4"/>
+              <circle cx="143" cy="86" r="12" fill="#dcefa5" stroke="#a2b86a"/>
+              <circle cx="93" cy="145" r="17" fill="#ded7ff" stroke="#a39ac4"/>
+              <text x="110" y="111" fill="#62576e" text-anchor="middle" font-size="10" font-family="sans-serif">＋</text>
+            </svg>
+          </div>
+          <div class="tool-copy">
+            <p class="eyebrow"><span class="number">03</span> MAKE YOUR MAP</p>
+            <h2 id="bias-title">BIAS MAP</h2>
+            <p class="tool-desc" id="bias-desc">写真をマップに並べて、あなたの「推し解釈」を一枚に。</p>
+            <span class="open">マップをつくる</span>
+          </div>
+        </a>
+
+        <a class="tool train" href="./live-kaeri/" aria-labelledby="train-title" aria-describedby="train-desc">
+          <div class="preview" aria-hidden="true">
+            <div class="chat-preview">
+              <span class="sys">LAST TRAIN 23:12</span>
+              <span>柱の前にいます！</span>
+              <span class="me">今向かってます！</span>
+              <span>ねえ生きてる？笑</span>
+            </div>
+            <span class="preview-label">終電まで98分</span>
+          </div>
+          <div class="tool-copy">
+            <p class="eyebrow"><span class="number">04</span> CHAT GAME</p>
+            <h2 id="train-title">ライブ帰りシミュレーター</h2>
+            <p class="tool-desc" id="train-desc">規制退場から終電まで。トレカを手渡しで交換して、電池を残して帰れる？</p>
+            <span class="open">帰り道へいく</span>
+          </div>
+        </a>
+
+        <a class="tool visual6" href="./visual6/" aria-labelledby="visual6-title" aria-describedby="visual6-desc">
+          <div class="preview" aria-hidden="true">
+            <img class="photo" src="https://rikomuze.github.io/muze-tool-box/assets/images/oshi-visual-6.jpeg" alt="" width="400" height="400">
+            <span class="preview-label">好きな6枚を一枚に</span>
+          </div>
+          <div class="tool-copy">
+            <p class="eyebrow"><span class="number">05</span> PICK SIX</p>
+            <h2 id="visual6-title">推しビジュ6選</h2>
+            <p class="tool-desc" id="visual6-desc">好きなビジュ6枚を選んで、タグ画っぽい一枚にまとめる。</p>
+            <span class="open">6枚を選ぶ</span>
+          </div>
+        </a>
+
+        <a class="tool best9" href="./best9/" aria-labelledby="best9-title" aria-describedby="best9-desc">
+          <div class="preview" aria-hidden="true">
+            <img class="photo" src="https://rikomuze.github.io/muze-tool-box/assets/images/best-visual-photo-20260918-v3.jpg" alt="" width="400" height="400">
+            <span class="preview-label">アー写で最強9マス</span>
+          </div>
+          <div class="tool-copy">
+            <p class="eyebrow"><span class="number">06</span> BEST NINE</p>
+            <h2 id="best9-title">最強9マス アー写</h2>
+            <p class="tool-desc" id="best9-desc">好きなアー写で組む、自分だけの最強ビジュ9マス。</p>
+            <span class="open">9マスをつくる</span>
+          </div>
+        </a>
+
+        <a class="tool best9-performance" href="./best9-performance/" aria-labelledby="best9p-title" aria-describedby="best9p-desc">
+          <div class="preview" aria-hidden="true">
+            <img class="photo" src="https://rikomuze.github.io/muze-tool-box/assets/images/best-visual-costume-20260918-v3.jpg" alt="" width="400" height="400">
+            <span class="preview-label">パフォ衣装で9マス</span>
+          </div>
+          <div class="tool-copy">
+            <p class="eyebrow"><span class="number">07</span> PERFORMANCE NINE</p>
+            <h2 id="best9p-title">最強9マス パフォ衣装</h2>
+            <p class="tool-desc" id="best9p-desc">好きなパフォーマンス衣装で組む、もうひとつの最強9マス。</p>
+            <span class="open">衣装を選ぶ</span>
+          </div>
+        </a>
+
+        <a class="tool diagnosis" href="./diagnosis/" aria-labelledby="diagnosis-title" aria-describedby="diagnosis-desc">
+          <div class="preview" aria-hidden="true">
+            <img class="photo" src="https://rikomuze.github.io/muze-tool-box/assets/images/otaku-numa.jpeg" alt="" width="400" height="400">
+            <span class="preview-label">あなたは何タイプ？</span>
+          </div>
+          <div class="tool-copy">
+            <p class="eyebrow"><span class="number">08</span> FIND YOUR TYPE</p>
+            <h2 id="diagnosis-title">オタク沼診断</h2>
+            <p class="tool-desc" id="diagnosis-desc">いくつかの質問に答えて、自分のオタクタイプを診断。</p>
+            <span class="open">診断する</span>
+          </div>
+        </a>
+      </div>
+      <p class="bottom-note">気分に合わせて、好きなところからどうぞ。</p>
+    </main>
+    <footer>
+      <p>MAZZEL・BMSG公式とは関係のない<br>非公式ファンメイドサイトです。</p>
+      <p class="credit">PLAY ROOM</p>
+    </footer>
+  </div>
+</body>
+</html>
