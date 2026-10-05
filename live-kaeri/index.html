@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>ライブ帰りシミュレーター｜PLAY ROOM</title>
+  <meta name="description" content="規制退場から終電まで。手渡しのトレカ交換を済ませて、電池を残したまま終電に乗れるか。チャットで遊ぶライブ帰りシミュレーター。">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#f7f5ed">
+  <link rel="icon" href="../icon-192.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <style>*,*::before,*::after{box-sizing:border-box}[hidden]{display:none!important}img{max-width:100%}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap">
+<style>
+/* Layout: one phone-width column. A paper "game band" on top (stats, pinch, route, the one action), below it a chat app. Paper/ink/pastel follows the play room site. Single fixed look by design. */
+:root{
+  --paper:#f7f5ed; --ink:#282536; --pmuted:#625f6d; --pline:#d5d1d9;
+  --pink:#ffd5df; --lime:#dcefa5; --violet:#ded7ff; --sky:#cfe3ff;
+  --hot:#e5486a;
+  --app:#ffffff; --wall:#8fabd3; --sub:#8b8f99; --rule:#e6e7eb;
+  --mine:#8de055; --them:#ffffff; --brand:#06c755; --bad:#ff5f5f;
+  --f-ui:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Zen Kaku Gothic New",system-ui,sans-serif;
+  --f-head:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif;
+  --f-hand:"Klee One","Hiragino Sans",sans-serif;
+  color-scheme:light;
+}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-size:15px;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+button:focus-visible,a:focus-visible{outline:3px solid #8051bd;outline-offset:2px}
+.app{position:relative;height:100%;max-width:440px;margin:0 auto;display:flex;flex-direction:column;background:var(--app);overflow:hidden;border-inline:1px solid var(--pline)}
+
+/* ---- game band (paper) ---- */
+.band{background:var(--paper);color:var(--ink);padding:9px 12px 10px;display:flex;flex-direction:column;gap:7px;font-family:var(--f-head);border-bottom:1.5px solid var(--ink)}
+.srow{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}
+.stat{min-width:0}
+.lab{display:flex;justify-content:space-between;align-items:baseline;font-size:11px;font-weight:700;letter-spacing:.06em}
+.lab b{font-size:13px;font-variant-numeric:tabular-nums;transition:color .3s}
+.lab b.flash{color:var(--hot)}
+.lab em{font-style:normal;color:var(--hot);margin-left:4px}
+.bar{height:8px;border:1.5px solid var(--ink);border-radius:5px;background:#fff;margin-top:3px;overflow:hidden}
+.bar span{display:block;height:100%;transition:width .5s,background .5s;border-right:1.5px solid var(--ink)}
+.train{border:1.5px solid var(--ink);background:#fff;padding:2px 8px;text-align:center;transform:rotate(3deg);line-height:1.25;min-width:84px}
+.train small{display:block;font-size:9px;letter-spacing:.12em;color:var(--pmuted)}
+.train b{display:block;font-size:16px;font-weight:900;font-variant-numeric:tabular-nums}
+.train i{display:block;font-style:normal;font-size:10px;font-weight:700}
+.train i.warn{color:#b07a00} .train i.crit{color:var(--hot)}
+.pinch{display:flex;align-items:center;gap:8px;width:100%;border:1.5px solid var(--ink);background:#fff;border-radius:5px;box-shadow:2px 3px 0 var(--ink);padding:5px 9px;font-size:12px;font-weight:700;text-align:left;cursor:pointer;min-height:32px;font-family:var(--f-head)}
+.pinch i{font-style:normal;flex:none;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:11px;border:1.5px solid var(--ink);background:var(--lime)}
+.pinch span{flex:1;min-width:0;line-height:1.35}
+.pinch small{flex:none;color:var(--pmuted);font-size:11px;font-weight:500}
+.pinch.warn{background:#fff8e0} .pinch.warn i{background:#ffe08a}
+.pinch.crit{background:var(--pink)} .pinch.crit i{background:var(--hot);color:#fff;animation:blink .9s infinite}
+@keyframes blink{50%{opacity:.35}}
+.plist{border:1.5px solid var(--ink);background:#fff;border-radius:5px;box-shadow:2px 3px 0 var(--ink);padding:4px;display:flex;flex-direction:column;gap:2px;max-height:200px;overflow-y:auto;margin-top:-2px}
+.plist button{display:flex;gap:8px;align-items:center;width:100%;border:0;background:none;text-align:left;padding:6px 6px;border-radius:4px;font-size:12px;font-weight:700;font-family:var(--f-head);cursor:pointer}
+.plist button:hover{background:var(--paper)}
+.plist button i{font-style:normal;flex:none;width:8px;height:8px;border-radius:50%;background:var(--lime);border:1.5px solid var(--ink)}
+.plist button.l2 i{background:#ffe08a} .plist button.l3 i{background:var(--hot)}
+.plist button span{flex:1;min-width:0}
+.plist button small{flex:none;color:var(--pmuted);font-weight:500}
+.plist p{margin:0;padding:6px;font-size:12px;color:var(--pmuted)}
+.route{padding:0 8px}
+.track{position:relative;height:3px;background:var(--ink);margin:9px 0 17px;opacity:.9}
+.track .fill{position:absolute;left:0;top:-2px;height:7px;background:var(--pink);border:1.5px solid var(--ink);border-radius:4px;transition:width .6s;box-sizing:border-box}
+.node{position:absolute;top:50%;width:10px;height:10px;border-radius:50%;background:var(--paper);border:1.5px solid var(--ink);transform:translate(-50%,-50%);box-sizing:border-box}
+.node.on{background:var(--ink)}
+.node span{position:absolute;top:11px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:10px;color:var(--pmuted);font-weight:700}
+.node.on span{color:var(--ink)}
+.node:nth-of-type(2) span{left:0;transform:none}
+.node.last span{left:auto;right:0;transform:none}
+.walker{position:absolute;top:50%;width:18px;height:18px;border-radius:50%;background:var(--pink);border:2px solid var(--ink);transform:translate(-50%,-50%);transition:left .6s;box-sizing:border-box;z-index:2}
+.walker.wait{animation:bob 1.2s infinite}
+@keyframes bob{50%{transform:translate(-50%,-80%)}}
+.arow{display:flex;gap:8px;align-items:center}
+.stage{flex:1;min-width:0;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px}
+.stage b{display:inline-block;padding:1px 8px;background:var(--ink);color:var(--paper);font-size:11px;letter-spacing:.08em;transform:rotate(-2deg);flex:none}
+.stage span{min-width:0;line-height:1.35}
+.stage.ready b{background:var(--hot)}
+.act{flex:none;border:1.5px solid var(--ink);border-radius:30px;padding:6px 14px;font-size:13px;font-weight:900;cursor:pointer;background:var(--pink);box-shadow:2px 3px 0 var(--ink);font-family:var(--f-head);transition:transform .12s,box-shadow .12s}
+.act:active{transform:translate(2px,2px);box-shadow:0 1px 0 var(--ink)}
+.act.sub{background:#fff;font-weight:700;font-size:12px}
+.act.pulse{animation:nudge 1.1s infinite}
+@keyframes nudge{50%{transform:translateY(-2px);box-shadow:2px 5px 0 var(--ink)}}
+
+/* ---- phone status bar ---- */
+.sbar{display:flex;align-items:center;justify-content:space-between;padding:6px 18px 4px;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;background:var(--app)}
+.sbar .r{display:flex;gap:7px;align-items:center}
+.bat{display:inline-flex;align-items:center;gap:4px}
+.bat i{position:relative;width:23px;height:11px;border:1.5px solid var(--ink);border-radius:3px;display:inline-block;opacity:.85}
+.bat i::after{content:"";position:absolute;right:-4px;top:2.5px;width:2px;height:4px;background:var(--ink);border-radius:0 1px 1px 0}
+.bat b{position:absolute;left:1px;top:1px;bottom:1px;background:var(--ink);border-radius:1px}
+.bat.low b{background:var(--bad)} .bat.low #batp{color:var(--bad)} .bat.lp b{background:#f5c400}
+
+/* ---- talk list ---- */
+.view{flex:1;min-height:0;display:flex;flex-direction:column}
+.list{flex:1;overflow-y:auto;background:var(--app)}
+.lhead{display:flex;align-items:center;justify-content:space-between;padding:6px 16px 4px}
+.lhead h2{font-size:21px;margin:0}
+.lhead .ic{display:flex;gap:16px;font-size:18px}
+.search{margin:6px 16px 8px;background:#f1f2f4;border-radius:10px;padding:8px 12px;color:var(--sub);font-size:13px}
+.tabs{display:flex;gap:6px;padding:0 16px 8px;overflow-x:auto}
+.tabs span{flex:none;border-radius:999px;padding:4px 12px;font-size:12px;background:#f1f2f4;color:var(--sub)}
+.tabs span.on{background:#16181d;color:#fff}
+.row{display:grid;grid-template-columns:50px 1fr auto;gap:12px;align-items:center;width:100%;padding:9px 16px;background:none;border:0;text-align:left;cursor:pointer}
+.row:hover{background:#f6f7f9}
+.av{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:17px;color:#fff;flex:none}
+.row .nm{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .nm small{font-weight:500;color:var(--sub);margin-left:4px;font-size:13px}
+.row .pv{color:var(--sub);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
+.row .side{display:flex;flex-direction:column;align-items:flex-end;gap:6px;font-size:11px;color:var(--sub);font-variant-numeric:tabular-nums;align-self:start;padding-top:4px}
+.badge{min-width:19px;height:19px;padding:0 6px;border-radius:10px;background:var(--brand);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center}
+.nav{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--rule);padding:6px 0 calc(6px + env(safe-area-inset-bottom,0px));font-size:10px;color:var(--sub);text-align:center;background:var(--app)}
+.nav span.on{color:#16181d;font-weight:700}
+.nav i{display:block;font-style:normal;font-size:17px;line-height:1.3}
+
+/* ---- talk room ---- */
+.chat{flex:1;min-height:0;display:flex;flex-direction:column;background:var(--wall)}
+.chead{display:flex;align-items:center;gap:6px;padding:6px 10px 8px;background:var(--wall)}
+.back{background:none;border:0;font-size:22px;line-height:1;cursor:pointer;padding:4px 8px 4px 4px;display:flex;align-items:center;gap:4px}
+.back .badge{font-size:11px;height:18px;min-width:18px}
+.chead .t{flex:1;min-width:0;font-weight:700;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chead .ic{display:flex;gap:14px;font-size:17px;padding-right:4px}
+.pin{margin:0 10px 6px;padding:7px 12px;background:rgba(255,255,255,.88);border-radius:10px;font-size:12px;color:var(--sub);display:flex;gap:10px;flex-wrap:wrap}
+.pin b{color:#16181d}
+.msgs{flex:1;overflow-y:auto;padding:4px 10px 12px;display:flex;flex-direction:column;gap:6px}
+.day,.sys{align-self:center;font-size:11px;color:#fff;background:rgba(0,0,0,.2);padding:3px 12px;border-radius:999px;text-align:center;max-width:88%}
+.day{margin:6px 0 4px} .sys{margin:4px 0}
+.m{display:flex;gap:6px;align-items:flex-end;width:100%}
+.m.them{justify-content:flex-start} .m.me{flex-direction:row-reverse}
+.m .av{width:34px;height:34px;font-size:12px;align-self:flex-start}
+.m .gap{width:34px;flex:none}
+.col{display:flex;flex-direction:column;min-width:0;max-width:74%}
+.me .col{align-items:flex-end}
+.who{font-size:11px;color:#2b3a55;margin:0 0 3px 2px}
+.bub{padding:8px 12px;border-radius:18px;line-height:1.5;word-break:break-word;font-size:15px;animation:pop .16s ease-out;color:#16181d}
+.them .bub{background:var(--them)} .me .bub{background:var(--mine)}
+.them.first .bub{border-top-left-radius:4px} .me.first .bub{border-top-right-radius:4px}
+.tm{display:flex;flex-direction:column;font-size:10px;color:#3c4a63;line-height:1.3;flex:none;font-variant-numeric:tabular-nums}
+.me .tm{align-items:flex-end}
+.photo{width:180px;max-width:100%;aspect-ratio:4/3;border-radius:14px;position:relative;overflow:hidden;animation:pop .16s ease-out;background:
+  radial-gradient(circle at 28% 40%,#ffd1e0 0 9%,transparent 10%),radial-gradient(circle at 46% 32%,#fff3c4 0 8%,transparent 9%),
+  radial-gradient(circle at 62% 46%,#ffb3c9 0 10%,transparent 11%),radial-gradient(circle at 38% 58%,#e9d9ff 0 9%,transparent 10%),
+  radial-gradient(circle at 70% 30%,#fffaf0 0 7%,transparent 8%),radial-gradient(circle at 54% 62%,#ffc9a8 0 8%,transparent 9%),
+  linear-gradient(180deg,#e9eef5 0 62%,#c9d2de 62% 100%)}
+.photo::after{content:"";position:absolute;left:38%;top:70%;width:24%;height:14%;background:#fff;border-radius:2px}
+.photo.board{background:linear-gradient(90deg,transparent 30%,#9b7653 30% 33%,transparent 33% 67%,#9b7653 67% 70%,transparent 70%) bottom/100% 22% no-repeat,radial-gradient(circle at 50% 46%,#fff 0 36%,transparent 37%),linear-gradient(180deg,#efe4d2,#e3d3bb)}
+.photo.board::before{content:"WELCOME";position:absolute;left:0;right:0;top:24%;text-align:center;font-family:var(--f-hand);font-weight:600;font-size:15px;color:var(--hot);letter-spacing:.08em}
+.photo.board::after{left:41%;top:43%;width:18%;height:22%;border-radius:50%;background:#ffe3c2;box-shadow:-30px 6px 0 -6px #ffd5df,30px 6px 0 -6px #ded7ff}
+.photo.goods{background:linear-gradient(135deg,#f7e7d4,#f3f0ea)}
+.photo.goods::after{left:14%;top:22%;width:20%;height:52%;border-radius:4px;background:#cfd8ea;box-shadow:42px 0 0 #f2c6d3,84px 0 0 #d8ead2,126px 0 0 #efe2b7}
+.stamp{width:120px;height:110px;border-radius:20px;display:grid;place-items:center;text-align:center;font-size:12px;color:#33405a;background:rgba(255,255,255,.45);padding:8px;line-height:1.4;animation:pop .16s ease-out}
+.stamp b{display:block;font-size:30px;line-height:1.1;margin-bottom:4px}
+.post{width:220px;max-width:100%;background:#fff;border-radius:14px;overflow:hidden;animation:pop .16s ease-out}
+.post .pimg{aspect-ratio:1;background:linear-gradient(135deg,#3a3550,#c88aa8 55%,#ffd9a8)}
+.post .pbody{padding:8px 10px;font-size:12px;line-height:1.5}
+.post .pbody b{display:block;font-size:12px}
+.post button{width:100%;border:0;border-top:1px solid var(--rule);background:#fff;padding:9px;font-weight:700;color:#0a64e0;cursor:pointer}
+.post button:disabled{color:var(--sub);cursor:default}
+.typing{display:flex;gap:4px;background:var(--them);border-radius:18px;padding:11px 14px}
+.typing i{width:6px;height:6px;border-radius:50%;background:#a5abb6;animation:dot 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes dot{0%,60%,100%{opacity:.35;transform:none}30%{opacity:1;transform:translateY(-3px)}}
+@keyframes pop{from{transform:scale(.96);opacity:.4}to{transform:none;opacity:1}}
+.reply{background:var(--app);padding:8px 10px calc(10px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--rule)}
+.reply .q{font-size:11px;color:var(--sub);text-align:center}
+.choice{text-align:left;background:#f4f5f7;border:1px solid var(--rule);border-radius:12px;padding:9px 12px;cursor:pointer;font-size:14px;line-height:1.4;color:#16181d}
+.choice:hover{border-color:var(--brand)}
+.choice.actn{color:#0a8f43;border-style:dashed;background:#fff}
+.choice small{display:block;color:var(--hot);font-size:11px;margin-top:2px}
+
+/* ---- banner ---- */
+.phone{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}
+.pa{position:absolute;left:8px;right:8px;top:6px;z-index:31;background:rgba(40,37,54,.94);color:var(--paper);border-radius:10px;padding:5px 10px;display:flex;gap:8px;align-items:center;font-size:12px;box-shadow:0 4px 12px rgba(0,0,0,.2);transform:translateY(-160%);transition:transform .3s;font-family:var(--f-head);border:0;text-align:left;cursor:pointer;width:auto}
+.pa.on{transform:none}
+.pa i{flex:none;width:16px;height:16px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:9px;font-weight:700;color:#fff}
+.pa b{flex:none;font-size:10px;letter-spacing:.08em;opacity:.8}
+.pa span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.banner{position:absolute;left:8px;right:8px;top:6px;z-index:30;background:rgba(245,246,248,.97);border:0;border-radius:18px;padding:10px 12px;display:flex;gap:10px;align-items:center;box-shadow:0 10px 28px rgba(0,0,0,.28);transform:translateY(-160%);transition:transform .35s cubic-bezier(.2,.9,.3,1.2);cursor:pointer;text-align:left;color:#16181d}
+.banner.on{transform:none}
+.banner .av{width:36px;height:36px;font-size:13px}
+.banner b{display:block;font-size:13px}
+.banner span.x{display:block;font-size:13px;color:#4a4f5a;line-height:1.45}
+.banner div{min-width:0;flex:1}
+.banner small{font-size:11px;color:var(--sub);align-self:flex-start}
+
+/* ---- scene card (state change) ---- */
+.scene{position:absolute;inset:0;z-index:35;display:grid;place-items:center;padding:24px;background:rgba(40,37,54,.28);cursor:pointer}
+.scard{background:var(--paper);border:1.5px solid var(--ink);border-radius:5px;box-shadow:4px 5px 0 var(--ink);padding:18px 20px;width:min(300px,100%);font-family:var(--f-head);animation:drop .35s cubic-bezier(.2,.9,.3,1.25);position:relative}
+@keyframes drop{from{transform:translateY(-14px) rotate(-3deg);opacity:0}to{transform:rotate(-1deg);opacity:1}}
+.scard .tag{display:inline-block;padding:2px 9px;background:var(--ink);color:var(--paper);font-size:11px;font-weight:700;letter-spacing:.12em;transform:rotate(-3deg)}
+.scard h3{margin:10px 0 4px;font-size:24px;font-weight:900;line-height:1.3}
+.scard h3 span{position:relative;isolation:isolate}
+.scard h3 span::after{content:"";position:absolute;z-index:-1;left:-2%;right:-2%;bottom:6%;height:28%;background:var(--pink);transform:rotate(-1.5deg)}
+.scard.bad h3 span::after{background:#ffb3c1}
+.scard.good h3 span::after{background:var(--lime)}
+.scard p{margin:0;font-size:14px;line-height:1.7;color:var(--pmuted)}
+.scard .hand{margin-top:10px;font-family:var(--f-hand);font-weight:600;font-size:13px;color:var(--ink)}
+
+/* ---- overlays ---- */
+.ov{position:absolute;inset:0;z-index:40;display:flex;flex-direction:column}
+.call{background:linear-gradient(180deg,#3b4a5e,#1a212c);color:#fff;align-items:center;justify-content:space-between;padding:64px 24px 48px;text-align:center}
+.call .av{width:100px;height:100px;font-size:34px;margin:0 auto 14px;animation:pulse 1.2s infinite}
+.call.live .av{animation:none}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.35)}100%{box-shadow:0 0 0 26px rgba(255,255,255,0)}}
+.call h3{font-size:24px;margin:0}
+.call p{color:#c6cdd8;margin:6px 0 0;font-size:13px;font-variant-numeric:tabular-nums}
+.subs{min-height:120px;display:flex;flex-direction:column;gap:8px;justify-content:center;font-size:16px;line-height:1.5}
+.subs .s{animation:pop .2s}
+.cbtns{display:flex;gap:64px}
+.cb{display:flex;flex-direction:column;align-items:center;gap:8px;background:none;border:0;cursor:pointer;font-size:12px;color:#fff}
+.cb i{width:66px;height:66px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:24px;color:#fff}
+.cb.no i{background:var(--bad)} .cb.yes i{background:var(--brand)}
+.osd{background:rgba(0,0,0,.35);align-items:center;justify-content:center;padding:24px}
+.osbox{background:rgba(242,242,246,.98);border-radius:14px;width:min(290px,100%);text-align:center;overflow:hidden;color:#16181d}
+.osbox .in{padding:18px 16px 14px}
+.osbox b{display:block;font-size:16px;margin-bottom:6px}
+.osbox p{margin:0;font-size:13px;color:#3f444d;line-height:1.5}
+.osbox .bt{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #d5d6db}
+.osbox .bt.v{grid-template-columns:1fr}
+.osbox .bt button{background:none;border:0;padding:12px;cursor:pointer;color:#0a64e0;font-size:15px}
+.osbox .bt:not(.v) button+button{border-left:1px solid #d5d6db;font-weight:700}
+.osbox .bt.v button+button{border-top:1px solid #d5d6db}
+.dead{background:#000}
+.viewer{background:#000;color:#fff}
+.viewer .vh{display:flex;align-items:center;gap:10px;padding:14px 14px 10px}
+.viewer .vh .av{width:32px;height:32px;font-size:12px;background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af)}
+.viewer .vh b{flex:1;font-size:14px}
+.viewer .vh button{background:none;border:0;color:#fff;font-size:22px;cursor:pointer}
+.viewer .dots{display:flex;gap:4px;padding:0 14px 10px}
+.viewer .dots i{flex:1;height:2px;background:#444;border-radius:1px}
+.viewer .dots i.on{background:#fff}
+.viewer .img{flex:1;margin:0 14px;border-radius:6px;display:grid;place-items:center;font-size:13px;color:rgba(255,255,255,.8);text-align:center;padding:20px;cursor:pointer}
+.viewer .cap{padding:12px 16px calc(18px + env(safe-area-inset-bottom,0px));font-size:13px;line-height:1.6;color:#ddd}
+.viewer .cap small{display:block;color:#999;margin-top:4px}
+
+/* ---- intro & result: paper room style ---- */
+.intro,.result{background:var(--paper);color:var(--ink);overflow-y:auto;padding:0 20px calc(28px + env(safe-area-inset-bottom,0px));font-family:var(--f-head);line-height:1.7}
+.pnav{display:flex;justify-content:space-between;align-items:center;padding:18px 0 14px;border-bottom:1px solid var(--pline);font-size:13px;font-weight:700;letter-spacing:.045em}
+.pnav span:last-child{font-family:var(--f-hand);font-weight:600;border-bottom:1px solid var(--ink);letter-spacing:0}
+.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;padding:28px 0 20px}
+.hero>div{min-width:0}
+.tag{display:inline-block;margin:0 0 12px;padding:3px 10px;background:var(--ink);color:var(--paper);font-size:12px;font-weight:700;letter-spacing:.12em;transform:rotate(-3deg)}
+.hero h1,.hero h2{margin:0;font-size:2.1rem;font-weight:900;line-height:1.25;letter-spacing:.01em;text-wrap:balance}
+.hero h1 span,.hero h2 span{position:relative;isolation:isolate}
+.hero h1 span::after,.hero h2 span::after{content:"";position:absolute;z-index:-1;left:-2%;right:-2%;bottom:7%;height:26%;background:var(--pink);transform:rotate(-1.8deg)}
+.hero.clear h2 span::after{background:var(--lime)}
+.note{margin:10px 0 0;font-family:var(--f-hand);font-weight:600;font-size:15px}
+.ticket{flex:none;border:1.5px solid var(--ink);padding:7px 10px;text-align:center;transform:rotate(5deg);font-size:11px;letter-spacing:.13em;line-height:1.4;margin:0 2px 6px 0;background:#fff}
+.ticket strong{display:block;font-size:1.6rem;font-weight:500;letter-spacing:.02em;line-height:1.2;font-variant-numeric:tabular-nums}
+.pcard{position:relative;background:#fff;border:1.5px solid var(--ink);border-radius:5px;box-shadow:3px 4px 0 var(--ink);padding:16px;margin:4px 3px 18px 0;display:flex;flex-direction:column;gap:12px}
+.pcard .lbl{position:absolute;right:10px;top:-12px;margin:0;padding:1px 8px;background:var(--lime);border:1px solid var(--ink);font-size:12px;font-weight:700;letter-spacing:.04em;transform:rotate(-3deg)}
+.pcard.pink .lbl{background:var(--pink)} .pcard.violet .lbl{background:var(--violet)} .pcard.sky .lbl{background:var(--sky)}
+.story{margin:0;font-size:15px;line-height:1.9}
+.story em{font-style:normal;font-weight:700;background:linear-gradient(transparent 62%,var(--pink) 62%)}
+.goal{margin:0;font-size:15px;font-weight:700;line-height:1.7}
+.goal em{font-style:normal;background:linear-gradient(transparent 62%,var(--lime) 62%)}
+.how{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--pmuted)}
+.how li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:baseline}
+.how b{font-size:12px;color:var(--ink);border:1px solid var(--ink);border-radius:30px;padding:0 8px;background:var(--paper);white-space:nowrap}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:13px;font-weight:700;letter-spacing:.04em}
+.field input{background:var(--paper);border:1.5px solid var(--ink);border-radius:5px;padding:10px 12px;font-size:16px;color:var(--ink);font-family:var(--f-head)}
+.go{display:block;width:100%;margin:2px 0 14px;background:var(--pink);color:var(--ink);border:1.5px solid var(--ink);border-radius:30px;box-shadow:3px 4px 0 var(--ink);padding:12px;font-weight:900;font-size:16px;cursor:pointer;font-family:var(--f-head);transition:transform .15s,box-shadow .15s}
+.go:hover{transform:translateY(-2px);box-shadow:3px 6px 0 var(--ink)}
+.go:active{transform:translate(2px,2px);box-shadow:1px 2px 0 var(--ink)}
+.go.sub{background:#fff}
+.go:disabled{opacity:.6}
+.shot{background:rgba(40,37,54,.6);align-items:center;justify-content:center;padding:20px;gap:12px}
+.shot img{max-height:70%;width:auto;border:1.5px solid var(--ink);box-shadow:3px 4px 0 var(--ink);background:var(--paper)}
+.shot p{margin:0;color:#fff;font-weight:700;font-family:var(--f-head);text-align:center}
+.shot button{border:1.5px solid var(--ink);background:#fff;border-radius:30px;padding:8px 22px;font-weight:700;font-family:var(--f-head);cursor:pointer}
+.fine{margin:0;padding:16px 0 4px;border-top:1px dashed var(--pline);text-align:center;color:var(--pmuted);font-size:12px;line-height:1.7}
+.handnote{margin:0 0 14px;text-align:center;font-family:var(--f-hand);font-weight:600;font-size:14px}
+.end{margin:0;font-size:15px;line-height:1.9}
+.checks{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.checks div{border:1.5px solid var(--ink);border-radius:5px;padding:6px 4px;text-align:center;font-size:12px;font-weight:700;background:var(--paper)}
+.checks div b{display:block;font-size:18px;line-height:1.2}
+.checks div.ok{background:var(--lime)} .checks div.ng{background:#fff;color:var(--pmuted)}
+.cards{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;border:1.5px solid var(--ink);border-radius:5px;padding:6px 12px;background:var(--violet);box-shadow:2px 3px 0 var(--ink)}
+.cards b{font-size:30px;font-weight:900;line-height:1}
+.cards span{font-weight:700}
+.cards small{flex-basis:100%;font-size:12px;color:var(--pmuted)}
+.bonus{align-self:flex-start;border:1.5px dashed var(--ink);padding:3px 10px;font-size:13px;font-weight:700;background:var(--violet);transform:rotate(-2deg)}
+.stampbox{align-self:flex-start;border:1.5px solid var(--ink);padding:4px 12px;transform:rotate(-2deg);background:var(--paper)}
+.stampbox small{display:block;font-size:11px;letter-spacing:.12em;color:var(--pmuted)}
+.stampbox b{font-family:var(--f-hand);font-size:20px;font-weight:600}
+.kv{display:grid;grid-template-columns:1fr auto;gap:6px 12px;font-size:14px;margin:0}
+.kv dt{color:var(--pmuted)} .kv dd{margin:0;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.endmap{display:flex;gap:6px;flex-wrap:wrap}
+.endmap span{font-size:12px;border:1px dashed var(--pline);border-radius:30px;padding:1px 10px;color:var(--pmuted)}
+.endmap span.got{border:1px solid var(--ink);background:var(--violet);color:var(--ink);font-weight:700}
+.endmap span.got.clear{background:var(--lime)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="band" aria-label="ゲームの状態">
+    <div class="srow">
+      <div class="stat"><div class="lab"><span>余韻</span><b id="vY">70</b></div><div class="bar"><span id="bY"></span></div></div>
+      <div class="stat"><div class="lab"><span>体力<em id="tWarn"></em></span><b id="vT">60</b></div><div class="bar"><span id="bT"></span></div></div>
+      <div class="train"><small>LAST TRAIN 23:12</small><b id="vL">98分</b><i id="vS"></i></div>
+    </div>
+    <button class="pinch" id="pinch" type="button" aria-expanded="false"><i id="pinchI">✓</i><span id="pinchT">いまのピンチはなし</span><small id="pinchN"></small></button>
+    <div class="plist" id="plist" hidden></div>
+    <div class="route"><div class="track" id="track">
+      <span class="fill" id="rFill"></span>
+      <span class="node" style="left:0%"><span>座席</span></span>
+      <span class="node" style="left:16%"><span>会場出口</span></span>
+      <span class="node" style="left:55%"><span>駅までの道</span></span>
+      <span class="node last" style="left:100%"><span>駅・東口</span></span>
+      <span class="walker wait" id="rMe" style="left:0%"></span>
+    </div></div>
+    <div class="arow"><div class="stage" id="stage"><b>いま</b><span>座席で待機中</span></div><span id="acts"></span></div>
+  </div>
+  <div class="phone">
+  <div class="sbar" id="sbar"><span id="clk">21:34</span><span class="r"><span>4G</span><span class="bat" id="bat"><span id="batp">26%</span><i><b id="batb"></b></i></span></span></div>
+  <div class="view" id="view"></div>
+  </div>
+  <button class="pa" id="pa" type="button" aria-live="polite"><i id="paI"></i><b id="paT">場内アナウンス</b><span id="paX"></span></button>
+  <div class="scene" id="scene" hidden></div>
+  <div class="ov intro" id="intro"></div>
+  <div class="ov call" id="call" hidden></div>
+  <div class="ov viewer" id="viewer" hidden></div>
+  <div class="ov osd" id="osd" hidden></div>
+  <div class="ov result" id="result" hidden></div>
+</div>
+
+<script>
+(function(){
+const START=21*60+34, LAST=23*60+12, SPEED=10000, DIST=2400, PLAZA=380, SWAP_DL=22*60+35;
+const $=id=>document.getElementById(id);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const fmt=m=>Math.floor(m/60)%24+":"+String(m%60).padStart(2,"0");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+const TH={
+  yui:{name:"ゆい",col:"#e98aae",ini:"ゆ"},
+  riku:{name:"はるや",col:"#4f8fd6",ini:"は"},
+  swap:{name:"すず🫧交換用",col:"#8c9cf0",ini:"す"},
+  photo:{name:"もも🃏交換用",col:"#e0a15b",ini:"も"},
+  mio:{name:"みお🎀",col:"#c58be0",ini:"み"},
+  group:{name:"現場組",n:3,col:"#5fbfa0",ini:"現"},
+  mom:{name:"母",col:"#e7b25e",ini:"母"},
+  info:{name:"お知らせ",col:"#9aa0ab",ini:"!"},
+  baito:{name:"バイト（ホール）",n:14,col:"#b2b7c2",ini:"バ",static:true},
+  zemi:{name:"ゼミ 3年",n:9,col:"#b2b7c2",ini:"ゼ",static:true}
+};
+const ORDER=["yui","riku","swap","photo","mio","group","mom","info","baito","zemi"];
+const ENDKEYS=["clear","missed","giveup","noswap","sleep","dead"];
+const ENDNAME={clear:"最高の帰り道",missed:"終電を乗りそびれた",giveup:"終電を諦めた",noswap:"交換できなかった",sleep:"終点まで寝過ごした",dead:"電池ゼロ"};
+const BLOCKS=["スタンド南","スタンドE","スタンド北","バルコニー"];
+let seen={};try{seen=JSON.parse(localStorage.getItem("lkSeen2")||"{}")}catch(e){}
+
+let S, sid=0;
+function fresh(oshi){
+  const th={};
+  for(const k of ORDER) th[k]={msgs:[],unread:0,pending:null,queue:[],busy:false,last:null,lastT:0};
+  th.baito.msgs=[{k:"them",who:"店長",x:"明日9時から入れる人いますか？",t:20*60+41},{k:"them",who:"みさき",x:"ごめんなさい無理です🙏",t:20*60+43}];
+  th.baito.last="みさき: ごめんなさい無理です🙏";th.baito.lastT=20*60+43;
+  th.zemi.msgs=[{k:"them",who:"佐藤",x:"来週のレジュメ共有しました",t:19*60+15}];
+  th.zemi.last="佐藤: 来週のレジュメ共有しました";th.zemi.lastT=19*60+15;
+  return {oshi,t:START,acc:0,yoin:70,tai:60,bat:26,lp:false,view:"list",
+    th,fired:{},over:false,idle:0,chase:0,ridle:0,rchase:0,
+    block:pick(BLOCKS),releaseAt:START+rnd(12,19),released:false,stage:"seat",sneaks:0,crowdUntil:0,
+    pos:0,hold:null,
+    raining:false,umbrella:false,
+    yuiBeats:shuffle(YUI).slice(0,6),groupDone:0,
+    swap:0,swapDone:false,swapFail:false,searchTries:0,
+    photo:0,rin:0,cards:0,drink:0,pickup:false,posts:0,
+    rq:[],rAsking:false,rinPing:false,yuiWait:false,m:{talk:0,photo:0,notif:0,calls:0,miss:0,chased:0,postSeen:0},batPrompted:false,callOn:false,boarded:false};
+}
+const atStation=()=>S.stage==="station";
+
+/* ---------------- content ---------------- */
+const ACT=s=>({act:true,...s});
+const YUI=[
+ {m:["{oshi}のあれ見た！？？","2曲目の","サビ前の","顔"],c:[
+   {t:"見た。人生終わった",fx:{y:8},r:["わかる","私も今日で終わった","来世もオタクする"]},
+   {t:"待って見逃したかもしれない",fx:{y:2},r:["嘘でしょ","円盤まで生きて","絶対円盤化して"]},
+   ACT({t:"(叫んでるスタンプ)",stamp:["😱","床を転がるうさぎ"],fx:{y:6},r:["それ","まさにそれ"]})]},
+ {m:["最後の曲さ","あれで締めると思ってなかった","イントロで隣の人崩れ落ちてた"],c:[
+   {t:"私も膝から崩れた",fx:{y:8},r:["でしょ！？","会場全体が崩れてた"]},
+   {t:"予想当たってた。ドヤ",fx:{y:4},r:["えらい","次のセトリも当てて"]},
+   {t:"正直記憶がない",fx:{y:6},r:["それが正解","記憶ないくらいが一番楽しんでる"]}]},
+ {m:["ねえウェルカムボードの写真ある？","私撮りそびれた","入場の列に流されて"],c:[
+   ACT({t:"(ウェルカムボードの写真を送る)",photo:"board",fx:{y:6,b:-2},r:["神","待って絵かわいすぎる","{oshi}の似顔絵うますぎない？","描いた人天才、保存した"]}),
+   {t:"人多くて遠くからしか撮れてない",fx:{y:3},r:["それでもいい","雰囲気だけでも欲しい"]},
+   {t:"見とれてて撮るの忘れた",fx:{y:6},r:["わかる","誰かが上げてるの探そ"]}]},
+ {m:["{oshi}こっち向いてくれた気がする","気のせいかな","いや絶対こっちだった"],c:[
+   {t:"絶対こっちだった",fx:{y:8},r:["だよね！？","今日の私たち勝ってた"]},
+   {t:"気のせいでも勝ち",fx:{y:6},r:["名言","それな"]},
+   {t:"私もそう思ってた",fx:{y:5},r:["全員そう思ってるやつ","それが現場の魔法"]}]},
+ {m:["てかMCさ","あの話なに","腹筋死んだ"],c:[
+   {t:"一生思い出し笑いする",fx:{y:7},r:["電車で思い出すのやめてね","私はもう3回思い出した"]},
+   {t:"メモ取ったから後で送る",fx:{y:5},r:["有能","レポ職人じゃん"]},
+   {t:"笑いすぎて聞き逃した",fx:{y:4},r:["誰かのレポ待とう","タイムライン見れば絶対ある"]}]},
+ {m:["次の現場いつだっけ","もう申し込んだ？"],c:[
+   {t:"当落待ち",fx:{y:3},r:["震える","当たったら一緒に行こ"]},
+   {t:"FC先行、全落ちしたらどうしよう",fx:{y:2},r:["考えたくない","一般で一緒にがんばろ"]},
+   {t:"遠征するしかない",fx:{y:5},r:["行こ","スプシ作るわ","交通費の列も作る"]}]},
+ {m:["今日の衣装","優勝","異論は認めない"],c:[
+   {t:"異論なし",fx:{y:6},r:["だよね","あの衣装で写真集出してほしい"]},
+   {t:"前回のも好きだった",fx:{y:4},r:["わかる","全部優勝で解決"]},
+   ACT({t:"(衣装の感想を長文で送る)",fx:{y:9,t:-2},r:["長い","でも全部わかる","スクショした"]})]},
+ {m:["ペンラさ","途中で電池切れた","最後の曲だけ光ってなかった"],c:[
+   {t:"予備の電池持ってきてないの！？",fx:{y:4},r:["次は持ってく","カバンの底に入ってた、今見つけた"]},
+   {t:"心の中で光ってたから大丈夫",fx:{y:6},r:["優しい","泣く"]},
+   {t:"私のもちょっと暗かった",fx:{y:3},r:["電池交換の儀式、毎回忘れる"]}]}
+];
+const FIRSTBEAT={m:["ねえ","ねえ待って","私Aブロックだったからもう外出れた","まだ座ってる？"],c:[
+   {t:"まだ座ってる。規制退場いつ終わるの",fx:{y:2},r:["スタンドは最後のほうだよね","待ってる間に感想戦しよ"],follow:[{t:"しよしよ！",fx:{y:2},r:["まずどこから語る？"]},{t:"まず{oshi}の話からね",fx:{y:3},r:["当然"]},ACT({t:"(うなずくスタンプ)",stamp:["🙆‍♀️","OKするいぬ"],fx:{y:2},r:[]})]},
+   {t:"アナウンス待ち中",fx:{y:2},r:["おつ","外めっちゃ人いる","待ってる間に感想戦しよ"],follow:[{t:"しよしよ！",fx:{y:2},r:["まずどこから語る？"]},{t:"まず{oshi}の話からね",fx:{y:3},r:["当然"]},ACT({t:"(うなずくスタンプ)",stamp:["🙆‍♀️","OKするいぬ"],fx:{y:2},r:[]})]},
+   ACT({t:"(ペンライトを振るスタンプ)",stamp:["🔦","ペンライト振るひよこ"],fx:{y:3},r:["まだ光らせてるの好き","待ってる間に感想戦しよ"],follow:[{t:"しよしよ！",fx:{y:2},r:["まずどこから語る？"]},{t:"まず{oshi}の話からね",fx:{y:3},r:["当然"]},ACT({t:"(うなずくスタンプ)",stamp:["🙆‍♀️","OKするいぬ"],fx:{y:2},r:[]})]})]};
+const LASTBEAT={m:["てか終電大丈夫？","私あと20分で走る"],c:[
+   {t:"まだ余裕",fx:{y:2},r:["ほんとに？","調べてね"]},
+   {t:"やばい走る",fx:{y:3,t:-3},r:["走れ","無事を祈る"]},
+   ACT({t:"(終電を諦めてファミレスに誘う)",k:"giveup",fx:{y:5},r:["え、いいの！？","じゃあ私も諦める","駅前のファミレス集合で"]})]};
+const GROUP=[
+ {m:[["あや","おつかれ〜！"],["あや","今日どこ席だった？"],["りん","私スタンド上の方"]],c:[
+   {t:"{block}。規制退場まだ",fx:{y:4},r:[["あや","スタンドは長いよね"],["りん","座って感想戦しよ"]],follow:[{t:"しよ！まず最後の曲の話",fx:{y:3},r:[["あや","あれは反則"]]},{t:"もう語彙力ない",fx:{y:2},r:[["りん","それも立派な感想"]]},ACT({t:"(うなずくスタンプ)",stamp:["🙆‍♀️","OKするいぬ"],fx:{y:2},r:[["あや","かわいい"]]})]},
+   {t:"天井席。でも全部見えた",fx:{y:5},r:[["りん","天井から見るペンラの海きれいだよね"]]},
+   ACT({t:"(座席番号のチケット画面をスクショして送る)",photo:"goods",fx:{y:3,b:-1},r:[["あや","いい席じゃん"]]})]},
+ {m:[["りん","物販の列なにあれ"],["りん","2時間並んだ"],["あや","トレカ交換の人も多かったね"]],c:[
+   {t:"私も今から交換1件",fx:{y:3},r:[["あや","がんばれ〜"],["りん","駅前の柱、交換の人だらけだよ"]]},
+   {t:"予算オーバーした",fx:{y:4},r:[["りん","わかる"],["あや","現場の財布は別人格"]]},
+   ACT({t:"(戦利品の写真を送る)",photo:"goods",fx:{y:5,b:-2},r:[["あや","ずらっと並べるやつ好き"],["りん","アクスタの顔がいい"]]})]}
+];
+const CHASE=["ねえ","生きてる？笑","余韻で死んだ？","既読ついてるのよ",["🐱","ペンライト振ってるねこ"],"返事はあとでいいから全部聞いて","おーい"];
+const RCHASE=["おーい","既読ついてるよ","推しのことで頭いっぱいか笑"];
+
+/* ---------------- time & movement ---------------- */
+let timer=null;
+function startClock(){
+  clearInterval(timer);const my=sid;
+  timer=setInterval(()=>{
+    if(my!==sid||!S||S.over||!$("scene").hidden) return;
+    S.acc+=$("viewer").hidden?250:125;
+    if(S.acc>=SPEED){S.acc-=SPEED;minute()}
+    idleTick(250);
+  },250);
+}
+function speed(){let v=S.t<S.crowdUntil?40:80;if(S.raining&&!S.umbrella&&!atStation()) v=Math.round(v*.7);return v}
+function minute(){
+  S.t++;const n=S.t-START;
+  if(n%(S.lp?8:4)===0) setBat(S.bat-1);
+  if(S.over) return;
+  if(n%6===0) change("tai",-1);
+  if(S.raining&&!S.umbrella&&S.stage==="walk"&&n%3===0) change("tai",-1);
+  if(S.stage==="walk"&&!S.hold) walk(speed());
+  runEvents();
+  if(S.over) return;
+  if(S.t>=LAST&&!S.boarded){end("missed");return}
+  hud();
+}
+function walk(m){
+  if(S.stage!=="walk") return;
+  const before=S.pos;
+  S.pos=Math.min(DIST,S.pos+m);
+  if(S.photo===2&&before<PLAZA&&S.pos>=PLAZA){S.pos=PLAZA;photoMeet();return}
+  if(S.pos>=DIST) arrive();
+}
+function addTime(n){for(let i=0;i<n&&!S.over;i++) minute()}
+function setBat(v){
+  S.bat=Math.max(0,v);
+  if(S.bat<=20&&!S.batPrompted&&!S.callOn&&$("viewer").hidden){S.batPrompted=true;batteryPrompt()}
+  if(S.bat<=0) end("dead");
+}
+function release(){
+  if(S.released) return;
+  S.released=true;hud();
+  scene("退場","あなたのブロックの番",S.block+"の退場が始まった。","上の「会場を出る」を押して、駅へ向かおう");
+}
+function leaveVenue(){
+  if(S.stage!=="seat"||S.over) return;
+  if(!S.released){
+    S.sneaks++;addTime(5);change("tai",-4);
+    scene("規制退場","人の波に押し戻された","通路に出たとたん、退場中のブロックの列に巻き込まれた。係員に誘導されて、結局もとの席へ。","時間 -5分・体力 -4","bad");
+    return;
+  }
+  S.stage="walk";S.pos=60;S.crowdUntil=S.t+10;hud();
+  scene(fmt(S.t),"会場を出た","外はペンライトを持った人でいっぱい。ここから駅まで約2.4km。","駅に着いたら「改札に入る」で帰宅","good");
+}
+function arrive(){
+  S.stage="station";S.pos=DIST;hud();
+  scene(fmt(S.t),"駅に着いた","〇〇駅 東口。すずさんとの待ち合わせ場所の柱が見える。","交換を済ませてから「改札に入る」","good");
+  swapArrive();
+  later(rinReady,3000);
+  later(()=>{if(!S.over) drinkInvite()},9000);
+}
+
+/* scheduled events */
+const EV=[
+ {at:()=>START, f:()=>{pa("ただいまより規制退場を行います。係員がご案内するまで、お席でお待ちください。");yuiFirst()}},
+ {at:()=>START+2, f:()=>swapStart()},
+ {at:()=>START+4, f:()=>pa("アリーナA〜Cブロックの方、ご退場ください。")},
+ {at:()=>START+6, f:()=>groupNext()},
+ {at:()=>START+7, f:()=>pa("アリーナD〜Gブロックの方、ご退場ください。その他のお客様はお席でお待ちください。")},
+ {at:()=>S.releaseAt-2, f:()=>pa("駅が大変混雑しております。お帰りの際は、時間に余裕を持ってご移動ください。")},
+ {at:()=>S.releaseAt, f:()=>{pa(S.block+"の方、ご退場ください。お忘れ物のないようご注意ください。");release()}},
+ {at:()=>21*60+41, f:()=>rikuHello()},
+ {at:()=>21*60+58, f:()=>photoAsk()},
+ {at:()=>22*60+1, f:()=>momCall()},
+ {at:()=>21*60+50, f:()=>rikuDinner()},
+ {at:()=>21*60+58, f:()=>info("雨雲レーダー","30分後に雨が降り出す予報です（現在地周辺）",true)},
+ {at:()=>22*60+0, f:()=>rikuRain()},
+ {at:()=>22*60+14, f:()=>rinAsk()},
+ {at:()=>22*60+50, f:()=>rinLeave()},
+ {at:()=>22*60+18, f:()=>info("雨雲レーダー","10分後に雨が降り出します。現在地周辺に強い雨雲が近づいています。",true)},
+ {at:()=>22*60+22, f:()=>groupNext()},
+ {at:()=>22*60+28, f:()=>startRain()},
+ {at:()=>22*60+26, f:()=>swapWarn()},
+ {at:()=>22*60+29, f:()=>swapCall()},
+ {at:()=>22*60+9, f:()=>rikuJealous()},
+ {at:()=>SWAP_DL, f:()=>swapDeadline()},
+ {at:()=>22*60+18, f:()=>rikuGoods()},
+ {at:()=>22*60+48, f:()=>{S.yuiBeats.unshift(LASTBEAT);if(!S.th.yui.pending&&!S.th.yui.busy) yuiNext()}},
+ {at:()=>22*60+26, f:()=>rikuArrive()},
+ {at:()=>22*60+30, f:()=>rikuLate()},
+ {at:()=>23*60+2, f:()=>info("駅","まもなく最終電車です。お乗り遅れのないようご注意ください")}
+];
+function runEvents(){for(let i=0;i<EV.length;i++){if(!S.fired[i]&&S.t>=EV[i].at()){S.fired[i]=1;EV[i].f()}}}
+function idleTick(ms){
+  const quiet=!S.callOn&&$("viewer").hidden;
+  const y=S.th.yui;
+  if(y.pending&&!y.busy&&quiet){S.idle+=ms;if(S.idle>=30000&&S.chase<3){S.idle=0;S.chase++;S.m.chased++;them("yui",[CHASE[(S.m.chased-1)%CHASE.length]],{keepPending:true})}}else S.idle=0;
+  const r=S.th.riku;
+  if(r.pending&&!r.pending.end&&!r.busy&&quiet){S.ridle+=ms;if(S.ridle>=36000&&S.rchase<2){S.ridle=0;S.rchase++;S.m.chased++;them("riku",[RCHASE[S.rchase-1]],{keepPending:true})}}else S.ridle=0;
+}
+
+/* ---------------- messaging ---------------- */
+function line(th,obj){obj.t=S.t;S.th[th].msgs.push(obj);S.th[th].lastT=S.t}
+function sys(th,x){S.th[th].msgs.push({k:"sys",x:fill(x)});S.th[th].lastT=S.t;render()}
+function fill(x){return String(x).replace(/\{oshi\}/g,S.oshi).replace(/\{block\}/g,S.block)}
+function preview(o){return o.stamp?"スタンプを送信しました":o.photo?"写真を送信しました":o.post?o.post.title:o.x}
+function them(th,lines,opts={}){const T=S.th[th];T.queue.push({lines:lines.slice(),opts});if(!T.busy) drain(th)}
+function drain(th){
+  const T=S.th[th],my=sid;
+  const job=T.queue.shift();
+  if(!job){T.busy=false;render();return}
+  T.busy=true;
+  const step=()=>{
+    if(my!==sid||S.over) return;
+    if(!job.lines.length){
+      T.busy=false;
+      if(job.opts.then) job.opts.then();
+      render();
+      if(T.queue.length&&!T.busy) drain(th);
+      return;
+    }
+    T.typing=true;render();
+    const raw=job.lines.shift();
+    const isPair=Array.isArray(raw)&&th==="group";
+    const txt=isPair?raw[1]:Array.isArray(raw)?"":raw;
+    setTimeout(()=>{
+      if(my!==sid||S.over) return;
+      T.typing=false;
+      let obj;
+      if(isPair) obj={k:"them",who:raw[0],x:fill(raw[1])};
+      else if(Array.isArray(raw)) obj={k:"them",stamp:raw};
+      else obj={k:"them",x:fill(raw)};
+      line(th,obj);
+      T.last=(obj.who?obj.who+": ":"")+preview(obj);
+      if(S.view!==th){T.unread++;S.m.notif++;banner(th,TH[th].name,T.last)}
+      render();step();
+    },Math.min(900+String(txt).length*65,2200)+Math.random()*400);
+  };
+  step();
+}
+function me(th,o){line(th,{k:"me",...o});S.th[th].last=preview(o);render()}
+function setPending(th,choices,onPick){S.th[th].pending={choices:shuffle(choices),onPick};render()}
+function answer(th,c){
+  const T=S.th[th];if(!T.pending) return;
+  const p=T.pending;T.pending=null;
+  if(c.photo){S.m.photo++;me(th,{photo:c.photo})}
+  else if(c.stamp) me(th,{stamp:c.stamp});
+  else me(th,{x:fill(c.t)});
+  p.onPick(c);
+}
+function endStamp(th,choices){setPending(th,choices,()=>{});S.th[th].pending.end=true}
+const openQ=th=>{const P=S.th[th].pending;return P&&!P.end}
+function fx(e){if(!e)return;if(e.y)change("yoin",e.y);if(e.t)change("tai",e.t);if(e.b)setBat(S.bat+e.b)}
+function later(fn,ms){const my=sid;setTimeout(()=>{if(my===sid&&S&&!S.over) fn()},ms)}
+
+/* ---------------- yui ---------------- */
+function yuiFirst(){S.yuiBeats.unshift(FIRSTBEAT);yuiNext()}
+function yuiNext(){
+  const b=S.yuiBeats.shift();if(!b) return;
+  S.chase=0;S.idle=0;
+  them("yui",b.m,{then:()=>setPending("yui",b.c,c=>{
+    S.m.talk++;fx(c.fx);change("tai",-1);
+    later(()=>{addTime(3);
+      them("yui",c.r,{then:()=>{
+        if(c.k==="giveup"){later(()=>end("giveup"),1500);return}
+        if(c.follow){setPending("yui",c.follow,f=>{S.m.talk++;fx(f.fx);later(()=>them("yui",f.r||[],{then:()=>later(yuiNext,1200)}),400)});return}
+        S.yuiWait=true;later(()=>{S.yuiWait=false;yuiNext()},9000+Math.random()*6000)}});
+    },400);
+  })});
+}
+/* ---------------- group & drinks ---------------- */
+function groupNext(){
+  const b=GROUP[S.groupDone];if(!b) return;
+  S.groupDone++;
+  them("group",b.m,{then:()=>setPending("group",b.c,c=>{S.m.talk++;fx(c.fx);later(()=>{addTime(2);them("group",c.r,{then:()=>{if(c.follow) setPending("group",c.follow,f=>{S.m.talk++;fx(f.fx);later(()=>them("group",f.r||[]),400)})}})},400)})});
+}
+function drinkInvite(){
+  if(S.drink||S.t>22*60+44) return;
+  if(openQ("group")||S.th.group.busy||S.hold){later(drinkInvite,3000);return}
+  S.drink=1;
+  them("group",[["あや","駅着いた！"],["あや","ねえ、駅前で1杯だけ飲んでかない？"],["りん","感想戦第二部しよ🍻"]],{then:()=>setPending("group",[
+    {t:"1杯だけなら！",k:"one",cost:"約25分かかる"},
+    {t:"終電諦めて朝まで語ろう",k:"all"},
+    {t:"今日は帰る！また誘って",k:"no"}
+  ],c=>{
+    if(c.k==="no"){S.drink=-1;later(()=>them("group",[["あや","了解〜！気をつけて"],["りん","次は飲も"]]),400);return}
+    if(c.k==="all"){later(()=>them("group",[["あや","そうこなくちゃ"],["りん","始発まで語るぞ"]],{then:()=>later(()=>end("giveup"),1500)}),400);return}
+    S.drink=2;S.hold="drink";hud();
+    later(()=>{
+      them("group",[["あや","やった！駅前の居酒屋いるね"]],{then:()=>{
+        sys("group","駅前の居酒屋で乾杯した🍻");
+        addTime(12);change("yoin",10);change("tai",-4);
+        if(S.over) return;
+        sys("group","感想戦第二部。最後の曲の話だけで20分経った");
+        addTime(12);change("yoin",8);change("tai",-4);setBat(S.bat-2);
+        if(S.over) return;
+        them("group",[["りん","やば、もうこんな時間"],["あや","解散しよ！楽しかった〜"]],{then:()=>{sys("group","店を出た");S.hold=null;S.drink=3;hud()}});
+      }});
+    },400);
+  })});
+}
+/* ---------------- riku ---------------- */
+function rikuNext(){if(S.rq.length&&!openQ("riku")&&!S.rAsking){const a=S.rq.shift();rikuAsk(a[0],a[1],a[2])}}
+function rikuAsk(lines,choices,after){
+  if(openQ("riku")||S.rAsking){S.rq.push([lines,choices,after]);return}
+  S.rAsking=true;S.rchase=0;S.ridle=0;
+  them("riku",lines,{then:()=>setPending("riku",choices,c=>{fx(c.fx);if(c.k==="yes")S.pickup=true;later(()=>them("riku",c.r,{then:()=>{S.rAsking=false;if(after)after(c);else rikuNext()}}),400)})});
+}
+function rikuHello(){
+  rikuAsk(["おつかれ〜","終わった？楽しかった？"],[
+    {t:"最高だった！まだ規制退場中",fx:{y:3},r:["よかった","で、何時に帰ってくるの？"]},
+    {t:"語彙力なくなった",fx:{y:3},r:["いつものことじゃん","で、何時に帰ってくるの？"]},
+    ACT({t:"(ペンライトのスタンプ)",stamp:["🔦","ペンライト振るひよこ"],fx:{y:2},r:["それ何色？","で、何時に帰ってくるの？"]})],rikuWhen);
+}
+function rikuWhen(){
+  S.rchase=0;S.ridle=0;
+  setPending("riku",[
+    {t:"終電で帰る！0時過ぎるかも",fx:{},r:["0時過ぎるの！？","明日も仕事でしょ","…鍵あけとく"]},
+    {t:"交換が終わったら帰る",fx:{y:1},r:["交換？","また何か増えるんだ","まあ気をつけて"]},
+    ACT({t:"(推し次第、とだけ送る)",fx:{y:2},r:["推し次第って何笑","推しはもう帰ってるでしょ"]})
+  ],c=>{fx(c.fx);later(()=>them("riku",c.r,{then:rikuNext}),400)});
+}
+function rikuDinner(){
+  rikuAsk(["ねえ","ご飯どうする？","冷蔵庫に何もないんだけど"],[
+    {t:"コンビニで何か買って帰る",fx:{},r:["俺の分も？","からあげ棒で","あと明日の朝のパンも"]},
+    {t:"今それどころじゃない",fx:{y:1},r:["それどころって笑","ライブ終わったんじゃないの？"]},
+    ACT({t:"(推しの話で返す)",fx:{y:3},r:["ご飯の話してるんだけど笑","まあ楽しそうでなにより"]})]);
+}
+function rikuRain(){
+  rikuAsk(["そっち雨降るらしいけど","傘持ってる？","駅まで車で迎えに行こうか？"],[
+    {t:"お願いしたい！",k:"yes",fx:{},r:["了解！","22:40くらいに駅のロータリー着くようにする"]},
+    {t:"大丈夫、電車で帰る",fx:{},r:["了解","濡れないようにね"]},
+    {t:"推しの話30分聞いてくれるなら",k:"yes",fx:{y:2},r:["それは…がんばる笑","22:40くらいにロータリー着くようにする"]}]);
+}
+function rikuJealous(){
+  rikuAsk(["ちなみに","{oshi}と俺どっちがかっこいい？"],[
+    {t:"ジャンルが違う",fx:{y:2},r:["うまく逃げたな笑","じゃあ俺のジャンルは何"]},
+    {t:"{oshi}（即答）",fx:{y:4},r:["知ってた笑","即答はちょっと傷つく"]},
+    ACT({t:"(既読をつけたまま考える)",fx:{y:1},r:["既読ついてるの見えてるよ笑","考える時間長くない？"]})]);
+}
+function rikuGoods(){
+  rikuAsk(["てかさ","またグッズ増えるの？","棚もう入らないよ"],[
+    {t:"トレカは薄いから実質0",fx:{y:2},r:["実質0の理論やめて笑","先月もそれ言ってた"]},
+    {t:"棚もう一個買お",fx:{y:2},r:["俺の物置き場がなくなる","…色は白でいい？"]},
+    ACT({t:"(推しのアクスタの写真を送る)",photo:"goods",fx:{y:3,b:-1},r:["かわいいけどそういう話じゃない","いや確かにかわいいけど"]})]);
+}
+function rikuArrive(){
+  if(!S.pickup) return;
+  them("riku",["ごめん","道めっちゃ混んでて着くの23:30過ぎそう","やっぱ電車で帰ってきて🙏"],{then:()=>{if(!openQ("riku")) endStamp("riku",[ACT({t:"(ぷんぷんのスタンプ)",stamp:["💢","ぷんぷんするねこ"]}),{t:"言うと思った"}])}});
+}
+function rikuLate(){
+  if(S.pickup) return;
+  rikuAsk(["まだ駅着かないの？","既読ついてから返信まで12分かかってたよ"],[
+    {t:"数えないで",fx:{y:1},r:["数えちゃうでしょ","気をつけて帰ってきてね"]},
+    {t:"今急いでるとこ！",fx:{},r:["了解","最寄り着いたら連絡して"]},
+    ACT({t:"(ごめんねのスタンプ)",stamp:["🙏","土下座するぺんぎん"],fx:{},r:["スタンプで済ませようとしてる","許す"]})]);
+}
+/* ---------------- swap (trading card, hand-to-hand only) ---------------- */
+function swapStart(){
+  them("swap",["お疲れさまです！本日交換お願いしているすずです🙇‍♀️","{oshi}のトレカ、ちゃんと持ってきてます！","終演後、駅のほうでお渡しで大丈夫でしょうか？","私、22:35には電車に乗らないといけなくて…🙏"],{then:()=>setPending("swap",[
+    {t:"お疲れさまです！駅で大丈夫です",k:"ok"},
+    {t:"すみません、まだ規制退場待ちです…少し遅れます",k:"late"},
+    {t:"よろしくお願いします！{block}なので出るの遅めです",k:"late"}
+  ],c=>{S.swap=1;later(()=>{addTime(1);
+    them("swap",(c.k==="late"?["全然大丈夫です！"]:["ありがとうございます！"]).concat(["東口のコンビニ横の柱のところで待ってます","白いトートに缶バッジつけてます"]),{then:swapWalk});
+  },400)})});
+}
+function swapWalk(){
+  if(S.swap!==1||S.swapDone||S.swapFail) return;
+  if(atStation()){swapArrive();return}
+  setPending("swap",[
+    {t:"向かってます！着いたら連絡します",k:"go"},
+    ACT({t:"(駅に向かって急ぐ)",k:"walk",cost:"体力 -3"}),
+    {t:"私は黒のリュックです",k:"bag"}
+  ],c=>{
+    if(c.k==="walk"){
+      if(S.stage!=="walk"){sys("swap",S.stage==="seat"?"まだ会場の中。急ぎようがない。":"もう駅にいる。");later(()=>{if(S.swap===1&&!atStation())swapWalk();else swapArrive()},800);return}
+      walk(300);change("tai",-3);addTime(1);
+    } else addTime(1);
+    later(()=>them("swap",c.k==="bag"?["了解です！探しますね👀"]:["了解です！気をつけて🙏"],{then:()=>{if(atStation()) swapArrive()}}),400);
+  });
+}
+function swapArrive(){
+  if(S.swapDone||S.swapFail||S.swap!==1||!atStation()) return;
+  S.swap=2;S.th.swap.pending=null;
+  them("swap",["柱の前にいます！","人多いですね…！"],{then:swapSearch});
+}
+function swapSearch(){
+  if(S.swapDone||S.swapFail||S.swap>=3) return;
+  setPending("swap",[
+    ACT({t:"(柱の周りを探す)",k:"look"}),
+    {t:"着きました！黒のリュック、手を振ってます",k:"wave"},
+    ACT({t:"(缶バッジを目印に探す)",k:"badge"})
+  ],c=>{
+    addTime(2);
+    if(c.k==="look"&&S.searchTries===0){S.searchTries++;sys("swap","白いトートの人が、3人いる。");later(swapSearch,900);return}
+    swapMeet();
+  });
+}
+function swapMeet(){
+  if(S.swapDone||S.swapFail||S.swap>=3) return;
+  S.swap=3;S.th.swap.pending=null;
+  them("swap",["あっ！見えました！","今行きます🏃‍♀️"],{then:()=>{
+    sys("swap","手渡しで交換した");addTime(3);
+    S.swapDone=true;S.cards++;change("yoin",10);hud();later(rinReady,4000);
+    scene(fmt(S.t),"トレカ交換、完了",S.oshi+"のトレカをお迎えした。",S.rin===2?"次はみおに、着いたことをスタンプで知らせよう":"あとは電池を残して終電に乗るだけ","good");
+    them("swap",["ありがとうございました！！","私も推しをお迎えできて嬉しいです…！","またご縁があればよろしくお願いします🙇‍♀️"],{then:()=>setPending("swap",[
+      {t:"{oshi}、大事にします！ありがとうございました！"},
+      {t:"気をつけて帰ってください！"},
+      ACT({t:"(お礼のスタンプ)",stamp:["🙇‍♀️","ぺこりするしろくま"]})
+    ],()=>{})});
+  }});
+}
+function swapWarn(){
+  if(S.swapDone||S.swapFail||S.swap>=3) return;
+  if(S.swap>=2){them("swap",["あと10分くらいで出ないといけなくて…！","まだ柱の前にいます🙏"],{keepPending:true});return}
+  them("swap",["あと10分くらいで出ないといけなくて…！","今どのあたりですか？🙏"],{then:()=>setPending("swap",[
+    {t:"今向かってます！あと"+walkLeft()+"分くらいです",k:"x"},
+    {t:"ごめんなさい、急ぎます！",k:"x"},
+    ACT({t:"(全力で走ってるスタンプ)",stamp:["🏃‍♀️","全力疾走するいぬ"],k:"x"})
+  ],()=>later(()=>them("swap",["了解です！柱の前で待ってます🙏"],{then:()=>{if(atStation()) swapArrive()}}),400))});
+}
+function swapCall(){
+  if(S.swapDone||S.swapFail||S.swap!==2||!atStation()) return;
+  incoming("swap",{
+    lines:["もしもし、すずです！","今柱の前にいて…","あっ、手振ってるの見えますか？","見えた！今行きます！"],
+    onEnd:()=>{S.m.calls++;swapMeet()},
+    onDecline:()=>them("swap",["お電話すみません！柱の前にいます🙇‍♀️"],{then:swapSearch})
+  });
+}
+function swapDeadline(){
+  if(S.swapDone||S.swapFail||S.swap>=3) return;
+  S.th.swap.pending=null;
+  const near=atStation()&&S.swap===2;
+  them("swap",["すみません、もう電車の時間で…！"],{then:()=>setPending("swap",near?[
+    {t:"今柱の前です！30秒だけください！",k:"wait"},
+    {t:"わかりました、ごめんなさい",k:"ng"}
+  ]:[
+    {t:"わかりました、ごめんなさい",k:"ng"},
+    {t:"こちらこそ遅くなってすみません",k:"ng"}
+  ],c=>{
+    if(c.k==="wait"){addTime(1);later(swapMeet,400);return}
+    later(swapFail,400);
+  })});
+}
+function swapFail(){
+  if(S.swapDone||S.swapFail) return;
+  S.swapFail=true;S.th.swap.pending=null;
+  them("swap",["今回は手渡し交換を優先したくて…","お取引はなしでお願いできますか🙇‍♀️","またどこかでご縁があれば！"],{then:()=>{hud();scene(fmt(S.t),"交換は、なしになった","すずさんから、手渡しを優先したいと断られた。","このまま帰ると「交換できなかった」","bad");endStamp("swap",[{t:"承知しました。ありがとうございました"},ACT({t:"(ぺこりのスタンプ)",stamp:["🙇‍♀️","ぺこりするしろくま"]})]);rinReady()}});
+}
+/* ---------------- rin: spare card at the gate ---------------- */
+function rinAsk(){
+  if(S.over) return;
+  S.rin=1;
+  them("mio",["今日来てたよね？おつかれさま！","{oshi}のトレカ被っちゃったんだけど、よかったらもらってくれない？","駅の改札前に22:50までいるよ"],{then:()=>setPending("mio",[
+    {t:"いいの！？ほしい！駅着いたら行くね",k:"yes",cost:"改札前で約4分。22:50までに駅へ"},
+    {t:"ありがとう！でも今日は大丈夫",k:"no"},
+    ACT({t:"(拝むスタンプ)",stamp:["🙏","拝むうさぎ"],k:"yes",cost:"改札前で約4分。22:50までに駅へ"})
+  ],c=>{
+    if(c.k==="no"){S.rin=-1;later(()=>them("mio",["了解〜！また現場で"],{then:()=>endStamp("mio",[ACT({t:"(手を振るスタンプ)",stamp:["👋","手をふるくま"]})])}),400);return}
+    S.rin=2;hud();
+    later(()=>them("mio",["了解！改札前で待ってるね","着いたらスタンプちょうだい"],{then:rinReady}),400);
+  })});
+}
+function rinReady(){
+  if(S.over||S.rin!==2||!atStation()||S.rinPing) return;
+  if(!S.swapDone&&!S.swapFail&&S.swap>=1) return; // after the main trade
+  if(openQ("mio")||S.th.mio.busy){later(rinReady,2500);return}
+  S.rinPing=true;
+  if(S.view!=="mio"){S.th.mio.unread++;banner("mio","みお","駅に着いた。みおにスタンプで知らせよう")}
+  setPending("mio",[
+    ACT({t:"(着いたよ！のスタンプ)",stamp:["📍","ついたよ！のぺんぎん"]}),
+    {t:"今改札前着いた！"},
+    ACT({t:"(手を振るスタンプ)",stamp:["👋","手をふるくま"]})
+  ],()=>later(rinMeet,400));
+}
+function rinMeet(){
+  if(S.over||S.rin!==2||!atStation()) return;
+  if(S.hold||S.callOn){later(rinMeet,2500);return}
+  S.hold="rin";S.rin=4;hud();
+  them("mio",["いた！こっちこっち"],{then:()=>{
+    sys("mio","改札前でみおからトレカを受け取った");addTime(4);if(S.over) return;
+    S.rin=3;S.cards++;S.hold=null;change("yoin",4);hud();
+    scene(fmt(S.t),"推しのトレカ +1","みおから"+S.oshi+"のトレカを受け取った。","","good");
+    them("mio",["大事にしてね〜","またどこかの現場で！"],{then:()=>endStamp("mio",[ACT({t:"(ありがとうのスタンプ)",stamp:["🙏","ありがとうのうさぎ"]}),{t:"みおちゃん神すぎる、ありがとう！"}])});
+  }});
+}
+function rinLeave(){
+  if(S.rin!==2) return;
+  S.rin=-1;hud();
+  them("mio",["ごめん、私もう電車乗るね！","トレカはまた今度渡す🙏"],{then:()=>endStamp("mio",[ACT({t:"(ごめんねのスタンプ)",stamp:["🙏","土下座するぺんぎん"]}),{t:"ごめん！また今度ね"}])});
+}
+/* ---------------- photo swap (bonus, costs time) ---------------- */
+function photoAsk(){
+  if(S.over) return;
+  S.photo=1;
+  them("photo",["突然すみません！タイムラインでトレカ交換の募集を見てくださった方ですか？","{oshi}のトレカが被ってしまって…","私の推しのトレカと交換していただけませんか？🙏","会場前の広場の時計の下にいます！"],{then:()=>setPending("photo",[
+    {t:"ぜひ！今から行きます",k:"go",cost:photoCost()},
+    {t:"すみません、今日は急いでいて…",k:"no"},
+    {t:"ごめんなさい、もう交換の予定が埋まってて",k:"no"}
+  ],c=>{
+    if(c.k==="no"){S.photo=-1;later(()=>them("photo",["とんでもないです！またご縁があれば🙇‍♀️"],{then:()=>endStamp("photo",[ACT({t:"(ぺこりのスタンプ)",stamp:["🙇‍♀️","ぺこりするしろくま"]})])}),400);return}
+    photoGo();
+  })});
+}
+function photoCost(){
+  if(S.stage==="seat") return "会場を出たら広場に寄る（相手を待つ時間あり）";
+  const back=Math.max(0,S.pos-PLAZA);const m=Math.round(back/80)+(S.stage==="station"?Math.round((DIST-PLAZA)/80):0)+9;
+  return "広場まで引き返す（合計 約"+m+"分ロス）";
+}
+function photoGo(){
+  if(S.photo!==1) return;
+  S.photo=2;hud();
+  if(S.stage==="seat"){sys("photo","会場を出たら広場に寄ることにした。");return}
+  if(S.pos<=PLAZA){S.pos=PLAZA;photoMeet();return}
+  const back=S.pos-PLAZA;const mins=Math.max(1,Math.round(back/80));
+  S.stage="walk";S.hold="photo";
+  sys("photo","広場まで引き返す（"+mins+"分）");
+  addTime(mins);if(S.over) return;
+  S.pos=PLAZA;hud();photoMeet();
+}
+function photoMeet(){
+  S.hold="photo";hud();
+  them("photo",["時計の下、青い傘持ってます！","すみません、今トイレの列で…！少し待っていただけますか🙇‍♀️"],{then:()=>{
+    sys("photo","もも さんを待っている…");addTime(6);if(S.over) return;
+    them("photo",["お待たせしました！！"],{then:()=>{
+      sys("photo","トレカを交換した");addTime(3);if(S.over) return;
+      change("yoin",8);S.photo=3;S.cards++;S.hold=null;hud();
+      scene(fmt(S.t),"推しのトレカ +1","思わぬところで"+S.oshi+"のトレカ。ただ、時間はかなり使った。","急いで駅へ","good");
+      them("photo",["ありがとうございました！！","推しのトレカやっと揃いました🥹","{oshi}、大事にしてください！"],{then:()=>endStamp("photo",[{t:"大事にします！ありがとうございました"},ACT({t:"(ハートのスタンプ)",stamp:["🫶","ハートのくま"]})])});
+    }});
+  }});
+}
+/* ---------------- mom / info / weather / official ---------------- */
+function momCall(){
+  incoming("mom",{
+    lines:["もしもし？今どこ？","終電あるの？","…楽しかった？","気をつけて帰ってきなさいよ"],
+    onEnd:()=>{S.m.calls++;change("yoin",5)},
+    onDecline:()=>them("mom",["電話出れないならスタンプでいいから","生きてる証拠ください"],{then:()=>setPending("mom",[
+      ACT({t:"(スタンプを送る)",stamp:["🫡","敬礼するくま"]}),
+      {t:"今から帰る！"},
+      {t:"終電で帰る、ごはんいらない"}
+    ],()=>later(()=>them("mom",["はーい","気をつけて"],{then:()=>endStamp("mom",[ACT({t:"(OKのスタンプ)",stamp:["🙆‍♀️","OKするいぬ"]})])}),400))})
+  });
+}
+function info(src,x,rain){
+  const T=S.th.info;line("info",{k:"them",who:src,x});T.last=src+": "+x;
+  if(S.view!=="info"){T.unread++;S.m.notif++;banner("info",src,x,rain?"rain":null)}
+  render();
+}
+function pa(x){const T=S.th.info;line("info",{k:"them",who:"場内アナウンス",x});T.last="場内アナウンス: "+x;render();banner("info","場内アナウンス",x,"pa")}
+function startRain(){
+  S.raining=true;hud();
+  info("雨雲レーダー","現在地周辺で雨が降り始めました",true);
+  if(S.stage==="walk") rainPrompt();
+}
+function rainPrompt(){
+  if(S.over) return;
+  if(S.callOn||!$("viewer").hidden||!$("scene").hidden){later(rainPrompt,1500);return}
+  const el=$("osd");el.hidden=false;
+  el.innerHTML=`<div class="osbox" role="dialog" aria-label="雨"><div class="in"><b>雨が降ってきた</b><p>駅まではまだ距離がある。傘はない。</p></div><div class="bt v"><button type="button" id="r1">コンビニで傘を買う（3分）</button><button type="button" id="r2">走る（体力 -6）</button><button type="button" id="r3">濡れながら歩く（遅くなる）</button></div></div>`;
+  $("r1").onclick=()=>{el.hidden=true;S.umbrella=true;addTime(3);hud()};
+  $("r2").onclick=()=>{el.hidden=true;change("tai",-6);walk(350);hud()};
+  $("r3").onclick=()=>{el.hidden=true;hud()};
+}
+function officialPost(title,n){
+  S.posts++;
+  const T=S.th.info;line("info",{k:"them",who:"公式アカウント",post:{title,n,id:S.posts}});T.last="公式アカウント: "+title;
+  if(S.view!=="info"){T.unread++;S.m.notif++;banner("info","公式アカウント",title)}
+  render();
+  S.yuiBeats.unshift({m:["公式見た！？？","無理","電池なくなる"],c:[
+    {t:"見た。無理。",fx:{y:4},r:["わかる","3枚目で息止まった"]},
+    {t:"電池やばいからまだ見てない",fx:{y:1},r:["えらい","帰ってから見て、絶対"]},
+    ACT({t:"(泣いてるスタンプ)",stamp:["😭","号泣するうさぎ"],fx:{y:3},r:["それ"]})]});
+  if(!S.th.yui.pending&&!S.th.yui.busy&&!S.yuiWait) yuiNext();
+}
+function openPost(id){
+  const msg=S.th.info.msgs.find(m=>m.post&&m.post.id===id);if(!msg||msg.post.seen) return;
+  msg.post.seen=true;S.m.postSeen++;
+  const n=msg.post.n;let i=0;
+  setBat(S.bat-3);if(S.over) return;change("yoin",4);
+  const el=$("viewer");el.hidden=false;
+  const hues=[["#3a3550","#c88aa8"],["#24324a","#7fb2ff"],["#3b2a2a","#ffb84d"],["#2a3b33","#9fd8c4"],["#3a2a44","#e98aae"]];
+  const draw=()=>{
+    const h=hues[i%hues.length];
+    el.innerHTML=`<div class="vh"><span class="av">公</span><b>公式アカウント</b><button type="button" id="vX" aria-label="閉じる">✕</button></div>
+    <div class="dots">${Array.from({length:n},(_,k)=>`<i class="${k<=i?"on":""}"></i>`).join("")}</div>
+    <div class="img" id="vImg" style="background:linear-gradient(160deg,${h[0]},${h[1]})">${i+1} / ${n}<br>タップで次へ</div>
+    <div class="cap">${esc(msg.post.title)}<small>見るほど電池が減っていく…（いま ${S.bat}%）</small></div>`;
+    $("vX").onclick=close;
+    $("vImg").onclick=()=>{if(i<n-1){i++;if(i%2===0){setBat(S.bat-1);if(S.over)return}change("yoin",1);draw()}else close()};
+  };
+  const close=()=>{el.hidden=true;addTime(2);render()};
+  draw();render();
+}
+/* ---------------- call UI ---------------- */
+function incoming(th,o){
+  if(S.over) return;
+  if(S.callOn||!$("scene").hidden){later(()=>incoming(th,o),3000);return}
+  S.callOn=true;
+  const el=$("call");el.hidden=false;el.classList.remove("live");
+  let decided=false;
+  el.innerHTML=`<div><div class="av" style="background:${TH[th].col}">${TH[th].ini}</div><h3>${esc(TH[th].name)}</h3><p>音声通話の着信（出ると電池 -3）</p></div><div class="subs"></div>
+  <div class="cbtns"><button class="cb no" id="cNo" type="button"><i>✕</i>拒否</button><button class="cb yes" id="cYes" type="button"><i>✆</i>応答</button></div>`;
+  const decline=missed=>{
+    if(decided)return;decided=true;el.hidden=true;S.callOn=false;
+    line(th,{k:"call",x:missed?"不在着信":"キャンセル"});
+    S.th[th].last=missed?"不在着信":"通話をキャンセルしました";S.m.miss++;
+    if(S.view!==th) S.th[th].unread++;
+    render();o.onDecline&&o.onDecline();
+  };
+  $("cNo").onclick=()=>decline(false);
+  $("cYes").onclick=()=>{
+    if(decided)return;decided=true;el.classList.add("live");
+    const p=el.querySelector("p");p.textContent="0:00";
+    el.querySelector(".cbtns").innerHTML=`<button class="cb no" type="button" disabled><i>✕</i>通話中</button>`;
+    const subs=el.querySelector(".subs");let sec=0,i=0;const my=sid;
+    const tick=setInterval(()=>{if(my!==sid){clearInterval(tick);return}sec++;p.textContent=Math.floor(sec/60)+":"+String(sec%60).padStart(2,"0")},400);
+    const next=()=>{
+      if(i>=o.lines.length){
+        clearInterval(tick);
+        later(()=>{el.hidden=true;S.callOn=false;line(th,{k:"call",x:"通話時間 "+Math.floor(sec/60)+":"+String(sec%60).padStart(2,"0")});S.th[th].last="通話が終了しました";setBat(S.bat-3);if(S.over)return;addTime(3);o.onEnd&&o.onEnd();render()},700);
+        return;
+      }
+      const d=document.createElement("div");d.className="s";d.textContent=fill(o.lines[i++]);subs.appendChild(d);
+      if(subs.children.length>3) subs.firstChild.remove();
+      later(next,1900);
+    };
+    later(next,600);
+  };
+  later(()=>{if(!decided) decline(true)},11000);
+}
+function batteryPrompt(){
+  const el=$("osd");el.hidden=false;
+  el.innerHTML=`<div class="osbox" role="dialog" aria-label="バッテリー残量"><div class="in"><b>バッテリー残量が少なくなっています</b><p>残り20%です。低電力モードにすると、電池が長持ちします。</p></div><div class="bt"><button type="button" id="oC">閉じる</button><button type="button" id="oL">低電力モード</button></div></div>`;
+  $("oC").onclick=()=>{el.hidden=true};
+  $("oL").onclick=()=>{S.lp=true;el.hidden=true;hud()};
+}
+/* ---------------- scene card ---------------- */
+let sceneT=null;
+function scene(tag,title,body,hand,kind){
+  const el=$("scene");el.hidden=false;
+  el.innerHTML=`<div class="scard ${kind||""}" role="status"><span class="tag">${esc(tag)}</span><h3><span>${esc(title)}</span></h3><p>${esc(body)}</p>${hand?`<p class="hand">${esc(hand)}</p>`:""}</div>`;
+  clearTimeout(sceneT);
+  const close=()=>{el.hidden=true;clearTimeout(sceneT)};
+  el.onclick=close;sceneT=setTimeout(close,3200);
+}
+/* ---------------- notifications: one slim strip at the very top ---------------- */
+let bq=[],bOn=false,bT=null;
+function banner(th,t,x,kind){bq.push({th,t,x,kind});if(!bOn) nextBanner()}
+function nextBanner(){
+  const el=$("pa");
+  let b=bq.shift();
+  while(b&&S&&b.kind!=="pa"&&S.view===b.th) b=bq.shift(); // already reading that talk
+  if(!b||!S||S.over){bOn=false;el.classList.remove("on");return}
+  bOn=true;
+  const i=$("paI");
+  i.style.background=b.kind==="pa"?"#6b6680":b.kind==="rain"?"#7fb2ff":TH[b.th].col;
+  i.textContent=b.kind==="pa"?"📢":b.kind==="rain"?"☂":TH[b.th].ini;
+  $("paT").textContent=b.t;$("paX").textContent=b.x;
+  el.dataset.th=b.kind==="pa"?"":b.th;el.classList.add("on");
+  clearTimeout(bT);
+  bT=setTimeout(()=>{el.classList.remove("on");setTimeout(nextBanner,320)},b.kind==="pa"?4200:2800);
+}
+$("pa").onclick=()=>{const th=$("pa").dataset.th;$("pa").classList.remove("on");clearTimeout(bT);setTimeout(nextBanner,320);if(th&&S) openTh(th)};
+/* ---------------- HUD ---------------- */
+function change(k,d){
+  S[k]=Math.max(0,Math.min(100,S[k]+d));
+  const el=k==="yoin"?$("vY"):$("vT");el.classList.add("flash");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("flash"),700);
+  hud();
+}
+function walkLeft(){
+  if(S.stage==="station") return 0;
+  if(S.stage==="seat") return (S.released?0:Math.max(0,S.releaseAt-S.t))+Math.ceil(10+(DIST-60-400)/80);
+  let left=DIST-S.pos,m=0;const crowd=Math.max(0,S.crowdUntil-S.t);const rain=S.raining&&!S.umbrella?.7:1;
+  const c=Math.min(left,crowd*40*rain);m+=c/(40*rain);left-=c;m+=left/(80*rain);
+  return Math.ceil(m);
+}
+function alerts(){
+  const A=[];
+  const wl=walkLeft();const slack=LAST-S.t-wl-3;S.slack=slack;
+  if(S.stage==="seat"&&S.released) A.push({lv:3,x:"退場の順番が来た。「会場を出る」を押そう",th:null});
+  if(slack<=0) A.push({lv:3,x:"このままだと終電に間に合わない（駅まで約"+wl+"分）",th:null});
+  else if(slack<=10) A.push({lv:3,x:"終電ギリギリ。余裕あと"+slack+"分",th:null});
+  else if(slack<=20) A.push({lv:2,x:"終電の余裕が"+slack+"分を切った",th:null});
+  if(!S.swapDone&&!S.swapFail){
+    const dl=SWAP_DL-S.t;
+    if(dl<=10&&dl>0) A.push({lv:3,x:"すずさんの電車まであと"+dl+"分。交換を急いで",th:"swap"});
+    else if(dl>0&&atStation()&&S.swap>=2) A.push({lv:2,x:"すずさんが東口の柱の前で待っている",th:"swap"});
+    else if(dl>0&&S.swap>=1) A.push({lv:1,x:"すずさんとの交換は22:35まで（あと"+dl+"分）",th:"swap"});
+  }
+  if(S.swapFail) A.push({lv:2,x:"トレカ交換は断られた",th:"swap"});
+  if(S.bat<=10) A.push({lv:3,x:"電池残り"+S.bat+"%。写真や電話は控えて",th:null});
+  else if(S.bat<=20) A.push({lv:2,x:"電池残り"+S.bat+"%",th:null});
+  if(S.tai<=15) A.push({lv:3,x:"体力が限界。座ったら寝過ごすかも",th:null});
+  else if(S.tai<=30) A.push({lv:2,x:"体力が減ってきた",th:null});
+  if(S.raining&&!S.umbrella&&S.stage==="walk") A.push({lv:2,x:"雨に濡れて、体力が減り続けている",th:null});
+  if(S.photo===1) A.push({lv:1,x:"ももさんが広場で返事を待っている",th:"photo"});
+  if(S.rin===2&&S.t<22*60+50) A.push(S.rinPing&&!S.hold?{lv:2,x:"駅に着いた。みおにスタンプで知らせよう",th:"mio"}:{lv:1,x:"みおが改札前で22:50まで待っている",th:"mio"});
+  if(atStation()&&S.swapDone&&S.hold==null&&S.rin!==2) A.push({lv:1,x:"交換完了。「改札に入る」で帰れる",th:null});
+  for(const k of ["swap","riku","yui","group","photo","mio","mom"]){
+    const T=S.th[k];if(T.pending&&!T.pending.end&&!T.busy) A.push({lv:1,x:TH[k].name.replace(/[🫧📸].*$/,"")+"が返事を待っている",th:k});
+  }
+  return A.sort((a,b)=>b.lv-a.lv);
+}
+function pinch(){
+  const A=alerts(),el=$("pinch"),top=A[0];
+  el.className="pinch"+(top?top.lv>=3?" crit":top.lv===2?" warn":"":"");
+  $("pinchI").textContent=top?top.lv>=3?"!":top.lv===2?"!":"i":"✓";
+  $("pinchT").textContent=top?top.x:"いまのピンチはなし";
+  $("pinchN").textContent=A.length>1?"ほか"+(A.length-1)+"件":"";
+  el.dataset.th=top&&top.th?top.th:"";
+  const s=$("vS");const v=S.slack;
+  s.textContent=v<=0?"間に合わない":"余裕 "+v+"分";s.className=v<=10?"crit":v<=20?"warn":"";
+  $("tWarn").textContent=S.tai<=15?"限界":S.tai<=30?"ピンチ":"";
+}
+function drawPlist(){
+  const el=$("plist");if(el.hidden||!S) return;
+  const A=alerts();
+  el.innerHTML=A.length?A.map((a,i)=>`<button type="button" class="l${a.lv}" data-i="${i}" ${a.th?"":"disabled"}><i></i><span>${esc(a.x)}</span>${a.th?"<small>開く ›</small>":""}</button>`).join(""):"<p>いまのピンチはなし</p>";
+  el.querySelectorAll("button[data-i]").forEach(b=>b.onclick=()=>{const a=A[+b.dataset.i];if(a&&a.th){closePlist();openTh(a.th)}});
+}
+function closePlist(){$("plist").hidden=true;$("pinch").setAttribute("aria-expanded","false")}
+$("pinch").onclick=()=>{if(!S||S.over)return;const el=$("plist");el.hidden=!el.hidden;$("pinch").setAttribute("aria-expanded",String(!el.hidden));drawPlist()};
+function hud(){
+  if(!S) return;
+  $("clk").textContent=fmt(S.t);
+  $("vY").textContent=S.yoin;$("bY").style.width=S.yoin+"%";$("bY").style.background="var(--pink)";
+  $("vT").textContent=S.tai;$("bT").style.width=S.tai+"%";$("bT").style.background=S.tai>30?"var(--lime)":S.tai>15?"#ffe08a":"var(--hot)";
+  $("vL").textContent="あと"+Math.max(0,LAST-S.t)+"分";
+  $("batp").textContent=S.bat+"%";$("batb").style.width=Math.max(2,S.bat/100*19)+"px";
+  $("bat").classList.toggle("low",S.bat<=20&&!S.lp);$("bat").classList.toggle("lp",S.lp);
+  pinch();drawPlist();
+  const pct=S.pos/DIST*100;
+  $("rFill").style.width=pct+"%";$("rMe").style.left=pct+"%";
+  $("rMe").classList.toggle("wait",S.stage==="seat"||!!S.hold);
+  const nodes=[0,16,55,100];document.querySelectorAll("#track .node").forEach((n,i)=>n.classList.toggle("on",S.stage==="seat"?i===0:pct>=nodes[i]));
+  // stage + action
+  let tag="いま",txt="",go=false,acts="";
+  if(S.stage==="seat"){
+    if(S.released){txt="退場の順番。会場を出られる";go=true;acts=`<button class="act pulse" type="button" id="aLeave">会場を出る</button>`}
+    else{txt="座席で待機中（"+S.block+"）";acts=`<button class="act sub" type="button" id="aSneak">こっそり先に出る</button>`}
+  }else if(S.hold==="photo"){txt="会場前の広場でトレカ交換中"}
+  else if(S.hold==="rin"){txt="改札前でみおからトレカを受け取り中"}
+  else if(S.hold==="drink"){txt="駅前の居酒屋で乾杯中"}
+  else if(S.stage==="walk"){txt="駅へ歩いている・あと約"+walkLeft()+"分"+(S.t<S.crowdUntil?"（混雑）":"")+(S.raining&&!S.umbrella?"（雨）":"");acts=S.t<S.crowdUntil?"":`<button class="act sub" type="button" id="aRun">走る（体力-5）</button>`}
+  else{txt="駅・東口にいる"+(S.swapDone?(S.rin===2?"。みおが改札前で待っている":"。交換は完了"):"");go=S.swapDone&&S.rin!==2;acts=`<button class="act${go?" pulse":""}" type="button" id="aGate">改札に入る</button>`}
+  const st=$("stage");st.className="stage"+(go?" ready":"");st.innerHTML=`<b>${tag}</b><span>${esc(txt)}</span>`;
+  $("acts").innerHTML=acts;
+  if($("aLeave")) $("aLeave").onclick=leaveVenue;
+  if($("aSneak")) $("aSneak").onclick=()=>confirmBox("こっそり先に出る？","まだあなたのブロックは呼ばれていない。","出てみる","やめておく",leaveVenue);
+  if($("aGate")) $("aGate").onclick=gate;
+  if($("aRun")) $("aRun").onclick=()=>{if(S.stage!=="walk"||S.hold)return;change("tai",-5);walk(250);if(S.stage==="walk")addTime(1);hud()};
+}
+function confirmBox(title,body,yes,no,onYes){
+  const el=$("osd");el.hidden=false;
+  el.innerHTML=`<div class="osbox" role="dialog" aria-label="${esc(title)}"><div class="in"><b>${esc(title)}</b><p>${esc(body)}</p></div><div class="bt"><button type="button" id="cbN">${esc(no)}</button><button type="button" id="cbY">${esc(yes)}</button></div></div>`;
+  $("cbN").onclick=()=>{el.hidden=true};
+  $("cbY").onclick=()=>{el.hidden=true;onYes()};
+}
+
+/* ---------------- render ---------------- */
+function openTh(th){S.view=th;S.th[th].unread=0;bq=bq.filter(b=>b.th!==th||b.kind==="pa");if($("pa").dataset.th===th){$("pa").classList.remove("on");clearTimeout(bT);setTimeout(nextBanner,320)}render(true)}
+function totalUnread(ex){let n=0;for(const k of ORDER) if(k!==ex) n+=S.th[k].unread;return n}
+function avatar(k){const d=TH[k];return `<span class="av" style="background:${d.col}">${d.ini}</span>`}
+function render(scroll){
+  if(!S) return;
+  const v=$("view");
+  $("sbar").style.background=S.view==="list"?"var(--app)":"var(--wall)";
+  if(S.view==="list"){
+    const rows=ORDER.filter(k=>S.th[k].lastT).sort((a,b)=>(S.th[b].lastT||0)-(S.th[a].lastT||0)).map(k=>{
+      const T=S.th[k],d=TH[k];
+      return `<button class="row" type="button" data-th="${k}">${avatar(k)}
+      <span style="min-width:0"><div class="nm">${esc(d.name)}${d.n?`<small>(${d.n})</small>`:""}</div><div class="pv">${esc(T.last||"")}</div></span>
+      <span class="side">${fmt(T.lastT)}${T.unread?`<span class="badge">${T.unread}</span>`:""}</span></button>`;
+    }).join("");
+    v.innerHTML=`<div class="list"><div class="lhead"><h2>トーク</h2><span class="ic" aria-hidden="true"><span>⌕</span><span>✎</span></span></div>
+      <div class="search">検索</div><div class="tabs" aria-hidden="true"><span class="on">すべて</span><span>友だち</span><span>グループ</span><span>公式アカウント</span></div>${rows}</div>
+      <div class="nav" aria-hidden="true"><span><i>⌂</i>ホーム</span><span class="on"><i>💬</i>トーク</span><span><i>▤</i>ニュース</span><span><i>☰</i>ウォレット</span></div>`;
+    v.querySelectorAll(".row").forEach(b=>b.onclick=()=>openTh(b.dataset.th));
+    return;
+  }
+  const th=S.view,T=S.th[th],d=TH[th];
+  const prev=v.querySelector(".msgs");
+  const atBottom=!prev||prev.scrollHeight-prev.scrollTop-prev.clientHeight<80;
+  let html=`<div class="day">今日</div>`,prevKey=null;
+  for(const m of T.msgs){
+    if(m.k==="sys"){html+=`<div class="sys">${esc(m.x)}</div>`;prevKey=null;continue}
+    const mine=m.k==="me";
+    const key=mine?"me":"them:"+(m.who||"");
+    const first=key!==prevKey;prevKey=key;
+    let body;
+    if(m.k==="call") body=`<div class="bub">✆ ${esc(m.x)}</div>`;
+    else if(m.post) body=`<div class="post"><div class="pimg"></div><div class="pbody"><b>公式アカウント</b>${esc(m.post.title)}</div><button type="button" data-post="${m.post.id}" ${m.post.seen?"disabled":""}>${m.post.seen?"見た":"投稿を見る（電池が減ります）"}</button></div>`;
+    else if(m.photo) body=`<div class="photo${m.photo==="goods"?" goods":m.photo==="board"?" board":""}" role="img" aria-label="写真"></div>`;
+    else if(m.stamp) body=`<div class="stamp"><span><b>${m.stamp[0]}</b>${esc(m.stamp[1])}</span></div>`;
+    else body=`<div class="bub">${esc(m.x)}</div>`;
+    const tm=`<span class="tm">${mine?`<span>${th==="group"?"既読2":"既読"}</span>`:""}<span>${fmt(m.t)}</span></span>`;
+    if(mine) html+=`<div class="m me${first?" first":""}"><span class="col">${body}</span>${tm}</div>`;
+    else{
+      const showWho=first&&(th==="group"||th==="info")&&m.who;
+      html+=`<div class="m them${first?" first":""}">${first?avatar(th):`<span class="gap"></span>`}<span class="col">${showWho?`<span class="who">${esc(m.who)}</span>`:""}${body}</span>${tm}</div>`;
+    }
+  }
+  if(T.typing) html+=`<div class="m them">${prevKey&&prevKey.startsWith("them")?`<span class="gap"></span>`:avatar(th)}<div class="typing" aria-label="入力中"><i></i><i></i><i></i></div></div>`;
+  const tu=totalUnread(th);
+  const pin="";const _unused=th==="swap"?`<div class="pin"><span>もらう <b>${esc(S.oshi)}のトレカ</b></span><span>渡す <b>すずさんの推しのトレカ</b></span><span>手渡しのみ・駅 東口・〜22:35</span></div>`
+    :th==="photo"?`<div class="pin"><span>もらう <b>${esc(S.oshi)}のランダム写真</b></span><span>渡す <b>ももさんの推しの写真</b></span><span>会場前の広場・時計の下</span></div>`:"";
+  let reply="";
+  if(T.pending&&!T.busy) reply=`<div class="reply"><div class="q">返信を選ぶ</div>${T.pending.choices.map((c,i)=>`<button class="choice${c.act?" actn":""}" type="button" data-i="${i}">${esc(fill(c.t))}${c.cost?`<small>${esc(c.cost)}</small>`:""}</button>`).join("")}</div>`;
+  v.innerHTML=`<div class="chat"><div class="chead"><button class="back" type="button" id="back" aria-label="トーク一覧に戻る">‹${tu?`<span class="badge">${tu}</span>`:""}</button><span class="t">${esc(d.name)}${d.n?` (${d.n})`:""}</span><span class="ic" aria-hidden="true"><span>⌕</span><span>✆</span><span>≡</span></span></div>${pin}<div class="msgs" id="msgs">${html}</div>${reply}</div>`;
+  $("back").onclick=()=>{S.view="list";render()};
+  v.querySelectorAll(".choice").forEach(b=>b.onclick=()=>answer(th,T.pending.choices[+b.dataset.i]));
+  v.querySelectorAll("[data-post]").forEach(b=>b.onclick=()=>openPost(+b.dataset.post));
+  const ms=$("msgs");if(scroll||atBottom) ms.scrollTop=ms.scrollHeight;
+}
+
+/* ---------------- gate & endings ---------------- */
+function gate(){
+  if(!S||S.over||!atStation()||S.hold) return;
+  const warn=S.swapDone?(S.rin===2?"みおからまだトレカを受け取っていません。このまま帰りますか？":"ホームへ向かいます。"):S.swapFail?"トレカ交換はできなかった。このまま帰りますか？":"トレカ交換がまだです。改札に入ると「交換できなかった」になります。";
+  confirmBox("改札に入りますか？",warn,"入る","まだ",()=>{
+    S.boarded=true;
+    if(!S.swapDone) end("noswap");
+    else if(S.tai<12) end("sleep");
+    else end("clear");
+  });
+}
+const ENDS={
+  clear:"終電の扉が閉まる。手の中には{oshi}のトレカ。電池はまだ残っていて、ゆいからの通知が止まらない。",
+  missed:"23:12。ホームに着いたとき、最終電車の赤いランプが遠ざかっていった。",
+  giveup:"終電の時間を過ぎても、話はまだ2曲目にも辿り着いていない。始発まで、あと5時間。",
+  noswap:"改札を抜けて、電車に揺られる。カバンの中のトレカは、交換されないままだった。",
+  sleep:"座った瞬間に意識が消えた。目を開けたら知らない駅。トークの未読だけが、今日の楽しさを覚えている。",
+  dead:"画面が、静かに暗くなった。最後に見えたのは、ゆいの「ねえ」だった。"
+};
+function title(){const y=S.yoin;return y>=95?"余韻の化身":y>=80?"感想戦の主":y>=60?"ちゃんと帰れるオタク":"燃え尽きたオタク"}
+function where(){if(S.stage==="seat") return "座席";if(S.stage==="station") return "〇〇駅 東口";return S.pos<PLAZA?"会場前":"駅までの道"}
+function end(kind){
+  if(!S||S.over) return;
+  S.over=true;clearInterval(timer);
+  ["call","osd","viewer","scene"].forEach(id=>$(id).hidden=true);$("pa").classList.remove("on");
+  seen[kind]=1;try{localStorage.setItem("lkSeen2",JSON.stringify(seen))}catch(e){}
+  const go=()=>{
+    const el=$("result");el.hidden=false;
+    const got=ENDKEYS.filter(k=>seen[k]).length;
+    const no=String(ENDKEYS.indexOf(kind)+1).padStart(2,"0");
+    const okSwap=S.swapDone,okTrain=kind==="clear"||kind==="noswap"||kind==="sleep",okBat=S.bat>0;
+    el.innerHTML=`<div class="pnav"><span>ライブ帰りシミュレーター</span><span>ENDING ${got} / ${ENDKEYS.length}</span></div>
+    <header class="hero${kind==="clear"?" clear":""}"><div><p class="tag">${kind==="clear"?"CLEAR":"ENDING "+no}</p><h2><span>${esc(ENDNAME[kind])}</span></h2><p class="note">${fmt(Math.min(S.t,LAST))}、${esc(where())}にて。</p></div><p class="ticket">余韻<strong>${S.yoin}</strong></p></header>
+    <div class="pcard pink"><p class="lbl">今夜のこと</p><p class="end">${esc(fill(ENDS[kind]))}</p>
+      <div class="checks"><div class="${okSwap?"ok":"ng"}"><b>${okSwap?"✓":"—"}</b>手渡し交換</div><div class="${okTrain?"ok":"ng"}"><b>${okTrain?"✓":"—"}</b>終電</div><div class="${okBat?"ok":"ng"}"><b>${okBat?"✓":"—"}</b>電池</div></div>
+      <div class="cards"><b>${S.cards}</b><span>/ 3枚</span><small>集めた${esc(S.oshi)}のトレカ</small></div>
+      <div class="stampbox"><small>称号</small><b>${title()}</b></div></div>
+    <div class="pcard"><p class="lbl">きろく</p><dl class="kv"><dt>体力</dt><dd>${S.tai}</dd><dt>電池</dt><dd>${S.bat}%</dd>
+    <dt>語った回数</dt><dd>${S.m.talk}</dd><dt>送った写真</dt><dd>${S.m.photo}枚</dd><dt>届いた通知</dt><dd>${S.m.notif}件</dd>
+    <dt>出た電話 / 出なかった電話</dt><dd>${S.m.calls} / ${S.m.miss}</dd>
+    <dt>追撃された回数</dt><dd>${S.m.chased}</dd><dt>規制退場を無視した回数</dt><dd>${S.sneaks}</dd></dl></div>
+    <div class="pcard violet"><p class="lbl">見たエンディング ${got} / ${ENDKEYS.length}</p><div class="endmap">${ENDKEYS.map(k=>`<span class="${seen[k]?"got":""}${k==="clear"&&seen[k]?" clear":""}">${seen[k]?ENDNAME[k]:"？？？"}</span>`).join("")}</div></div>
+    <button class="go" type="button" id="saveImg">結果を画像で保存</button>
+    <button class="go sub" type="button" id="again">もう一度帰る</button>
+    <p class="handnote">${kind==="clear"?(S.cards<3?"次は、トレカ3枚に挑戦してみて。":"トレカ3枚、完璧な帰り道。"):"次は、ちがう帰り道で。"}</p>
+    <p class="fine">フィクションです。登場する人物・会場・団体はすべて架空です。</p>`;
+    $("again").onclick=showIntro;
+    const R={kind,no,got,ending:ENDNAME[kind],text:fill(ENDS[kind]),time:fmt(Math.min(S.t,LAST)),where:where(),yoin:S.yoin,okSwap,okTrain,okBat,cards:S.cards,title:title(),oshi:S.oshi,talk:S.m.talk,photo:S.m.photo,chased:S.m.chased,bat:S.bat};
+    let blobP=makeResultImage(R).catch(()=>null);
+    $("saveImg").onclick=()=>saveResult(blobP);
+  };
+  if(kind==="dead"){const el=$("osd");el.hidden=false;el.className="ov dead";el.innerHTML="";setTimeout(()=>{el.hidden=true;el.className="ov osd";go()},1600)}
+  else go();
+}
+
+
+/* ---------------- result image (share sheet) ---------------- */
+function wrapText(ctx,text,maxW){const lines=[];let cur="";for(const ch of text){if(ctx.measureText(cur+ch).width>maxW&&cur){lines.push(cur);cur=ch}else cur+=ch}if(cur)lines.push(cur);return lines}
+async function makeResultImage(R){
+  try{if(document.fonts){await Promise.all([document.fonts.load('900 80px "Zen Kaku Gothic New"'),document.fonts.load('700 36px "Zen Kaku Gothic New"'),document.fonts.load('600 40px "Klee One"')]);}}catch(e){}
+  const W=1080,H=1350,c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
+  const INK="#282536",PAPER="#f7f5ed",PINK="#ffd5df",LIME="#dcefa5",VIOLET="#ded7ff",MUTED="#625f6d";
+  const G='"Zen Kaku Gothic New","Hiragino Sans",sans-serif',HAND='"Klee One","Hiragino Sans",sans-serif';
+  x.fillStyle=PAPER;x.fillRect(0,0,W,H);
+  x.fillStyle=INK;x.font="700 34px "+G;x.textBaseline="alphabetic";x.fillText("ライブ帰りシミュレーター",80,110);
+  x.textAlign="right";x.font="600 32px "+HAND;x.fillText("ENDING "+R.got+" / 6",W-80,110);x.textAlign="left";
+  x.strokeStyle="#d5d1d9";x.lineWidth=2;x.setLineDash([]);x.beginPath();x.moveTo(80,140);x.lineTo(W-80,140);x.stroke();
+  // tag
+  x.save();x.translate(80,215);x.rotate(-3*Math.PI/180);x.font="700 30px "+G;const tag=R.kind==="clear"?"CLEAR":"ENDING "+R.no;const tw=x.measureText(tag).width;x.fillStyle=INK;x.fillRect(0,-36,tw+36,50);x.fillStyle=PAPER;x.fillText(tag,18,0);x.restore();
+  // ending title with highlighter
+  let fs=84;x.font="900 "+fs+"px "+G;while(x.measureText(R.ending).width>640&&fs>56){fs-=4;x.font="900 "+fs+"px "+G}const tl=wrapText(x,R.ending,640);let y=330;
+  for(const t of tl){const w=x.measureText(t).width;x.save();x.translate(80,y);x.rotate(-1.8*Math.PI/180);x.fillStyle=R.kind==="clear"?LIME:PINK;x.fillRect(-10,-20,w+20,30);x.restore();x.fillStyle=INK;x.fillText(t,80,y);y+=100}
+  x.font="600 38px "+HAND;x.fillStyle=INK;x.fillText(R.time+"、"+R.where+"にて。",80,y-20);
+  // ticket
+  x.save();x.translate(W-210,250);x.rotate(5*Math.PI/180);x.fillStyle="#fff";x.fillRect(-90,-70,180,150);x.strokeStyle=INK;x.lineWidth=4;x.strokeRect(-90,-70,180,150);x.fillStyle=INK;x.textAlign="center";x.font="700 26px "+G;x.fillText("余韻",0,-25);x.font="500 72px "+G;x.fillText(String(R.yoin),0,55);x.restore();x.textAlign="left";
+  // card
+  const cy=y+20,cx=80,cw=W-160;x.font="500 36px "+G;const nLines=Math.min(4,wrapText(x,R.text,cw-80).length);const ch=90+nLines*58+10+165+200+110-cy+cy;
+  x.fillStyle=INK;x.fillRect(cx+10,cy+12,cw,ch);x.fillStyle="#fff";x.fillRect(cx,cy,cw,ch);x.strokeStyle=INK;x.lineWidth=4;x.strokeRect(cx,cy,cw,ch);
+  x.save();x.translate(cx+cw-200,cy);x.rotate(-3*Math.PI/180);x.fillStyle=PINK;x.fillRect(0,-24,170,46);x.strokeStyle=INK;x.lineWidth=2;x.strokeRect(0,-24,170,46);x.fillStyle=INK;x.font="700 26px "+G;x.fillText("今夜のこと",20,8);x.restore();
+  x.font="500 36px "+G;x.fillStyle=INK;let ty=cy+90;for(const l of wrapText(x,R.text,cw-80).slice(0,4)){x.fillText(l,cx+40,ty);ty+=58}
+  // checks
+  const items=[["手渡し交換",R.okSwap],["終電",R.okTrain],["電池",R.okBat]];const bw=(cw-80-40)/3;let bx=cx+40;const by=ty+10;
+  for(const [lab,ok] of items){x.fillStyle=ok?LIME:"#fff";x.fillRect(bx,by,bw,120);x.strokeStyle=INK;x.lineWidth=3;x.strokeRect(bx,by,bw,120);x.fillStyle=ok?INK:MUTED;x.textAlign="center";x.font="900 48px "+G;x.fillText(ok?"✓":"—",bx+bw/2,by+58);x.font="700 28px "+G;x.fillText(lab,bx+bw/2,by+100);x.textAlign="left";bx+=bw+20}
+  // cards + title
+  const ky=by+165;x.fillStyle=INK;x.fillRect(cx+46,ky+6,330,140);x.fillStyle=VIOLET;x.fillRect(cx+40,ky,330,140);x.strokeStyle=INK;x.lineWidth=3;x.strokeRect(cx+40,ky,330,140);
+  x.fillStyle=INK;x.font="900 72px "+G;x.fillText(String(R.cards),cx+64,ky+80);x.font="700 34px "+G;x.fillText("/ 3枚",cx+64+x.measureText(String(R.cards)).width+40,ky+78);
+  x.font="500 24px "+G;x.fillStyle=MUTED;x.fillText("集めた推しのトレカ",cx+64,ky+120);
+  x.save();x.translate(cx+430,ky+14);x.rotate(-2*Math.PI/180);x.fillStyle=PAPER;x.fillRect(0,0,cw-470,112);x.strokeStyle=INK;x.lineWidth=3;x.strokeRect(0,0,cw-470,112);x.fillStyle=MUTED;x.font="700 22px "+G;x.fillText("称号",20,36);x.fillStyle=INK;x.font="600 42px "+HAND;x.fillText(R.title,20,88);x.restore();
+  // stats row
+  const sy=ky+200;x.strokeStyle="#d5d1d9";x.lineWidth=2;x.setLineDash([8,8]);x.beginPath();x.moveTo(cx+40,sy-30);x.lineTo(cx+cw-40,sy-30);x.stroke();x.setLineDash([]);
+  const st=[["語った回数",R.talk+"回"],["送った写真",R.photo+"枚"],["追撃された",R.chased+"回"],["残りの電池",R.bat+"%"]];const sw=(cw-80)/4;
+  st.forEach(([l,v],i)=>{const sx=cx+40+sw*i;x.fillStyle=MUTED;x.font="700 24px "+G;x.fillText(l,sx,sy+10);x.fillStyle=INK;x.font="900 46px "+G;x.fillText(v,sx,sy+66)});
+  // footer
+  x.fillStyle=MUTED;x.font="500 26px "+G;x.textAlign="center";x.fillText("推し："+R.oshi+"　｜　フィクションです",W/2,H-70);x.textAlign="left";
+  return await new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(new Error("toBlob")),"image/png"));
+}
+async function saveResult(blobP){
+  const btn=$("saveImg");
+  const blob=await blobP;
+  if(!blob){btn.textContent="画像を作れませんでした";return}
+  const file=new File([blob],"live-kaeri-result.png",{type:"image/png"});
+  try{
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:"ライブ帰りシミュレーター"});return}
+  }catch(e){if(e&&e.name==="AbortError") return}
+  showShot(blob);
+}
+function showShot(blob){
+  const fr=new FileReader();
+  fr.onload=()=>{const el=$("osd");el.hidden=false;el.className="ov shot";
+    el.innerHTML=`<img src="${fr.result}" alt="結果の画像"><p>画像を長押しして保存してください</p><button type="button" id="shotX">閉じる</button>`;
+    $("shotX").onclick=()=>{el.hidden=true;el.className="ov osd"}};
+  fr.readAsDataURL(blob);
+}
+
+/* ---------------- intro ---------------- */
+let lastOshi="";try{lastOshi=localStorage.getItem("lkOshi")||""}catch(e){}
+function showIntro(){
+  sid++;clearInterval(timer);S=null;bq=[];bOn=false;
+  ["result","call","osd","viewer","scene"].forEach(id=>$(id).hidden=true);$("osd").className="ov osd";
+  $("view").innerHTML="";
+  const el=$("intro");el.hidden=false;
+  el.innerHTML=`<div class="pnav"><span>ライブ帰りシミュレーター</span><span>エンディング6種</span></div>
+  <header class="hero"><div><p class="tag">CHAT GAME</p><h1>ライブ<span>帰り</span>シミュレーター</h1><p class="note">終電まで、あと98分。</p></div><p class="ticket">LAST TRAIN<strong>23:12</strong></p></header>
+  <div class="pcard pink"><p class="lbl">21:34</p><p class="story">最後の曲の余韻が、まだ耳に残っている。規制退場の<em>アナウンス待ち</em>。手渡しのトレカ交換が<em>1件</em>残っていて、終電は<em>23:12</em>。<br>スマホが、震えた。</p></div>
+  <div class="pcard sky"><p class="lbl">ゴール</p><p class="goal"><em>手渡しでトレカ交換</em>して、<em>電池を残したまま</em>、<em>終電に乗る</em>。</p><p class="story" style="font-size:13px;color:var(--pmuted)">寄り道すれば、推しのトレカは最大3枚まで集められる。</p></div>
+  <div class="pcard"><p class="lbl">あそびかた</p><ul class="how">
+    <li><b>退場</b><span>自分のブロックが呼ばれたら「会場を出る」。先に出ようとすると…</span></li>
+    <li><b>トーク</b><span>届いたトークを開いて返信を選ぶ。放っておくと追撃が来る</span></li>
+    <li><b>ピンチ</b><span>上の「いまのピンチ」を見て、急ぐものから片づける</span></li>
+    <li><b>電池</b><span>写真・電話・公式の投稿で減る。0%で終わり</span></li>
+    <li><b>走る</b><span>混雑が落ち着いたら走れる。速いけど体力を使う</span></li>
+    <li><b>改札</b><span>駅に着いたら「改札に入る」で帰宅</span></li></ul></div>
+  <form class="field pcard violet" id="oform"><p class="lbl">推し</p><label for="oshi">推しの名前（空欄なら「推し」）</label><input id="oshi" type="text" maxlength="12" autocomplete="off" placeholder="推し" value="${esc(lastOshi)}"></form>
+  <button class="go" type="button" id="start">スマホを見る</button>
+  <p class="handnote">展開は毎回ちょっとずつ変わります。</p>
+  <p class="fine">フィクションです。登場する人物・会場・団体はすべて架空です。</p>`;
+  const go=()=>{const v=$("oshi").value.trim()||"推し";try{localStorage.setItem("lkOshi",v==="推し"?"":v)}catch(e){}el.hidden=true;begin(v)};
+  $("start").onclick=go;$("oform").onsubmit=e=>{e.preventDefault();go()};
+}
+function begin(oshi){sid++;closePlist();S=fresh(oshi);hud();render();runEvents();startClock()}
+showIntro();
+})();
+</script>
+</body>
+</html>
