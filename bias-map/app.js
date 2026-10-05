@@ -62,7 +62,7 @@ function initMembers(){
 }
 $('#toMap').onclick=()=>{if(state.member)show('screen-map');};
 function currentAxes(){
- if(state.preset!=='custom')return PRESETS[state.preset]||PRESETS.type;
+ if(state.preset!=='custom')return PRESETS[state.preset]||PRESETS.island;
  const a={name:'CUSTOM'};['Top','Bottom','Left','Right'].forEach(k=>a[k.toLowerCase()]=$('#custom'+k).value.trim());return a;
 }
 function validPreset(){return !!state.preset&&(state.preset!=='custom'||['top','bottom','left','right'].every(k=>currentAxes()[k]));}
