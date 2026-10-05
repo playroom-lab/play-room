@@ -4,7 +4,10 @@
      → プレビューCanvas(1200×1200)をCSSで縮小表示しているだけなので、
        写真位置・ラベル位置・名前位置が保存画像とズレることはない
    ・結果画像デザインは scrap / archive / idcard の3種類
-   ・背景テーマ選択・ポエム風テキスト・白手書きラベルは削除済み
+   ・編集はプレビュー上で直接おこなう
+       枠をタップで選択 → ドラッグで位置 / ピンチ・ホイール・ボタンで拡大
+     プレビューは画面に固定表示(スマホは上部に固定)なので、
+     調整しながら常に仕上がりを見られる
    ===================================================================== */
 (function () {
 "use strict";
@@ -43,20 +46,29 @@ var designs = [
 
 var IMAGE_COUNT = 20;
 var IMAGE_ORDER_DESCENDING = true;
+var SCALE_MIN = 100, SCALE_MAX = 300;
 
 /* ---------- 状態 ---------- */
 var currentMemberId = "kairyu";
 var currentDesignId = "scrap";
-var currentThemeId = null;
+var currentThemeId = themes[0].id;          /* 編集中の枠(常にどれか1つ選択) */
 var selectedImages = createEmptySelection();
 var lastFocused = null;
+var fineOpen = false;                       /* 「こまかく調整」の開閉を再描画しても保つ */
+var slotGeom = [];                          /* 枠ごとの位置 {m,x,y,w,h}(描画時に記録) */
+var lastImgs = [];                          /* 直近に描いた画像(ドラッグ量の換算用) */
+var pointers = new Map();                   /* プレビュー上のポインタ */
+var pinch = null;
 
 /* ---------- 要素 ---------- */
 var memberTags = document.getElementById("memberTags");
 var designChips = document.getElementById("designChips");
 var designHint = document.getElementById("designHint");
-var themeList = document.getElementById("themeList");
+var slotGrid = document.getElementById("slotGrid");
+var editor = document.getElementById("editor");
 var previewCanvas = document.getElementById("previewCanvas");
+var overlay = document.getElementById("overlay");
+var viewBtn = document.getElementById("viewBtn");
 var saveBtn = document.getElementById("saveBtn");
 var statusEl = document.getElementById("status");
 var progressEl = document.getElementById("progress");
@@ -66,22 +78,25 @@ var modalPhotoGrid = document.getElementById("modalPhotoGrid");
 var uploadInput = document.getElementById("uploadInput");
 var modalUploadBtn = document.getElementById("modalUploadBtn");
 var closeButton = photoModal.querySelector(".close-button");
-var tapeB = document.getElementById("tapeB");
 var userNameInput = document.getElementById("userNameInput");
 var saveFallback = document.getElementById("saveFallback");
 var fallbackImage = document.getElementById("fallbackImage");
 var fallbackClose = document.getElementById("fallbackClose");
+var viewModal = document.getElementById("viewModal");
+var viewImage = document.getElementById("viewImage");
+var viewClose = document.getElementById("viewClose");
 
 init();
 
 function init() {
   renderMemberTags();
   renderDesignChips();
-  renderThemeCards();
-  schedulePreview();
+  buildOverlay();
+  renderAll();
 
   userNameInput.addEventListener("input", schedulePreview);
   saveBtn.addEventListener("click", saveResultImage);
+  viewBtn.addEventListener("click", openView);
   modalUploadBtn.addEventListener("click", function(){ uploadInput.click(); });
   uploadInput.addEventListener("change", handleUploadFromInput);
   closeButton.addEventListener("click", closeModal);
@@ -92,26 +107,23 @@ function init() {
   saveFallback.addEventListener("click", function (e) {
     if (e.target === saveFallback) saveFallback.classList.remove("active");
   });
+  viewClose.addEventListener("click", function(){ viewModal.classList.remove("active"); });
+  viewModal.addEventListener("click", function (e) {
+    if (e.target === viewModal) viewModal.classList.remove("active");
+  });
   document.addEventListener("keydown", function (e) {
     if (e.key !== "Escape") return;
     if (photoModal.classList.contains("active")) closeModal();
     if (saveFallback.classList.contains("active")) saveFallback.classList.remove("active");
+    if (viewModal.classList.contains("active")) viewModal.classList.remove("active");
   });
+
+  bindEditor();
+  bindOverlay();
 
   // フォントが読み込めたらプレビューを描き直す(字形が変わるため)
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(schedulePreview);
-  }
-
-  if ("IntersectionObserver" in window) {
-    var io = new IntersectionObserver(function (es) {
-      es.forEach(function (en) {
-        if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
-      });
-    }, { threshold: .1 });
-    document.querySelectorAll(".settle").forEach(function (el) { io.observe(el); });
-  } else {
-    document.querySelectorAll(".settle").forEach(function (el) { el.classList.add("in"); });
   }
 }
 
@@ -123,6 +135,13 @@ function createEmptySelection() {
 function getCurrentMember() {
   return members.find(function (m) { return m.id === currentMemberId; }) || members[0];
 }
+function themeIndex(id) {
+  return themes.findIndex(function (t) { return t.id === id; });
+}
+function getTheme(id) {
+  return themes[themeIndex(id)] || themes[0];
+}
+function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
 /* 表示名: 自由入力があればそれを優先。空欄なら選択中のメンバー名。 */
 function getDisplayName() {
   var free = userNameInput.value.trim();
@@ -130,6 +149,24 @@ function getDisplayName() {
 }
 function isFreeNameUsed() {
   return userNameInput.value.trim().length > 0;
+}
+
+/* すべて描き直す(選択・枠一覧・編集パネル・プレビュー・進み具合) */
+function renderAll() {
+  renderSlots();
+  renderEditor();
+  syncOverlayState();
+  updateProgress();
+  schedulePreview();
+}
+
+/* 編集する枠を切り替える */
+function selectSlot(themeId) {
+  if (themeId === currentThemeId) return;
+  currentThemeId = themeId;
+  renderSlots();
+  renderEditor();
+  syncOverlayState();
 }
 
 /* ---------- メンバー名札 ---------- */
@@ -144,24 +181,23 @@ function renderMemberTags() {
     b.addEventListener("click", function () {
       if (m.id === currentMemberId) return;
       currentMemberId = m.id;
-      currentThemeId = null;
+      currentThemeId = themes[0].id;
       selectedImages = createEmptySelection(); // 切替でリセット(現行仕様)
       renderMemberTags();
-      renderThemeCards();
-      schedulePreview();
+      renderAll();
       setStatus(m.name + " の6枚をつくる", true);
     });
     memberTags.appendChild(b);
   });
 }
 
-/* ---------- デザインチップ ---------- */
+/* ---------- デザイン切替(プレビューの真下) ---------- */
 function renderDesignChips() {
   designChips.innerHTML = "";
   designs.forEach(function (d) {
     var b = document.createElement("button");
     b.type = "button";
-    b.className = "chip";
+    b.className = "seg-btn";
     b.textContent = d.label;
     b.setAttribute("aria-pressed", d.id === currentDesignId ? "true" : "false");
     b.addEventListener("click", function () {
@@ -175,153 +211,185 @@ function renderDesignChips() {
   designHint.textContent = cur ? cur.hint : "";
 }
 
-/* ---------- 位置調整(プレビューと保存で同じ値を使用) ---------- */
+/* ---------- 位置調整(プレビューと保存で同じ値を使用) ----------
+   posX / posY: 余白のうち何%ぶん動かすか(0〜100)
+   scale: 枠にぴったり収まる大きさを100としたときの倍率 */
 function adjustDefaults(s) {
   s = s || {};
+  var up = s.type === "upload";
   return {
     posX: s.posX !== undefined ? s.posX : 50,
-    posY: s.posY !== undefined ? s.posY : 20,
+    posY: s.posY !== undefined ? s.posY : (up ? 20 : 0),
     scale: s.scale !== undefined ? s.scale : 100
   };
 }
 function getImageAdjustStyle(selected) {
-  if (!selected || selected.type !== "upload") return "";
+  if (!selected) return "";
   var a = adjustDefaults(selected);
   return "object-position:" + a.posX + "% " + a.posY + "%;transform:scale(" + (a.scale / 100) + ");";
 }
+function hasPhoto(themeId) {
+  return !!(selectedImages[themeId] && selectedImages[themeId].src);
+}
+function nextEmptyTheme(fromId) {
+  var start = themeIndex(fromId);
+  for (var k = 1; k <= themes.length; k++) {
+    var t = themes[(start + k) % themes.length];
+    if (!hasPhoto(t.id)) return t;
+  }
+  return null;
+}
 
-/* ---------- 台紙(6枠) ---------- */
-function renderThemeCards() {
-  themeList.innerHTML = "";
+/* ---------- 枠一覧(テンプレと同じ 3×2 の並び) ---------- */
+function renderSlots() {
+  slotGrid.innerHTML = "";
   themes.forEach(function (theme) {
     var selected = selectedImages[theme.id];
-    var card = document.createElement("article");
-    card.className = "frame";
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "slot-chip" + (selected ? " filled" : "");
+    b.setAttribute("aria-pressed", theme.id === currentThemeId ? "true" : "false");
+    b.setAttribute("aria-label", theme.label + (selected ? "(選択ずみ)" : "(まだ)"));
+    b.dataset.theme = theme.id;
 
-    var slot = document.createElement("div");
-    slot.className = "frame-slot";
+    var th = document.createElement("span");
+    th.className = "thumb";
     if (selected && selected.src) {
-      var mp = document.createElement("button");
-      mp.type = "button";
-      mp.className = "mini-print";
-      mp.setAttribute("aria-label", theme.label + " の写真を変える");
       var im = document.createElement("img");
       im.src = selected.src;
-      im.alt = theme.label + " 選択中";
-      var st = getImageAdjustStyle(selected);
-      if (st) im.style.cssText = st;
-      mp.appendChild(im);
-      mp.addEventListener("click", function(){ openModal(theme.id); });
-      slot.appendChild(mp);
+      im.alt = "";
+      im.style.cssText = getImageAdjustStyle(selected);
+      th.appendChild(im);
     } else {
-      var emp = document.createElement("button");
-      emp.type = "button";
-      emp.className = "empty";
-      emp.innerHTML = "ここに<br>1枚";
-      emp.setAttribute("aria-label", theme.label + " の写真を選ぶ");
-      emp.addEventListener("click", function(){ openModal(theme.id); });
-      slot.appendChild(emp);
+      th.textContent = "+";
     }
+    var nm = document.createElement("span");
+    nm.className = "nm";
+    nm.textContent = theme.label;
 
-    var body = document.createElement("div");
-    body.className = "frame-body";
-    body.innerHTML =
-      "<h3>" + theme.label + "</h3>" +
-      '<p class="state">' + (selected ? (selected.type === "upload" ? "アップロード画像を選択中" : "選択中") : "まだえらんでない") + "</p>";
-
-    var actions = document.createElement("div");
-    actions.className = "frame-actions";
-
-    var pick = document.createElement("button");
-    pick.type = "button";
-    pick.className = "btn primary";
-    pick.textContent = "候補から選ぶ";
-    pick.addEventListener("click", function(){ openModal(theme.id); });
-
-    var up = document.createElement("button");
-    up.type = "button";
-    up.className = "btn";
-    up.textContent = "画像をアップロード";
-    up.addEventListener("click", function(){
-      currentThemeId = theme.id;
-      uploadInput.click();
-    });
-
-    actions.appendChild(pick);
-    actions.appendChild(up);
-
-    if (selected) {
-      var clr = document.createElement("button");
-      clr.type = "button";
-      clr.className = "btn quiet";
-      clr.textContent = "リセット";
-      clr.addEventListener("click", function(){
-        selectedImages[theme.id] = null;
-        renderThemeCards();
-        schedulePreview();
-      });
-      actions.appendChild(clr);
-    }
-    body.appendChild(actions);
-
-    var adjust = document.createElement("div");
-    adjust.className = "adjust" + (selected && selected.type === "upload" ? " is-visible" : "");
-    if (selected && selected.type === "upload") {
-      buildSliders(adjust, theme.id);
-    }
-    body.appendChild(adjust);
-
-    card.appendChild(slot);
-    card.appendChild(body);
-    themeList.appendChild(card);
-  });
-  updateProgress();
-}
-
-function buildSliders(container, themeId) {
-  var rows = [
-    { key: "posX",  label: "左右位置",  min: 0,  max: 100 },
-    { key: "posY",  label: "上下位置",  min: 0,  max: 100 },
-    { key: "scale", label: "拡大・縮小", min: 80, max: 180 }
-  ];
-  rows.forEach(function (row) {
-    var wrap = document.createElement("div");
-    var label = document.createElement("label");
-    var name = document.createElement("span");
-    name.textContent = row.label;
-    var val = document.createElement("span");
-    var input = document.createElement("input");
-    input.type = "range";
-    input.min = row.min;
-    input.max = row.max;
-    input.setAttribute("aria-label", row.label);
-    var cur = adjustDefaults(selectedImages[themeId])[row.key];
-    input.value = cur;
-    val.textContent = cur + "%";
-    input.addEventListener("input", function () {
-      var v = Number(input.value);
-      val.textContent = v + "%";
-      if (selectedImages[themeId]) {
-        selectedImages[themeId][row.key] = v;
-        updateThumbFor(themeId);
-        schedulePreview();
-      }
-    });
-    label.appendChild(name);
-    label.appendChild(val);
-    wrap.appendChild(label);
-    wrap.appendChild(input);
-    container.appendChild(wrap);
+    b.appendChild(th);
+    b.appendChild(nm);
+    b.addEventListener("click", function () { selectSlot(theme.id); });
+    slotGrid.appendChild(b);
   });
 }
-
-function updateThumbFor(themeId) {
-  var idx = themes.findIndex(function (t) { return t.id === themeId; });
-  var card = themeList.children[idx];
-  if (!card) return;
-  var img = card.querySelector(".mini-print img");
+function updateChipThumb(themeId) {
+  var chip = slotGrid.querySelector('[data-theme="' + themeId + '"] img');
   var s = selectedImages[themeId];
-  if (img && s) img.style.cssText = getImageAdjustStyle(s);
+  if (chip && s) chip.style.cssText = getImageAdjustStyle(s);
+}
+
+/* ---------- 編集パネル(選んだ枠の操作) ---------- */
+function renderEditor() {
+  var theme = getTheme(currentThemeId);
+  var idx = themeIndex(theme.id);
+  var s = selectedImages[theme.id];
+  var photo = !!(s && s.src);
+  var a = adjustDefaults(s);
+  var next = photo ? nextEmptyTheme(theme.id) : null;
+
+  var h = "";
+  h += '<div class="ed-head"><span class="ed-eyebrow">いま編集中 ' + (idx + 1) + "/" + themes.length + "</span>";
+  h += "<h3>" + theme.label + "</h3>";
+  h += '<p class="ed-state">' + (photo ? (s.type === "upload" ? "アップロード画像" : "候補から選択") : "まだ写真がありません") + "</p></div>";
+
+  h += '<div class="ed-actions">';
+  h += '<button type="button" class="btn pick" data-act="pick">' + (photo ? "別の写真にする" : "候補から選ぶ") + "</button>";
+  h += '<button type="button" class="btn" data-act="upload">画像をアップロード</button>';
+  h += "</div>";
+
+  if (photo) {
+    h += '<div class="ed-zoom"><span class="ed-label" id="zoomLabel">拡大</span>';
+    h += '<button type="button" class="step" data-act="zoomOut" aria-label="縮小">−</button>';
+    h += '<input type="range" id="zoomRange" data-key="scale" min="' + SCALE_MIN + '" max="' + SCALE_MAX + '" step="1" value="' + a.scale + '" aria-labelledby="zoomLabel">';
+    h += '<button type="button" class="step" data-act="zoomIn" aria-label="拡大">＋</button>';
+    h += '<output id="zoomOut" class="val">' + a.scale + "%</output></div>";
+    h += '<p class="hint"><span class="when-touch">プレビューの写真をドラッグで移動、2本指で拡大できます。</span>';
+    h += '<span class="when-mouse">プレビューの写真をドラッグで移動、ホイールで拡大できます。</span></p>';
+
+    h += '<details class="fine"' + (fineOpen ? " open" : "") + "><summary>スライダーで細かく調整</summary>";
+    h += '<div class="fine-row"><label for="posXRange">左右</label><input type="range" id="posXRange" data-key="posX" min="0" max="100" value="' + a.posX + '"><output class="val" data-for="posX">' + a.posX + "%</output></div>";
+    h += '<div class="fine-row"><label for="posYRange">上下</label><input type="range" id="posYRange" data-key="posY" min="0" max="100" value="' + a.posY + '"><output class="val" data-for="posY">' + a.posY + "%</output></div>";
+    h += '<button type="button" class="btn quiet" data-act="resetAdjust">位置と拡大をもどす</button></details>';
+
+    h += '<div class="ed-foot">';
+    if (next) h += '<button type="button" class="btn next" data-act="next">つぎの空き枠へ（' + next.label + "）→</button>";
+    h += '<button type="button" class="btn quiet" data-act="clear">この枠をからにする</button></div>';
+  } else {
+    h += '<p class="hint">「候補から選ぶ」か、自分の画像をアップロードしてください。</p>';
+  }
+  editor.innerHTML = h;
+}
+
+/* 編集パネルのボタン・スライダー(再描画のたびに作り直さないよう委譲で受ける) */
+function bindEditor() {
+  editor.addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-act]");
+    if (!btn) return;
+    var act = btn.dataset.act;
+    var s = selectedImages[currentThemeId];
+    if (act === "pick") openModal(currentThemeId);
+    else if (act === "upload") uploadInput.click();
+    else if (act === "zoomIn" && s) setScale(adjustDefaults(s).scale + 10);
+    else if (act === "zoomOut" && s) setScale(adjustDefaults(s).scale - 10);
+    else if (act === "resetAdjust" && s) {
+      delete s.posX; delete s.posY; delete s.scale;
+      afterAdjust(true);
+    }
+    else if (act === "clear") {
+      selectedImages[currentThemeId] = null;
+      renderAll();
+    }
+    else if (act === "next") {
+      var n = nextEmptyTheme(currentThemeId);
+      if (n) { selectSlot(n.id); }
+    }
+  });
+  editor.addEventListener("input", function (e) {
+    var input = e.target;
+    if (!input.dataset || !input.dataset.key) return;
+    var s = selectedImages[currentThemeId];
+    if (!s) return;
+    var v = Number(input.value);
+    if (input.dataset.key === "scale") v = clamp(v, SCALE_MIN, SCALE_MAX);
+    s[input.dataset.key] = v;
+    afterAdjust(false);
+  });
+  editor.addEventListener("toggle", function (e) {
+    if (e.target.classList && e.target.classList.contains("fine")) fineOpen = e.target.open;
+  }, true);
+}
+
+function setScale(v) {
+  var s = selectedImages[currentThemeId];
+  if (!s) return;
+  s.scale = clamp(Math.round(v), SCALE_MIN, SCALE_MAX);
+  afterAdjust(true);
+}
+
+/* 調整後に、表示中の数値・枠一覧のサムネ・プレビューをそろえる */
+function afterAdjust(syncInputs) {
+  var s = selectedImages[currentThemeId];
+  if (!s) return;
+  var a = adjustDefaults(s);
+  var z = document.getElementById("zoomOut");
+  if (z) z.textContent = a.scale + "%";
+  var vx = editor.querySelector('[data-for="posX"]');
+  var vy = editor.querySelector('[data-for="posY"]');
+  if (vx) vx.textContent = Math.round(a.posX) + "%";
+  if (vy) vy.textContent = Math.round(a.posY) + "%";
+  if (syncInputs !== false) {
+    var rs = editor.querySelectorAll("input[data-key]");
+    for (var i = 0; i < rs.length; i++) rs[i].value = a[rs[i].dataset.key];
+  } else {
+    /* スライダー操作中は、操作していない側(ドラッグで動いた値)だけ合わせる */
+    var all = editor.querySelectorAll("input[data-key]");
+    for (var j = 0; j < all.length; j++) {
+      if (document.activeElement !== all[j]) all[j].value = a[all[j].dataset.key];
+    }
+  }
+  updateChipThumb(currentThemeId);
+  schedulePreview();
 }
 
 function updateProgress() {
@@ -336,20 +404,174 @@ function updateProgress() {
   }
 }
 
+/* ---------- プレビュー上の操作(タップで選択・ドラッグで移動・ピンチで拡大) ---------- */
+var SVG_NS_UNUSED = 1;
+
+function buildOverlay() {
+  var SVG_NS = "http://www.w3.org/2000/svg";
+  overlay.setAttribute("viewBox", "0 0 " + previewCanvas.width + " " + previewCanvas.height);
+  overlay.innerHTML = "";
+  themes.forEach(function (theme, i) {
+    var halo = document.createElementNS(SVG_NS, "polygon");
+    halo.setAttribute("class", "halo");
+    halo.setAttribute("data-halo", i);
+    var hit = document.createElementNS(SVG_NS, "polygon");
+    hit.setAttribute("class", "hit");
+    hit.setAttribute("data-i", i);
+    hit.setAttribute("tabindex", "0");
+    hit.setAttribute("role", "button");
+    hit.setAttribute("aria-label", theme.label + " の枠");
+    overlay.appendChild(halo);
+    overlay.appendChild(hit);
+  });
+}
+
+/* 描画で記録した枠の位置から、選択用の多角形を作り直す(回転している枠にも合う) */
+function updateOverlayGeometry() {
+  themes.forEach(function (theme, i) {
+    var g = slotGeom[i];
+    if (!g) return;
+    var corners = [[g.x, g.y], [g.x + g.w, g.y], [g.x + g.w, g.y + g.h], [g.x, g.y + g.h]];
+    var pts = corners.map(function (c) {
+      var p = g.m.transformPoint(new DOMPoint(c[0], c[1]));
+      return p.x.toFixed(1) + "," + p.y.toFixed(1);
+    }).join(" ");
+    var hit = overlay.querySelector('[data-i="' + i + '"]');
+    var halo = overlay.querySelector('[data-halo="' + i + '"]');
+    if (hit) hit.setAttribute("points", pts);
+    if (halo) halo.setAttribute("points", pts);
+  });
+}
+
+/* 選択中の枠・写真の有無を見た目と操作モードに反映 */
+function syncOverlayState() {
+  var cur = themeIndex(currentThemeId);
+  overlay.querySelectorAll("[data-i]").forEach(function (el) {
+    var i = Number(el.getAttribute("data-i"));
+    var on = i === cur;
+    el.classList.toggle("on", on);
+    el.classList.toggle("has", hasPhoto(themes[i].id));
+    el.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+  overlay.querySelectorAll("[data-halo]").forEach(function (el) {
+    el.classList.toggle("on", Number(el.getAttribute("data-halo")) === cur);
+  });
+  /* 写真のある枠を選んでいる間だけ、プレビュー上の指の動きを写真の移動に使う。
+     それ以外はページのスクロールを妨げない。 */
+  overlay.classList.toggle("is-editing", hasPhoto(currentThemeId));
+}
+
+function bindOverlay() {
+  overlay.addEventListener("pointerdown", function (e) {
+    var el = e.target.closest("[data-i]");
+    if (!el) return;
+    var id = themes[Number(el.getAttribute("data-i"))].id;
+    if (id !== currentThemeId) selectSlot(id);
+    if (!hasPhoto(currentThemeId)) return;
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    try { overlay.setPointerCapture(e.pointerId); } catch (err) {}
+    if (pointers.size === 2) startPinch();
+    e.preventDefault();
+  });
+  overlay.addEventListener("pointermove", function (e) {
+    var p = pointers.get(e.pointerId);
+    if (!p) return;
+    var dx = e.clientX - p.x, dy = e.clientY - p.y;
+    p.x = e.clientX; p.y = e.clientY;
+    if (pointers.size >= 2) {
+      updatePinch();
+    } else if (dx || dy) {
+      panBy(dx, dy);
+    }
+  });
+  function endPointer(e) {
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2) pinch = null;
+  }
+  overlay.addEventListener("pointerup", endPointer);
+  overlay.addEventListener("pointercancel", endPointer);
+  overlay.addEventListener("wheel", function (e) {
+    var el = e.target.closest("[data-i]");
+    if (!el || themes[Number(el.getAttribute("data-i"))].id !== currentThemeId) return;
+    var s = selectedImages[currentThemeId];
+    if (!s || !s.src) return;
+    e.preventDefault();
+    setScale(adjustDefaults(s).scale * (e.deltaY < 0 ? 1.07 : 0.93));
+  }, { passive: false });
+
+  /* キーボード: 枠にフォーカスして Enter で選択、矢印で移動、+/-で拡大 */
+  overlay.addEventListener("keydown", function (e) {
+    var el = e.target.closest("[data-i]");
+    if (!el) return;
+    var id = themes[Number(el.getAttribute("data-i"))].id;
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectSlot(id); return; }
+    var s = selectedImages[currentThemeId];
+    if (id !== currentThemeId || !s || !s.src) return;
+    var a = adjustDefaults(s), step = e.shiftKey ? 8 : 2, used = true;
+    if (e.key === "ArrowLeft") s.posX = clamp(a.posX + step, 0, 100);
+    else if (e.key === "ArrowRight") s.posX = clamp(a.posX - step, 0, 100);
+    else if (e.key === "ArrowUp") s.posY = clamp(a.posY + step, 0, 100);
+    else if (e.key === "ArrowDown") s.posY = clamp(a.posY - step, 0, 100);
+    else if (e.key === "+" || e.key === "=") { setScale(a.scale + 10); return; }
+    else if (e.key === "-") { setScale(a.scale - 10); return; }
+    else used = false;
+    if (used) { e.preventDefault(); afterAdjust(true); }
+  });
+}
+
+/* 指(マウス)の移動量を、枠の中の座標(回転も考慮)に直して、写真の表示位置に反映 */
+function panBy(dxClient, dyClient) {
+  var idx = themeIndex(currentThemeId);
+  var g = slotGeom[idx], img = lastImgs[idx], s = selectedImages[currentThemeId];
+  if (!g || !img || !s) return;
+  var rect = overlay.getBoundingClientRect();
+  if (!rect.width) return;
+  var k = previewCanvas.width / rect.width;
+  var dx = dxClient * k, dy = dyClient * k;
+  var m = g.m, det = m.a * m.d - m.b * m.c;
+  if (!det) return;
+  var lx = (m.d * dx - m.c * dy) / det;
+  var ly = (-m.b * dx + m.a * dy) / det;
+  var a = adjustDefaults(s);
+  var base = Math.max(g.w / img.naturalWidth, g.h / img.naturalHeight) * (a.scale / 100);
+  var ox = g.w - img.naturalWidth * base;
+  var oy = g.h - img.naturalHeight * base;
+  if (Math.abs(ox) > 0.5) s.posX = clamp(a.posX + 100 * lx / ox, 0, 100);
+  if (Math.abs(oy) > 0.5) s.posY = clamp(a.posY + 100 * ly / oy, 0, 100);
+  afterAdjust(true);
+}
+
+function pointerDistance() {
+  var pts = Array.from(pointers.values());
+  return Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+}
+function startPinch() {
+  var s = selectedImages[currentThemeId];
+  if (!s) return;
+  var d = pointerDistance();
+  pinch = d > 0 ? { d0: d, s0: adjustDefaults(s).scale } : null;
+}
+function updatePinch() {
+  if (!pinch) { startPinch(); return; }
+  var d = pointerDistance();
+  if (d > 0) setScale(pinch.s0 * d / pinch.d0);
+}
+
 /* ---------- 候補モーダル ---------- */
 function openModal(themeId) {
   currentThemeId = themeId;
   lastFocused = document.activeElement;
-  var theme = themes.find(function (t) { return t.id === themeId; });
+  var theme = getTheme(themeId);
   modalTitle.textContent = theme.label + "を選ぶ";
   renderModalPhotoGrid();
   photoModal.classList.add("active");
   closeButton.focus();
 }
 function closeModal() {
+  var wasOpen = photoModal.classList.contains("active");
   photoModal.classList.remove("active");
   modalPhotoGrid.innerHTML = "";
-  if (lastFocused && lastFocused.focus) lastFocused.focus();
+  if (wasOpen && lastFocused && lastFocused.focus) lastFocused.focus();
 }
 function renderModalPhotoGrid() {
   if (!currentThemeId) return;
@@ -381,9 +603,9 @@ function renderModalPhotoGrid() {
     button.appendChild(img);
     button.addEventListener("click", function () {
       selectedImages[currentThemeId] = { src: img.currentSrc || img.src, type: "preset" };
-      renderThemeCards();
-      schedulePreview();
+      renderAll();
       closeModal();
+      setStatus(getTheme(currentThemeId).label + " に入れました。", true);
     });
     modalPhotoGrid.appendChild(button);
   });
@@ -402,6 +624,7 @@ function handleUploadFromInput(event) {
     setStatus("画像が大きすぎます（20MBまで）。");
     return;
   }
+  var themeId = currentThemeId;
   var reader = new FileReader();
   reader.onerror = function () { setStatus("画像の読み込みに失敗しました。"); };
   reader.onload = function () {
@@ -419,15 +642,23 @@ function handleUploadFromInput(event) {
         c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
         src = c.toDataURL(file.type === "image/png" ? "image/png" : "image/jpeg", 0.92);
       }
-      selectedImages[currentThemeId] = { src: src, type: "upload", posX: 50, posY: 20, scale: 100 };
-      renderThemeCards();
-      schedulePreview();
+      selectedImages[themeId] = { src: src, type: "upload", posX: 50, posY: 20, scale: 100 };
+      currentThemeId = themeId;
+      renderAll();
       closeModal();
-      setStatus("読み込みました。位置と大きさを調整できます。", true);
+      setStatus("読み込みました。プレビューを動かして調整できます。", true);
     };
     img.src = reader.result;
   };
   reader.readAsDataURL(file);
+}
+
+/* プレビューを全画面で大きく見る(保存画像と同じ絵) */
+function openView() {
+  try { viewImage.src = previewCanvas.toDataURL("image/png"); }
+  catch (e) { setStatus("大きく表示できませんでした。"); return; }
+  viewModal.classList.add("active");
+  viewClose.focus();
 }
 
 /* =====================================================================
@@ -516,7 +747,9 @@ async function renderInto(canvas) {
   var ctx = canvas.getContext("2d");
   await ensureFonts();
   var imgs = await loadSelectedImages();
+  if (canvas === previewCanvas) lastImgs = imgs;
   drawDesign(ctx, currentDesignId, imgs);
+  if (canvas === previewCanvas) updateOverlayGeometry();
 }
 
 /* Canvasに描く日本語をすべて含んだサンプル文字列。
@@ -572,8 +805,9 @@ function roundedRectPath(ctx, x, y, w, h, r) {
 
 /* 写真をカバー配置で描く。アップロード画像は posX/posY/scale を反映。
    プリセット画像は「上寄せカバー」(既存挙動)。 */
-function drawCoverImage(ctx, image, x, y, w, h, selected, radius, placeholderColor) {
+function drawCoverImage(ctx, image, x, y, w, h, selected, radius, placeholderColor, slotIndex) {
   ctx.save();
+  if (slotIndex !== undefined) slotGeom[slotIndex] = { m: ctx.getTransform(), x: x, y: y, w: w, h: h };
   if (radius > 0) { roundedRectPath(ctx, x, y, w, h, radius); ctx.clip(); }
   else { ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip(); }
   if (!image) {
@@ -587,9 +821,7 @@ function drawCoverImage(ctx, image, x, y, w, h, selected, radius, placeholderCol
     ctx.restore();
     return;
   }
-  var a;
-  if (selected && selected.type === "upload") a = adjustDefaults(selected);
-  else a = { posX: 50, posY: 0, scale: 100 };
+  var a = adjustDefaults(selected);
   var base = Math.max(w / image.naturalWidth, h / image.naturalHeight) * (a.scale / 100);
   var dw = image.naturalWidth * base;
   var dh = image.naturalHeight * base;
@@ -1066,7 +1298,7 @@ function drawScrap(ctx, imgs) {
     /* 写真 */
     var pw = g.frameW - g.photoPad * 2;
     drawCoverImage(ctx, imgs[i], -pw / 2, -frameH / 2 + g.photoPad, pw, g.photoH,
-      selectedImages[theme.id], 0, "#f0e6d8");
+      selectedImages[theme.id], 0, "#f0e6d8", i);
 
     ctx.restore();
 
@@ -1362,7 +1594,7 @@ function drawArchive(ctx, imgs) {
     ctx.strokeRect(x, y, g.cellW, g.photoH + g.labelH);
     // 写真
     drawCoverImage(ctx, imgs[i], x + 8, y + 8, g.cellW - 16, g.photoH - 8,
-      selectedImages[theme.id], 0, "#e7dcc8");
+      selectedImages[theme.id], 0, "#e7dcc8", i);
     // ラベル行
     var lyy = y + g.photoH + g.labelH / 2;
     ctx.fillStyle = soft;
@@ -1680,7 +1912,7 @@ function drawIdCard(ctx, imgs) {
     ctx.stroke();
     ctx.restore();
     drawCoverImage(ctx, imgs[i], x, y, g.cellW, g.photoH,
-      selectedImages[theme.id], 14, "#f3ede8");
+      selectedImages[theme.id], 14, "#f3ede8", i);
     ctx.strokeStyle = "#ded3cd";
     ctx.lineWidth = 1.2;
     roundedRectPath(ctx, x, y, g.cellW, g.photoH, 14);
@@ -1874,12 +2106,7 @@ function showFallbackImage(canvas) {
   saveFallback.classList.add("active");
 }
 
-function stampTape() {
-  tapeB.classList.remove("stamped");
-  window.requestAnimationFrame(function () {
-    window.requestAnimationFrame(function () { tapeB.classList.add("stamped"); });
-  });
-}
+function stampTape() {}
 
 function setStatus(message, ok) {
   statusEl.textContent = message || "";
