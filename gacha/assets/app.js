@@ -17,7 +17,10 @@ const nums = n => Array.from({length:n}, (_, k) => String(k + 1).padStart(2, '0'
 const NAMES = ['KAIRYU','NAOYA','RAN','SEITO','RYUKI','TAKUTO','HAYATO','EIKI'];
 const MEMBERS = NAMES.map((name, i) => ({
   id: 'mazzel-' + name.toLowerCase(), name, order: i, secret: false,
-  shots: nums(18).map(x => `https://raw.githubusercontent.com/rikomuze/mazzel-gacha/main/photos/${name.toLowerCase()}/${x}.jpg`)
+  shots: [
+    ...nums(18).map(x => `https://raw.githubusercontent.com/rikomuze/mazzel-gacha/main/photos/${name.toLowerCase()}/${x}.jpg`),
+    `photos/${name.toLowerCase()}/19.jpg`   // このリポジトリ内の追加ショット
+  ]
 }));
 MEMBERS.push({ id: 'mazzel-secret', name: 'MAZZEL 集合', order: 99, secret: true,
   shots: nums(16).map(x => `https://raw.githubusercontent.com/rikomuze/mazzel-gacha/main/photos/group/${x}.jpg`) });
@@ -555,7 +558,7 @@ function renderSettings(el) {
     <div class="field"><label for="rate">シークレット排出率：<b id="rv">${roomDoc.secretRate}%</b></label><input type="range" id="rate" min="0" max="20" value="${roomDoc.secretRate}" ${owner ? '' : 'disabled'}></div>
     ${owner && mode === 'room' ? `<h2>開封所を作った人用</h2><div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="resetAll">全員の開封記録をリセット</button></div>` : ''}
     ${mode === 'local' ? '<p class="hint">推しを変えると、ここから先の自引き判定が新しい推しになります。</p>' : ''}
-    <p class="hint">カードの写真は公式アーティスト写真です（各メンバー18ショット、シークレットは集合写真16ショット）。</p>`;
+    <p class="hint">カードの写真は公式アーティスト写真です（各メンバー19ショット、シークレットは集合写真16ショット）。</p>`;
   const q = s => el.querySelector(s);
   if (my && my.name) {
     if (q('#myname')) q('#myname').onchange = e => { const v = e.target.value.trim(); if (v) { my.name = v; saveMe(); renderTop(); } };
