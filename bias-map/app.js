@@ -8,7 +8,7 @@ const PRESETS={
  numa:{no:'03',name:'沼 / 尊い MAP',top:'熱い',bottom:'穏やか',left:'近づきたい',right:'拝んでいたい',corners:['沼','致死量','沼未満','尊い']},
  custom:{no:'04',name:'CUSTOM',top:'',bottom:'',left:'',right:''}
 };
-const CATALOG='https://rikomuze.github.io/oshi-visual-6/images/';
+const CATALOG='https://raw.githubusercontent.com/rikomuze/oshi-visual-6/main/images/';
 const state={member:null,preset:null,photos:[],selectedId:null,projectId:null,createdAt:null,epoch:0};
 const pending=new Set();
 const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
