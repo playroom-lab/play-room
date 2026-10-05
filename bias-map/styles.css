@@ -52,3 +52,9 @@ footer{max-width:720px;margin:0 auto;text-align:center;color:var(--muted);font-s
 
 .map-photo .pic{border-radius:50%;overflow:hidden;background:transparent;box-shadow:1px 2px 5px #28253640}
 .map-photo .pic img{border-radius:50%;object-position:center 30%}
+
+.drag-ghost{position:fixed!important;left:0!important;top:0!important;z-index:9999!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;pointer-events:none!important;touch-action:none!important;will-change:transform;contain:layout paint;line-height:0}
+.drag-ghost .pic{display:block!important;width:100%!important;height:100%!important;padding:0!important;border-radius:50%!important;overflow:hidden!important}
+.drag-ghost img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center 30%!important;border-radius:50%!important;pointer-events:none!important}
+.is-dragging{opacity:.28}
+.map-photo,.tray-photo{will-change:transform;-webkit-tap-highlight-color:transparent}
