@@ -21,9 +21,9 @@
     <section id="screen-start" class="screen is-active">
       <div class="hero-label">03 / MAKE YOUR MAP</div>
       <h1>BIAS <span>MAP</span></h1>
-      <p class="intro">写真をマップに並べて、<br>あなたの「推し解釈」を一枚に。</p>
-      <button class="primary big start-button" id="startNew">マップをつくる</button>
-      <p class="sub">「推しビジュ6選」の写真から選べます。<br>自分の写真のアップロードもOK。</p>
+      <p class="intro">お題を選んで、8人をマップに配置。<br>あなたの「メンバー解釈」を一枚に。</p>
+      <button class="primary big start-button" id="startNew">メンバー解釈MAPをつくる</button>
+      <p class="sub">18のお題＋CUSTOM。8人を好きな位置にドラッグして遊べます。</p>
       <section id="savedSection" class="saved-section" hidden>
         <div class="saved-head"><span>SAVED MAPS</span><small>この端末に保存したMAP</small></div>
         <div id="savedList" class="saved-list"></div>
@@ -81,9 +81,9 @@
     </section>
 
     <section id="screen-editor" class="screen">
-      <div class="step">04 / EDIT</div>
-      <h2>マップを調整する</h2>
-      <p class="sub">写真を指でドラッグして位置を調整できます。</p>
+      <div class="step">02 / PLACE MEMBERS</div>
+      <h2>8人を配置する</h2>
+      <p class="sub">メンバーを指でドラッグして、あなたの解釈に近い位置へ。</p>
 
       <div class="selection-summary">
         <span id="summaryMember">EIKI</span>
@@ -121,13 +121,13 @@
       </div>
 
       <div class="actions">
-        <button class="ghost" data-back="screen-photos">写真選択に戻る</button>
+        <button class="ghost" data-back="screen-map">お題選択に戻る</button>
         <button id="toPreview" class="primary">完成画像を見る</button>
       </div>
     </section>
 
     <section id="screen-preview" class="screen">
-      <div class="step">05 / RESULT</div>
+      <div class="step">03 / RESULT</div>
       <h2>完成画像</h2>
       <div class="result-sheet">
         <canvas id="resultCanvas" width="1080" height="1080"></canvas>
