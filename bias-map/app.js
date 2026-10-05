@@ -37,10 +37,10 @@ function buildMemberMarkers(){
   src:catalogUrl(name,20),
   label:name,
   member:name,
-  x:(i%cols+1)/(cols+1),
-  y:(Math.floor(i/cols)+1)/(rows+1),
+  x:.5,
+  y:.5,
   size:52,
-  _placed:true
+  _placed:false
  }));
 }
 const status=t=>{$('#appStatus').textContent=t;};
@@ -179,7 +179,7 @@ function applyAxes(){
  const a=currentAxes();['Top','Bottom','Left','Right'].forEach(k=>$('#axis'+k).textContent=a[k.toLowerCase()]);
  ['Tl','Tr','Bl','Br'].forEach((k,i)=>{const el=$('#corner'+k);el.textContent=a.corners?a.corners[i]:'';el.hidden=!a.corners;});
 }
-function layoutInitial(){const cols=Math.min(3,state.photos.length),rows=Math.ceil(state.photos.length/cols);state.photos.forEach((p,i)=>{if(p._placed)return;p.x=(i%cols+1)/(cols+1);p.y=(Math.floor(i/cols)+1)/(rows+1);p._placed=true;});}
+function layoutInitial(){}
 function enterEditor(){
  if(!state.photos.length||pending.size)return;
  applyAxes();layoutInitial();$('#summaryMember').textContent='8 MEMBERS';$('#summaryMap').textContent=currentAxes().name;
@@ -188,11 +188,12 @@ function enterEditor(){
 $('#toEditor').onclick=enterEditor;
 function constrain(p){const half=p.size/800;p.x=Math.max(half,Math.min(1-half,p.x));p.y=Math.max(half,Math.min(1-half,p.y));}
 function renderMap(){
- const box=$('#mapPhotos');box.innerHTML='';
+ const box=$('#mapPhotos'),tray=$('#memberTray');box.innerHTML='';tray.innerHTML='';
  state.photos.forEach((p,i)=>{
-  constrain(p);const b=document.createElement('button');b.type='button';b.className='map-photo';b.dataset.id=p.id;b.setAttribute('aria-label','写真 '+(i+1)+'を選択');b.setAttribute('aria-pressed',String(p.id===state.selectedId));
-  b.style.left=p.x*100+'%';b.style.top=p.y*100+'%';
-  const pic=document.createElement('span');pic.className='pic';const img=document.createElement('img');img.src=p.src;img.alt='';img.draggable=false;pic.appendChild(img);b.appendChild(pic);const tag=document.createElement('span');tag.className='member-tag';tag.textContent=p.label||'';b.appendChild(tag);box.appendChild(b);
+  const b=document.createElement('button');b.type='button';b.dataset.id=p.id;b.setAttribute('aria-label','メンバー写真 '+(i+1));b.setAttribute('aria-pressed',String(p.id===state.selectedId));
+  const pic=document.createElement('span');pic.className='pic';const img=document.createElement('img');img.src=p.src;img.alt='';img.draggable=false;pic.appendChild(img);b.appendChild(pic);
+  if(p._placed){constrain(p);b.className='map-photo';b.style.left=p.x*100+'%';b.style.top=p.y*100+'%';box.appendChild(b);}
+  else{b.className='tray-photo';tray.appendChild(b);}
  });updateSizes();selectPhoto(state.selectedId);
 }
 function updateSizes(){
@@ -206,12 +207,12 @@ function selectPhoto(id){
 }
 let drag=null;
 $('#mapPhotos').onpointerdown=e=>{
- const el=e.target.closest('.map-photo');if(!el)return;const p=state.photos.find(x=>x.id===el.dataset.id);if(!p)return;
+ const el=e.target.closest('.map-photo,.tray-photo');if(!el)return;const p=state.photos.find(x=>x.id===el.dataset.id);if(!p)return;
  e.preventDefault();selectPhoto(p.id);const rect=$('#mapCanvas').getBoundingClientRect();
- drag={p,el,pointerId:e.pointerId,rect,dx:e.clientX-rect.left-p.x*rect.width,dy:e.clientY-rect.top-p.y*rect.height};
+ drag={p,el,pointerId:e.pointerId,rect,fromTray:!p._placed,dx:p._placed?e.clientX-rect.left-p.x*rect.width:0,dy:p._placed?e.clientY-rect.top-p.y*rect.height:0};
  try{el.setPointerCapture(e.pointerId);}catch(_){}
 };
-window.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.pointerId)return;e.preventDefault();drag.p.x=(e.clientX-drag.rect.left-drag.dx)/drag.rect.width;drag.p.y=(e.clientY-drag.rect.top-drag.dy)/drag.rect.height;constrain(drag.p);drag.el.style.left=drag.p.x*100+'%';drag.el.style.top=drag.p.y*100+'%';},{passive:false});
+window.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.pointerId)return;e.preventDefault();const inside=e.clientX>=drag.rect.left&&e.clientX<=drag.rect.right&&e.clientY>=drag.rect.top&&e.clientY<=drag.rect.bottom;if(drag.fromTray&&!inside)return;if(drag.fromTray){drag.fromTray=false;drag.p._placed=true;drag.el.className='map-photo';$('#mapPhotos').appendChild(drag.el);}drag.p.x=(e.clientX-drag.rect.left-drag.dx)/drag.rect.width;drag.p.y=(e.clientY-drag.rect.top-drag.dy)/drag.rect.height;constrain(drag.p);drag.el.style.left=drag.p.x*100+'%';drag.el.style.top=drag.p.y*100+'%';},{passive:false});
 const endDrag=()=>{drag=null;};window.addEventListener('pointerup',endDrag);window.addEventListener('pointercancel',endDrag);
 $('#mapPhotos').onclick=e=>{const el=e.target.closest('.map-photo');if(el)selectPhoto(el.dataset.id);};
 $('#mapPhotos').onkeydown=e=>{
@@ -226,7 +227,7 @@ $('#deleteSelected').onclick=()=>{if(!state.selectedId)return;removePhoto(state.
 async function busy(button,text,action){if(button.disabled)return;const label=button.textContent;button.disabled=true;button.textContent=text;try{await action();}catch(e){status(e.message||'処理に失敗しました。もう一度試してください。');}finally{button.disabled=false;button.textContent=label;}}
 function cover(ctx,img,x,y,size){const scale=Math.max(size/img.width,size/img.height),side=size/scale;ctx.drawImage(img,(img.width-side)/2,(img.height-side)/2,side,side,x,y,size,size);}
 async function drawResult(){
- if(!state.photos.length)throw new Error('写真を1枚以上選んでください。');
+ if(state.photos.some(p=>!p._placed))throw new Error('8人全員をマップに配置してください。');
  const images=await Promise.all(state.photos.map(p=>loadImage(p.src)));
  if(document.fonts){try{await Promise.all([document.fonts.load('900 46px "Zen Kaku Gothic New"'),document.fonts.load('700 22px "Zen Kaku Gothic New"')]);}catch(_){}}
  const c=$('#resultCanvas'),ctx=c.getContext('2d'),a=currentAxes(),mx=110,my=145,mw=860,mh=860,cx=540,cy=my+mh/2;
@@ -244,9 +245,8 @@ async function drawResult(){
  }
  ctx.fillStyle='#282536';ctx.font='700 21px "Zen Kaku Gothic New",sans-serif';ctx.textAlign='center';ctx.fillText(a.top,cx,my-12);ctx.fillText(a.bottom,cx,my+mh+29);
  ctx.save();ctx.translate(mx-31,cy);ctx.rotate(-Math.PI/2);ctx.fillText(a.left,0,0);ctx.restore();ctx.save();ctx.translate(mx+mw+31,cy);ctx.rotate(Math.PI/2);ctx.fillText(a.right,0,0);ctx.restore();
- state.photos.forEach((p,i)=>{const size=p.size/400*mw,frame=3/400*mw,x=mx+p.x*mw-size/2,y=my+p.y*mh-size/2;
-  ctx.save();ctx.fillStyle='#282536';ctx.fillRect(x+2,y+3,size,size);ctx.fillStyle='#fff';ctx.fillRect(x,y,size,size);cover(ctx,images[i],x+frame,y+frame,size-2*frame);
-  const label=p.label||'';if(label){ctx.font='700 15px "Zen Kaku Gothic New",sans-serif';ctx.textAlign='center';const tw=ctx.measureText(label).width+18,lh=24,lx=x+size/2-tw/2,ly=y+size-22;ctx.fillStyle='rgba(40,37,54,.88)';ctx.fillRect(lx,ly,tw,lh);ctx.fillStyle='#fff';ctx.fillText(label,x+size/2,ly+17);}ctx.restore();
+ state.photos.forEach((p,i)=>{if(!p._placed)return;const size=p.size/400*mw,frame=3/400*mw,x=mx+p.x*mw-size/2,y=my+p.y*mh-size/2;
+  ctx.save();ctx.fillStyle='#282536';ctx.fillRect(x+2,y+3,size,size);ctx.fillStyle='#fff';ctx.fillRect(x,y,size,size);cover(ctx,images[i],x+frame,y+frame,size-2*frame);ctx.restore();
  });ctx.fillStyle='#625f6d';ctx.textAlign='right';ctx.font='500 14px "Zen Kaku Gothic New",sans-serif';ctx.fillText('PLAY ROOM',1018,1061);
 }
 $('#toPreview').onclick=()=>busy($('#toPreview'),'画像をつくっています…',async()=>{await drawResult();show('screen-preview');$('#saveStatus').textContent='';});
