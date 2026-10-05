@@ -2,12 +2,27 @@
 'use strict';
 const MEMBERS=['KAIRYU','NAOYA','RAN','SEITO','RYUKI','TAKUTO','HAYATO','EIKI'];
 const PRESETS={
- // corners: [左上, 右上, 左下, 右下]。2軸が別方向を測るよう、四隅すべてが想像できる組み合わせにしている
- type:{no:'01',name:'推しタイプ MAP',top:'近い',bottom:'遠い',left:'大人っぽい',right:'あどけない',corners:['彼氏','弟','国宝','天使']},
- reaction:{no:'02',name:'リアクション MAP',top:'静',bottom:'動',left:'癒される',right:'心乱される',corners:['守りたい','しんどい','供給ありがとう','ギャップ沼']},
- numa:{no:'03',name:'沼 / 尊い MAP',top:'熱い',bottom:'穏やか',left:'近づきたい',right:'拝んでいたい',corners:['沼','致死量','沼未満','尊い']},
- custom:{no:'04',name:'CUSTOM',top:'',bottom:'',left:'',right:''}
+ island:{no:'01',name:'無人島に1つだけ持っていく',top:'実用性を優先',bottom:'好きを優先',left:'自分のため',right:'みんなのため'},
+ dinner:{no:'02',name:'夕飯の意見が割れた',top:'自分の意見を通す',bottom:'みんなに合わせる',left:'すぐ決める',right:'じっくり悩む'},
+ birthday:{no:'03',name:'メンバーの誕生日サプライズ',top:'企画・準備を仕切る',bottom:'当日の盛り上げ役',left:'完璧に仕込む',right:'アドリブで盛り上げる'},
+ secret:{no:'04',name:'ひみつの趣味がバレた',top:'開き直って語る',bottom:'できれば隠したい',left:'みんなに広める',right:'ひとりで楽しむ'},
+ lost:{no:'05',name:'道に迷った',top:'自分が先頭に立つ',bottom:'誰かについていく',left:'地図で調べる',right:'人に聞く'},
+ afterparty:{no:'06',name:'打ち上げの終盤',top:'まだ盛り上がる',bottom:'そろそろ帰る',left:'聞き役',right:'話し役'},
+ battery:{no:'07',name:'スマホの充電が残り1%',top:'すぐ対処する',bottom:'もう諦める',left:'誰かに頼る',right:'自力でなんとかする'},
+ karaage:{no:'08',name:'から揚げが最後の一個',top:'遠慮する',bottom:'迷わずいただく',left:'みんなで分ける',right:'自分が食べる'},
+ photo:{no:'09',name:'写真を撮ってもらう',top:'ポーズを決める',bottom:'自然体で写る',left:'納得いくまで撮る',right:'一発でOK'},
+ movie:{no:'10',name:'感動映画のラストシーン',top:'涙が出る',bottom:'泣かずに見る',left:'感想を語りたい',right:'余韻に浸りたい'},
+ capsule:{no:'11',name:'タイムカプセルに手紙を書く',top:'未来の自分へ宣言',bottom:'今の思い出を残す',left:'しっかり長文',right:'ひとことだけ'},
+ convenience:{no:'12',name:'コンビニで新商品を見つけた',top:'すぐ買ってみる',bottom:'まず様子を見る',left:'自分で楽しむ',right:'みんなに教える'},
+ packing:{no:'13',name:'旅行の荷造り',top:'前日までに準備',bottom:'出発直前に準備',left:'念のため多め',right:'必要最低限'},
+ omikuji:{no:'14',name:'おみくじで大吉が出た',top:'素直に信じて喜ぶ',bottom:'軽く受け流す',left:'みんなに見せる',right:'自分だけで楽しむ'},
+ gift:{no:'15',name:'友達の家に手土産を持っていく',top:'事前にじっくり選ぶ',bottom:'当日その場で選ぶ',left:'定番を選ぶ',right:'珍しいものを選ぶ'},
+ regular:{no:'16',name:'好きなお店の常連になった',top:'新メニューに挑戦',bottom:'いつもの定番',left:'店員さんと話す',right:'静かに過ごす'},
+ hideout:{no:'17',name:'とっておきの隠れ家を見つけた',top:'みんなに教えたい',bottom:'自分だけの秘密',left:'何度も通う',right:'ときどき行く'},
+ hobby:{no:'18',name:'新しい趣味を始めるなら',top:'道具から揃える',bottom:'まず体験する',left:'ひとりで極める',right:'仲間と楽しむ'},
+ custom:{no:'19',name:'CUSTOM',top:'',bottom:'',left:'',right:''}
 };
+const PRESET_TOTAL=Object.keys(PRESETS).length;
 const CATALOG='https://raw.githubusercontent.com/rikomuze/oshi-visual-6/main/images/';
 const state={member:null,preset:null,photos:[],selectedId:null,projectId:null,createdAt:null,epoch:0};
 const pending=new Set();
@@ -59,10 +74,10 @@ function initPresets(){
  Object.entries(PRESETS).forEach(([key,p])=>{
   const card=document.createElement('div');card.className='preset-card';card.dataset.key=key;
   const b=document.createElement('button');b.type='button';b.className='preset-select';b.setAttribute('aria-pressed','false');
-  b.innerHTML='<span class="preset-no">'+p.no+' / 04</span><span class="preset-title">'+p.name+'</span>';
+  b.innerHTML='<span class="preset-no">'+p.no+' / '+String(PRESET_TOTAL).padStart(2,'0')+'</span><span class="preset-title">'+p.name+'</span>';
   card.onclick=()=>{state.preset=key;syncPresets();};card.appendChild(b);
   const spec=document.createElement('div');spec.className='axis-spec';
-  spec.innerHTML=key==='custom'?'<span>上下左右の言葉を自由に入力</span>':'<span><b>縦軸</b>　'+p.top+' / '+p.bottom+'</span><span><b>横軸</b>　'+p.left+' / '+p.right+'</span><span><b>四隅</b>　'+p.corners.join(' / ')+'</span>';
+  spec.innerHTML=key==='custom'?'<span>上下左右の言葉を自由に入力</span>':'<span><b>縦軸</b>　'+p.top+' / '+p.bottom+'</span><span><b>横軸</b>　'+p.left+' / '+p.right+'</span>';
   card.appendChild(spec);
   if(key==='custom'){
    const fields=document.createElement('div');fields.className='custom-fields';
@@ -215,7 +230,7 @@ async function drawResult(){
  ctx.save();ctx.translate(mx-31,cy);ctx.rotate(-Math.PI/2);ctx.fillText(a.left,0,0);ctx.restore();ctx.save();ctx.translate(mx+mw+31,cy);ctx.rotate(Math.PI/2);ctx.fillText(a.right,0,0);ctx.restore();
  state.photos.forEach((p,i)=>{const size=p.size/400*mw,frame=3/400*mw,x=mx+p.x*mw-size/2,y=my+p.y*mh-size/2;
   ctx.save();ctx.fillStyle='#282536';ctx.fillRect(x+2,y+3,size,size);ctx.fillStyle='#fff';ctx.fillRect(x,y,size,size);cover(ctx,images[i],x+frame,y+frame,size-2*frame);ctx.restore();
- });ctx.fillStyle='#625f6d';ctx.textAlign='right';ctx.font='500 14px "Zen Kaku Gothic New",sans-serif';ctx.fillText('MUZE PLAY ROOM / MUZE TOOL BOX',1018,1061);
+ });ctx.fillStyle='#625f6d';ctx.textAlign='right';ctx.font='500 14px "Zen Kaku Gothic New",sans-serif';ctx.fillText('PLAY ROOM',1018,1061);
 }
 $('#toPreview').onclick=()=>busy($('#toPreview'),'画像をつくっています…',async()=>{await drawResult();show('screen-preview');$('#saveStatus').textContent='';});
 function canvasBlob(){return new Promise((resolve,reject)=>$('#resultCanvas').toBlob(b=>b?resolve(b):reject(new Error('画像を書き出せませんでした。')),'image/png'));}
@@ -242,7 +257,7 @@ function openDB(){return new Promise((resolve,reject)=>{
   const version=db.version+1;db.close();const upgrade=indexedDB.open('muze-tool-box',version);
   upgrade.onupgradeneeded=()=>{if(!upgrade.result.objectStoreNames.contains('biasMaps'))upgrade.result.createObjectStore('biasMaps',{keyPath:'id'});};
   upgrade.onsuccess=()=>{upgrade.result.onversionchange=()=>upgrade.result.close();resolve(upgrade.result);};upgrade.onerror=request.onerror;
-  upgrade.onblocked=()=>reject(new Error('ほかのMUZEツールを閉じて、もう一度保存してください。'));
+  upgrade.onblocked=()=>reject(new Error('ほかのPLAY ROOMツールを閉じて、もう一度保存してください。'));
  };
 });}
 async function dbAction(mode,action){
