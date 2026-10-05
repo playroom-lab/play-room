@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>BIAS MAP｜PLAY ROOM</title>
+  <meta name="description" content="推しの写真を2軸マップに並べて、自分だけの推し解釈図を作るツール">
+  <meta name="theme-color" content="#f7f5ed">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css?v=20261002-playroom-r3">
+</head>
+<body>
+  <nav class="global-nav" aria-label="PLAY ROOM">
+    <a class="brand" href="../">PLAY ROOM</a>
+    <span class="current">BIAS MAP</span>
+  </nav>
+
+  <main class="shell">
+    <section id="screen-start" class="screen is-active">
+      <div class="hero-label">03 / MAKE YOUR MAP</div>
+      <h1>BIAS <span>MAP</span></h1>
+      <p class="intro">写真をマップに並べて、<br>あなたの「推し解釈」を一枚に。</p>
+      <button class="primary big start-button" id="startNew">マップをつくる</button>
+      <p class="sub">「推しビジュ6選」の写真から選べます。<br>自分の写真のアップロードもOK。</p>
+      <section id="savedSection" class="saved-section" hidden>
+        <div class="saved-head"><span>SAVED MAPS</span><small>この端末に保存したMAP</small></div>
+        <div id="savedList" class="saved-list"></div>
+      </section>
+
+    </section>
+
+    <section id="screen-member" class="screen">
+      <div class="step">01 / MEMBER</div>
+      <h2>誰のマップを作る？</h2>
+      <div id="memberList" class="member-list" role="group" aria-label="メンバーを選ぶ"></div>
+      <div class="actions">
+        <button class="ghost" data-back="screen-start">戻る</button>
+        <button id="toMap" class="primary" disabled>次へ</button>
+      </div>
+    </section>
+
+    <section id="screen-map" class="screen">
+      <div class="step-row">
+        <div class="step">02 / MAP</div>
+        <div class="type-count">4 TYPES</div>
+      </div>
+      <h2>どんなマップを作る？</h2>
+      <div id="presetList" class="preset-list"></div>
+      <div class="actions">
+        <button class="ghost" data-back="screen-member">戻る</button>
+        <button id="toPhotos" class="primary" disabled>次へ</button>
+      </div>
+    </section>
+
+    <section id="screen-photos" class="screen">
+      <div class="step">03 / PHOTO</div>
+      <h2>写真を選ぶ</h2>
+      <p class="sub">1〜9枚まで選べます。写真の追加・削除はあとからできます。</p>
+      <div class="photo-sources" role="group" aria-label="写真の選び方">
+        <button id="useCatalog" class="source-button is-selected" aria-pressed="true">推しビジュ6選から選ぶ</button>
+        <button id="useUpload" class="source-button" aria-pressed="false">写真をアップロード</button>
+      </div>
+      <section id="catalogSection" aria-label="推しビジュ6選の写真">
+        <p class="catalog-heading"><b id="catalogMember"></b><span>20枚から選ぶ</span></p>
+        <div id="catalogGrid" class="catalog-grid"></div>
+      </section>
+      <label class="upload-box" id="uploadSection" hidden>
+        <input id="photoInput" type="file" accept="image/*" multiple>
+        <span>アップロードする写真を選ぶ</span>
+        <small>画像を選択（合計9枚まで・1枚20MBまで）</small>
+      </label>
+      <p id="photoStatus" class="photo-status" role="status" aria-live="polite"></p>
+      <p class="selected-heading">選んだ写真 <strong id="photoCount">0 / 9</strong></p>
+      <div id="photoList" class="photo-list"></div>
+      <div class="actions">
+        <button class="ghost" data-back="screen-map">戻る</button>
+        <button id="toEditor" class="primary" disabled>次へ</button>
+      </div>
+    </section>
+
+    <section id="screen-editor" class="screen">
+      <div class="step">04 / EDIT</div>
+      <h2>マップを調整する</h2>
+      <p class="sub">写真を指でドラッグして位置を調整できます。</p>
+
+      <div class="selection-summary">
+        <span id="summaryMember">EIKI</span>
+        <span id="summaryMap">治安 MAP</span>
+      </div>
+
+      <div id="mapWrap" class="map-wrap">
+        <div class="axis-label axis-top" id="axisTop">治安良</div>
+        <div class="axis-label axis-bottom" id="axisBottom">治安悪</div>
+        <div class="axis-label axis-left" id="axisLeft">クール</div>
+        <div class="axis-label axis-right" id="axisRight">色気</div>
+        <div id="mapCanvas" class="map-canvas" aria-label="BIAS MAP">
+          <div class="axis-line vertical"></div>
+          <div class="axis-line horizontal"></div>
+          <div class="corner-label corner-tl" id="cornerTl"></div>
+          <div class="corner-label corner-tr" id="cornerTr"></div>
+          <div class="corner-label corner-bl" id="cornerBl"></div>
+          <div class="corner-label corner-br" id="cornerBr"></div>
+          <div id="mapPhotos" class="map-photos"></div>
+        </div>
+      </div>
+
+      <div class="edit-panel">
+        <label class="all-size-control">全写真サイズ
+          <input id="allSizeRange" type="range" min="40" max="100" value="58">
+          <small>すべての写真に一括で適用</small>
+        </label>
+        <div class="individual-size-control">
+          <div id="selectedHint">写真をタップすると個別にサイズを調整できます</div>
+          <label>選択中の写真サイズ
+            <input id="sizeRange" type="range" min="40" max="100" value="58" disabled>
+          </label>
+          <button id="deleteSelected" class="danger" disabled>この写真を外す</button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="ghost" data-back="screen-photos">写真選択に戻る</button>
+        <button id="toPreview" class="primary">完成画像を見る</button>
+      </div>
+    </section>
+
+    <section id="screen-preview" class="screen">
+      <div class="step">05 / RESULT</div>
+      <h2>完成画像</h2>
+      <div class="result-sheet">
+        <canvas id="resultCanvas" width="1080" height="1080"></canvas>
+      </div>
+      <div class="actions stacked">
+        <button id="saveImage" class="primary big">画像を保存</button>
+        <button id="saveProject" class="secondary">このMAPを端末に保存</button>
+        <button class="ghost" data-back="screen-editor">編集に戻る</button>
+      </div>
+      <p id="saveStatus" class="status" aria-live="polite"></p>
+    </section>
+    <p id="appStatus" class="status" role="status" aria-live="polite"></p>
+  </main>
+
+  <div id="fallback" class="modal" role="dialog" aria-modal="true" aria-labelledby="fallbackTitle" hidden>
+    <div class="modal-inner">
+      <button id="closeFallback" class="modal-close" aria-label="閉じる">×</button>
+      <h3 id="fallbackTitle">画像を長押しして保存</h3>
+      <p>Xなどのアプリ内ブラウザでは自動保存できないことがあります。</p>
+      <img id="fallbackImage" alt="完成したBIAS MAP">
+    </div>
+  </div>
+
+  <footer>MAZZEL・BMSG公式とは関係のない非公式ファンメイドツールです。<br>PLAY ROOM</footer>
+  <script src="./app.js?v=20261002-playroom-r3"></script>
+</body>
+</html>
