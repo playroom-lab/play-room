@@ -39,9 +39,9 @@ var themes = [
 
 /* 結果画像デザイン(3種類) */
 var designs = [
+  { id: "idcard",  label: "証明写真",    hint: "プロフィール登録シート風のドキュメントデザイン" },
   { id: "scrap",   label: "スクラップ",  hint: "紙もの・マステ・推し活ノートっぽい甘めデザイン" },
-  { id: "archive", label: "アーカイブ",  hint: "雑誌の誌面みたいな、きれいめアーカイブカード" },
-  { id: "idcard",  label: "証明写真",    hint: "プロフィール登録シート風のドキュメントデザイン" }
+  { id: "archive", label: "アーカイブ",  hint: "雑誌の誌面みたいな、きれいめアーカイブカード" }
 ];
 
 var IMAGE_COUNT = 20;
@@ -50,7 +50,7 @@ var SCALE_MIN = 100, SCALE_MAX = 300;
 
 /* ---------- 状態 ---------- */
 var currentMemberId = "kairyu";
-var currentDesignId = "scrap";
+var currentDesignId = "idcard";
 var currentThemeId = themes[0].id;          /* 編集中の枠(常にどれか1つ選択) */
 var selectedImages = createEmptySelection();
 var lastFocused = null;
