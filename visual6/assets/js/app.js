@@ -725,6 +725,7 @@ async function ensureFonts() {
       document.fonts.load("400 80px 'Zen Kaku Gothic New'", JP_SAMPLE),
       document.fonts.load("500 80px 'Zen Kaku Gothic New'", JP_SAMPLE),
       document.fonts.load("700 80px 'Zen Kaku Gothic New'", JP_SAMPLE),
+      document.fonts.load("900 80px 'Zen Kaku Gothic New'", JP_SAMPLE + "NAME0123456789#"),
       document.fonts.load("400 60px 'Klee One'", JP_SAMPLE),
       document.fonts.load("600 60px 'Klee One'", JP_SAMPLE),
       document.fonts.load("400 60px 'HanaToChoucho'", JP_SAMPLE + HANA_SAMPLE),
@@ -912,9 +913,295 @@ function fitText(ctx, text, maxW, baseFont, baseSize, minSize) {
 /* ---------- デザイン振り分け ---------- */
 function drawDesign(ctx, designId, imgs) {
   ctx.clearRect(0, 0, W, H);
-  if (designId === "archive") drawArchive(ctx, imgs);
+  if (designId === "archive") drawArchiveV2(ctx, imgs);
   else if (designId === "idcard") drawIdCard(ctx, imgs);
-  else drawScrap(ctx, imgs);
+  else drawScrapV2(ctx, imgs);
+}
+
+/* =====================================================================
+   PLAY ROOM トンマナ版 デザイン(スクラップ / アーカイブ)
+   ピンク #ffd5df / 黄緑 #dcefa5 / 薄紫 #ded7ff + インク #282536
+   ・太い黒フチ + ずらし影 + 蛍光ペン風のハイライトで統一
+   ===================================================================== */
+var PR = { ink: "#282536", bg: "#f7f5ed", paper: "#fffdf8", pink: "#ffd5df", lime: "#dcefa5", violet: "#ded7ff", sky: "#cfe3ff", berry: "#a43e61" };
+var G9 = "'Zen Kaku Gothic New','Noto Sans JP','Hiragino Sans','Yu Gothic',sans-serif";
+var PR_CYCLE = [PR.pink, PR.lime, PR.violet, PR.lime, PR.violet, PR.pink];
+
+/* インクの縁 + ずらし影つきの箱 */
+function prBox(ctx, x, y, w, h, r, fill, lw, off) {
+  ctx.save();
+  if (off) { ctx.fillStyle = PR.ink; roundedRectPath(ctx, x + off, y + off, w, h, r); ctx.fill(); }
+  ctx.fillStyle = fill;
+  roundedRectPath(ctx, x, y, w, h, r);
+  ctx.fill();
+  if (lw) { ctx.strokeStyle = PR.ink; ctx.lineWidth = lw; ctx.stroke(); }
+  ctx.restore();
+}
+function prText(ctx, text, x, y, size, color, align, weight, ls) {
+  ctx.save();
+  ctx.font = (weight || 900) + " " + size + "px " + G9;
+  ctx.fillStyle = color || PR.ink;
+  ctx.textAlign = align || "left";
+  ctx.textBaseline = "alphabetic";
+  setLS(ctx, ls || 0);
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
+/* 蛍光ペン風のハイライト帯 */
+function prHighlight(ctx, x, y, w, h, color, rot) {
+  ctx.save();
+  ctx.translate(x + w / 2, y + h / 2);
+  ctx.rotate((rot || 0) * Math.PI / 180);
+  ctx.fillStyle = color;
+  ctx.fillRect(-w / 2, -h / 2, w, h);
+  ctx.restore();
+}
+function prStar(ctx, cx, cy, r, fill, lw) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.beginPath();
+  for (var k = 0; k < 10; k++) {
+    var rr = k % 2 ? r * 0.48 : r, a = -Math.PI / 2 + k * Math.PI / 5;
+    ctx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr);
+  }
+  ctx.closePath();
+  ctx.fillStyle = fill; ctx.fill();
+  ctx.strokeStyle = PR.ink; ctx.lineWidth = lw || 4; ctx.lineJoin = "round"; ctx.stroke();
+  ctx.restore();
+}
+function prHeart(ctx, cx, cy, size, fill, lw) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.scale(size / 30, size / 30);
+  ctx.beginPath();
+  ctx.moveTo(0, 9);
+  ctx.bezierCurveTo(-1, 4, -14, -2, -14, -9);
+  ctx.bezierCurveTo(-14, -16, -6, -17, 0, -10);
+  ctx.bezierCurveTo(6, -17, 14, -16, 14, -9);
+  ctx.bezierCurveTo(14, -2, 1, 4, 0, 9);
+  ctx.closePath();
+  ctx.fillStyle = fill; ctx.fill();
+  ctx.restore();
+  ctx.save();
+  ctx.translate(cx, cy); ctx.scale(size / 30, size / 30);
+  ctx.beginPath();
+  ctx.moveTo(0, 9);
+  ctx.bezierCurveTo(-1, 4, -14, -2, -14, -9);
+  ctx.bezierCurveTo(-14, -16, -6, -17, 0, -10);
+  ctx.bezierCurveTo(6, -17, 14, -16, 14, -9);
+  ctx.bezierCurveTo(14, -2, 1, 4, 0, 9);
+  ctx.closePath();
+  ctx.strokeStyle = PR.ink; ctx.lineWidth = (lw || 4) * 30 / size; ctx.lineJoin = "round"; ctx.stroke();
+  ctx.restore();
+}
+function prTape(ctx, cx, cy, w, h, deg, color) {
+  ctx.save();
+  ctx.translate(cx, cy); ctx.rotate(deg * Math.PI / 180);
+  ctx.globalAlpha = 0.9;
+  ctx.fillStyle = color;
+  ctx.fillRect(-w / 2, -h / 2, w, h);
+  ctx.globalAlpha = 1;
+  ctx.strokeStyle = "rgba(40,37,54,.25)"; ctx.lineWidth = 1.5;
+  ctx.strokeRect(-w / 2, -h / 2, w, h);
+  ctx.restore();
+}
+/* ラベルのピル */
+function prPill(ctx, cx, cy, w, h, fill, text, size, rot) {
+  ctx.save();
+  ctx.translate(cx, cy); ctx.rotate((rot || 0) * Math.PI / 180);
+  prBox(ctx, -w / 2, -h / 2, w, h, h / 2, fill, 3.5, 4);
+  var s = size;
+  ctx.font = "900 " + s + "px " + G9;
+  while (ctx.measureText(text).width > w - 28 && s > 14) { s -= 1; ctx.font = "900 " + s + "px " + G9; }
+  ctx.fillStyle = PR.ink; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.fillText(text, 0, 2);
+  ctx.restore();
+}
+function prDots(ctx, x, y, w, h, gap, color, r) {
+  ctx.save();
+  ctx.fillStyle = color;
+  for (var yy = y + gap / 2; yy < y + h; yy += gap)
+    for (var xx = x + gap / 2 + (((yy - y) / gap) % 2 ? gap / 2 : 0); xx < x + w; xx += gap) {
+      ctx.beginPath(); ctx.arc(xx, yy, r, 0, Math.PI * 2); ctx.fill();
+    }
+  ctx.restore();
+}
+
+/* ---------- スクラップ(ステッカー・コラージュ) ---------- */
+function drawScrapV2(ctx, imgs) {
+  /* 背景: ピンク + ドット */
+  ctx.fillStyle = PR.pink;
+  ctx.fillRect(0, 0, W, H);
+  prDots(ctx, 0, 0, W, H, 40, "rgba(255,255,255,.55)", 5);
+  /* 背景の大きな色面 */
+  ctx.save();
+  ctx.fillStyle = PR.violet;
+  ctx.translate(1100, 60); ctx.rotate(0.35);
+  roundedRectPath(ctx, -150, -90, 300, 180, 30); ctx.fill();
+  ctx.restore();
+  ctx.save();
+  ctx.fillStyle = PR.lime;
+  ctx.translate(90, 1150); ctx.rotate(-0.25);
+  roundedRectPath(ctx, -180, -80, 360, 160, 30); ctx.fill();
+  ctx.restore();
+
+  /* タイトル */
+  prPill(ctx, 150, 62, 240, 46, PR.ink, "", 22, -3);
+  ctx.save();
+  ctx.translate(150, 62); ctx.rotate(-3 * Math.PI / 180);
+  ctx.fillStyle = PR.ink; roundedRectPath(ctx, -120, -23, 240, 46, 23); ctx.fill();
+  ctx.font = "900 22px " + G9; ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  setLS(ctx, 4); ctx.fillText("推しビジュ6選", 0, 2);
+  ctx.restore();
+  prHighlight(ctx, 58, 118, 560, 40, PR.lime, -1.2);
+  prText(ctx, "MY VISUAL", 56, 176, 104, PR.ink, "left", 900, -1);
+  /* 6 のバッジ */
+  ctx.save();
+  ctx.translate(690, 130);
+  ctx.rotate(8 * Math.PI / 180);
+  prBox(ctx, -62, -62, 124, 124, 62, PR.violet, 5, 6);
+  ctx.font = "900 92px " + G9; ctx.fillStyle = PR.ink; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.fillText("6", 0, 6);
+  ctx.restore();
+  prStar(ctx, 790, 60, 26, PR.lime, 4);
+
+  /* 名前タグ(右上) */
+  ctx.save();
+  ctx.translate(990, 118); ctx.rotate(3 * Math.PI / 180);
+  prBox(ctx, -150, -60, 300, 120, 14, PR.paper, 4, 7);
+  prText(ctx, "NAME", -128, -24, 20, PR.berry, "left", 900, 3);
+  var nm = getDisplayName();
+  var ns = fitText(ctx, nm, 260, "900 {S}px " + G9, 52, 24);
+  prText(ctx, nm, -128, 34, ns, PR.ink, "left", 900, 0);
+  ctx.restore();
+  prTape(ctx, 990, 52, 110, 32, -4, PR.lime);
+
+  /* ノート紙面 */
+  prBox(ctx, 36, 250, 1128, 860, 12, PR.paper, 5, 10);
+  ctx.save();
+  ctx.strokeStyle = "rgba(164,62,97,.16)"; ctx.lineWidth = 2;
+  for (var ly = 290; ly < 1110; ly += 40) { ctx.beginPath(); ctx.moveTo(52, ly); ctx.lineTo(1148, ly); ctx.stroke(); }
+  ctx.restore();
+
+  /* ポラロイド 3×2 */
+  var fw = 332, ph = 300, pad = 14, bottom = 64, fh = pad + ph + bottom;
+  var xs = [74, 434, 794], ys = [292, 706];
+  var rots = [-2.4, 1.6, -1.2, 1.8, -2, 1.4];
+  var tapes = [PR.violet, PR.pink, PR.lime, PR.pink, PR.lime, PR.violet];
+  themes.forEach(function (theme, i) {
+    var col = i % 3, row = Math.floor(i / 3);
+    var cx = xs[col] + fw / 2, cy = ys[row] + fh / 2;
+    ctx.save();
+    ctx.translate(cx, cy); ctx.rotate(rots[i] * Math.PI / 180);
+    prBox(ctx, -fw / 2, -fh / 2, fw, fh, 4, "#fff", 4.5, 8);
+    var px = -fw / 2 + pad, py = -fh / 2 + pad, pw = fw - pad * 2;
+    drawCoverImage(ctx, imgs[i], px, py, pw, ph, selectedImages[theme.id], 0, "#f0ecf8", i);
+    ctx.save();
+    ctx.strokeStyle = PR.ink; ctx.lineWidth = 3.5;
+    ctx.strokeRect(px, py, pw, ph);
+    ctx.restore();
+    /* 番号バッジ */
+    ctx.save();
+    ctx.translate(-fw / 2 + 4, -fh / 2 + 4);
+    prBox(ctx, -8, -8, 60, 38, 12, PR_CYCLE[i], 3.5, 0);
+    ctx.font = "900 24px " + G9; ctx.fillStyle = PR.ink; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(String(i + 1).padStart(2, "0"), 22, 12);
+    ctx.restore();
+    /* ラベル */
+    prPill(ctx, 0, fh / 2 - bottom / 2 + 2, fw - 60, 46, PR_CYCLE[i], theme.label, 28, -rots[i] * 0.7);
+    ctx.restore();
+    prTape(ctx, cx + (i % 2 ? 30 : -30), ys[row] - 4, 96, 30, rots[i] * 3, tapes[i]);
+  });
+
+  /* 小物 */
+  prHeart(ctx, 52, 600, 44, PR.pink, 4);
+  prStar(ctx, 1146, 640, 28, PR.violet, 4);
+  prStar(ctx, 40, 880, 20, PR.lime, 3.5);
+
+  /* フッター */
+  prPill(ctx, 190, 1160, 270, 44, PR.violet, "PLAY ROOM", 24, -2);
+  prText(ctx, formatDate(new Date()), 1150, 1168, 26, PR.ink, "right", 900, 2);
+}
+
+/* ---------- アーカイブ(誌面・雑誌風) ---------- */
+function drawArchiveV2(ctx, imgs) {
+  ctx.fillStyle = PR.bg;
+  ctx.fillRect(0, 0, W, H);
+  /* 外枠 */
+  ctx.save();
+  ctx.strokeStyle = PR.ink; ctx.lineWidth = 6;
+  ctx.strokeRect(20, 20, W - 40, H - 40);
+  ctx.restore();
+
+  /* 流れる帯(黄緑) */
+  ctx.save();
+  ctx.fillStyle = PR.lime;
+  ctx.fillRect(20, 20, W - 40, 56);
+  ctx.strokeStyle = PR.ink; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.moveTo(20, 76); ctx.lineTo(W - 20, 76); ctx.stroke();
+  ctx.beginPath(); ctx.rect(20, 20, W - 40, 56); ctx.clip();
+  var tick = "PLAY ROOM  ✦  MY VISUAL 6  ✦  ARCHIVE CARD  ✦  ";
+  ctx.font = "900 24px " + G9; ctx.fillStyle = PR.ink; ctx.textBaseline = "middle"; setLS(ctx, 3);
+  var tw = ctx.measureText(tick).width;
+  for (var tx = 30; tx < W; tx += tw) ctx.fillText(tick, tx, 50);
+  ctx.restore();
+
+  /* タイトル */
+  prHighlight(ctx, 54, 168, 720, 44, PR.pink, 0);
+  ctx.save();
+  var tsz = fitText(ctx, "MY VISUAL 6", 770, "900 {S}px " + G9, 126, 60);
+  ctx.restore();
+  prText(ctx, "MY VISUAL 6", 50, 224, tsz, PR.ink, "left", 900, -2);
+  prText(ctx, "推しビジュ6選 ─ ARCHIVE No." + serialNo().replace("MTB-", ""), 56, 112, 24, PR.ink, "left", 900, 3);
+
+  /* 名前ボックス */
+  prBox(ctx, 836, 100, 316, 138, 8, PR.violet, 4.5, 8);
+  prText(ctx, "NAME", 858, 138, 20, PR.ink, "left", 900, 4);
+  var nm = getDisplayName();
+  ctx.save();
+  var ns = fitText(ctx, nm, 270, "900 {S}px " + G9, 62, 28);
+  ctx.restore();
+  prText(ctx, nm, 858, 196, ns, PR.ink, "left", 900, 0);
+  prText(ctx, formatDate(new Date()), 1130, 222, 20, PR.ink, "right", 700, 1);
+
+  /* 6セル */
+  var cw = 352, hdr = 44, ph = 292, gapX = 24, x0 = 48;
+  var ys = [272, 650];
+  themes.forEach(function (theme, i) {
+    var col = i % 3, row = Math.floor(i / 3);
+    var x = x0 + col * (cw + gapX), y = ys[row];
+    var h = hdr + ph;
+    prBox(ctx, x, y, cw, h, 6, "#fff", 4, 7);
+    /* ヘッダー帯 */
+    ctx.save();
+    ctx.fillStyle = PR_CYCLE[i];
+    ctx.fillRect(x + 2, y + 2, cw - 4, hdr - 2);
+    ctx.strokeStyle = PR.ink; ctx.lineWidth = 3.5;
+    ctx.beginPath(); ctx.moveTo(x, y + hdr); ctx.lineTo(x + cw, y + hdr); ctx.stroke();
+    ctx.restore();
+    prText(ctx, "No." + String(i + 1).padStart(2, "0"), x + 16, y + 31, 24, PR.ink, "left", 900, 1);
+    ctx.save();
+    var ls = fitText(ctx, theme.label, cw - 130, "900 {S}px " + G9, 24, 14);
+    ctx.restore();
+    prText(ctx, theme.label, x + cw - 16, y + 31, ls, PR.ink, "right", 900, 0);
+    drawCoverImage(ctx, imgs[i], x + 2, y + hdr + 2, cw - 4, ph - 4, selectedImages[theme.id], 0, "#f0ecf8", i);
+  });
+
+  /* 下段: キーワード + バーコード */
+  var by = 1042;
+  prText(ctx, "VISUAL KEYWORDS", 52, by + 10, 20, PR.berry, "left", 900, 3);
+  var px = 52, py = by + 24;
+  themes.forEach(function (theme, i) {
+    ctx.font = "900 22px " + G9;
+    var w = ctx.measureText("#" + theme.label).width + 30;
+    if (px + w > 800) { px = 52; py += 44; }
+    prBox(ctx, px, py, w, 36, 18, PR_CYCLE[i], 3, 0);
+    prText(ctx, "#" + theme.label, px + 15, py + 26, 22, PR.ink, "left", 900, 0);
+    px += w + 10;
+  });
+  prBox(ctx, 850, by - 12, 302, 108, 8, "#fff", 4, 6);
+  drawBarcode(ctx, idCode(), 868, by + 2, 266, 52, PR.ink);
+  prText(ctx, idCode(), 868, by + 84, 20, PR.ink, "left", 900, 2);
 }
 
 /* =====================================================================
