@@ -13,14 +13,19 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt
 const $ = id => document.getElementById(id);
 const nums = n => Array.from({length:n}, (_, k) => String(k + 1).padStart(2, '0'));
 
+/* ---------- lightweight remote images ---------- */
+const PRfast = (url, w = 420) => /^https:\/\/raw\.githubusercontent\.com\//.test(url)
+  ? 'https://wsrv.nl/?url=' + encodeURIComponent(url.replace(/^https:\/\//, '')) + '&w=' + w + '&output=jpg&q=78'
+  : url;
+
 /* ---------- members (static) ---------- */
 const NAMES = ['KAIRYU','NAOYA','RAN','SEITO','RYUKI','TAKUTO','HAYATO','EIKI'];
 const MEMBERS = NAMES.map((name, i) => ({
   id: 'mazzel-' + name.toLowerCase(), name, order: i, secret: false,
-  shots: nums(18).map(x => `https://raw.githubusercontent.com/rikomuze/mazzel-gacha/main/photos/${name.toLowerCase()}/${x}.jpg`)
+  shots: nums(18).map(x => PRfast(`https://raw.githubusercontent.com/rikomuze/mazzel-gacha/main/photos/${name.toLowerCase()}/${x}.jpg`, 420))
 }));
 MEMBERS.push({ id: 'mazzel-secret', name: 'MAZZEL 集合', order: 99, secret: true,
-  shots: nums(16).map(x => `https://raw.githubusercontent.com/rikomuze/mazzel-gacha/main/photos/group/${x}.jpg`) });
+  shots: nums(16).map(x => PRfast(`https://raw.githubusercontent.com/rikomuze/mazzel-gacha/main/photos/group/${x}.jpg`, 420)) });
 const M = id => MEMBERS.find(m => m.id === id);
 const NORMALS = MEMBERS.filter(m => !m.secret);
 const SECRETS = MEMBERS.filter(m => m.secret);
@@ -224,7 +229,7 @@ function renderTop() {
     .sort((a, b) => (a === me ? -1 : b === me ? 1 : 0) || (players[b].pulls - players[a].pulls));
   $('players').innerHTML = ids.map(id => {
     const p = players[id], o = M(p.oshi);
-    return `<div class="pchip ${id === me ? 'me on' : ''}"><span class="dot">${o ? `<img src="${esc(o.shots[0])}" alt="">` : '?'}</span>${esc(p.name)}${id === me ? '（自分）' : ''} <small>${p.pulls}袋</small></div>`;
+    return `<div class="pchip ${id === me ? 'me on' : ''}"><span class="dot">${o ? `<img src="${esc(o.shots[0])}" alt="" loading="lazy" decoding="async">` : '?'}</span>${esc(p.name)}${id === me ? '（自分）' : ''} <small>${p.pulls}袋</small></div>`;
   }).join('');
 
   // 結果・コレクション・設定のタブは、参加して袋を開けられる状態になってから出す
@@ -239,7 +244,7 @@ function renderTop() {
 // 推しを写真で選ぶボタンの並び
 function oshiPicker(sel) {
   return `<div class="oshi-pick" role="radiogroup" aria-label="推し">${NORMALS.map(m =>
-    `<button type="button" role="radio" aria-checked="${m.id === sel}" data-oshi="${m.id}"><img src="${esc(m.shots[0])}" alt=""><span>${esc(m.name)}</span></button>`).join('')}</div>`;
+    `<button type="button" role="radio" aria-checked="${m.id === sel}" data-oshi="${m.id}"><img src="${esc(m.shots[0])}" alt="" loading="lazy" decoding="async"><span>${esc(m.name)}</span></button>`).join('')}</div>`;
 }
 function bindPicker(form) {
   form.querySelectorAll('[data-oshi]').forEach(b => b.onclick = () => {
@@ -314,7 +319,7 @@ function renderInvite() {
     <code class="url">${esc(url)}</code>
     <div class="actions">${navigator.share ? '<button class="btn" id="shareLink">招待リンクを送る</button>' : ''}<button class="btn ${navigator.share ? 'ghost' : ''}" id="copyInvite">リンクをコピー</button></div>
     <div class="joined"><span class="lbl">参加中</span>${[me, ...others.map(([id]) => id)].map(id => { const q = players[id], o = M(q?.oshi);
-      return q ? `<span class="pchip ${id === me ? 'me on' : ''}"><span class="dot">${o ? `<img src="${esc(o.shots[0])}" alt="">` : ''}</span>${esc(q.name)}${id === me ? '（自分）' : ''}</span>` : ''; }).join('')}
+      return q ? `<span class="pchip ${id === me ? 'me on' : ''}"><span class="dot">${o ? `<img src="${esc(o.shots[0])}" alt="" loading="lazy" decoding="async">` : ''}</span>${esc(q.name)}${id === me ? '（自分）' : ''}</span>` : ''; }).join('')}
       ${others.length ? '' : '<span class="wait">お友達を待っています…</span>'}</div>
     <button class="btn big" data-act="start">${others.length ? 'みんなで開封をはじめる' : '開封をはじめる'}</button>
     <p class="hint">はじめたあとも、上の「お友達を招待」からいつでも呼べます。</p>
