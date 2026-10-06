@@ -247,6 +247,24 @@ function choicesFor(member) {
   if (member === "group") return [16].concat(existing);
   return ["new3", "new2", "new1"].concat(existing);
 }
+/* 軽量化: 元画像(約1MB)をそのまま読まず、リサイズ配信(wsrv.nl)で小さく読む。失敗したら元画像に自動で戻る */
+function fastSrc(url, w) {
+  if (!/^https:\/\/raw\.githubusercontent\.com\//.test(url)) return url;
+  return "https://wsrv.nl/?url=" + encodeURIComponent(url.replace(/^https:\/\//, "")) + "&w=" + w + "&output=jpg&q=82";
+}
+function origOf(src) {
+  var m = /[?&]url=([^&]+)/.exec(src);
+  return m && src.indexOf("https://wsrv.nl/") === 0 ? "https://" + decodeURIComponent(m[1]) : src;
+}
+function setImg(img, url, w) {
+  img.decoding = "async";
+  img.onerror = function () {
+    var o = origOf(img.src);
+    if (o !== img.src) { img.onerror = null; img.src = o; }
+  };
+  img.src = fastSrc(url, w);
+}
+var SHEET_W = 640, THUMB_W = 260;
 function srcFor(index) { return srcForChoice(cells[index].member, selection[index]); }
 function formatDate(d) {
   return d.getFullYear() + "." + String(d.getMonth() + 1).padStart(2, "0") + "." + String(d.getDate()).padStart(2, "0");
@@ -265,7 +283,7 @@ function renderSheet() {
     shot.setAttribute("aria-label", (index + 1) + "コマ目 " + cell.name + " の写真を変える");
 
     var img = document.createElement("img");
-    img.src = srcFor(index);
+    setImg(img, srcFor(index), SHEET_W);
     img.style.objectPosition = objectPositionFor(selection[index]);
     img.alt = cell.name;
 
@@ -290,7 +308,7 @@ function renderSheet() {
 function updateCellImage(index) {
   var img = sheetGrid.children[index] && sheetGrid.children[index].querySelector("img");
   if (img) {
-    img.src = srcFor(index);
+    setImg(img, srcFor(index), SHEET_W);
     img.style.objectPosition = objectPositionFor(selection[index]);
   }
 }
@@ -311,11 +329,11 @@ function openPicker(index) {
       button.type = "button";
       button.className = "photo-option" + (member === "group" ? " wide" : "");
       var img = document.createElement("img");
-      img.src = srcForChoice(member, num);
+      setImg(img, srcForChoice(member, num), THUMB_W);
       img.style.objectPosition = objectPositionFor(num);
       img.alt = cells[index].name + " " + num;
       img.loading = "lazy";
-      img.onerror = function(){ button.style.display = "none"; };
+      var _fb = img.onerror; img.onerror = function(){ var o = origOf(img.src); if (o !== img.src) { img.src = o; } else { button.style.display = "none"; } };
       if (num === selection[index]) button.classList.add("is-selected");
       button.appendChild(img);
       button.addEventListener("click", function () {
@@ -346,13 +364,18 @@ function randomize() {
 }
 
 /* ---------- Canvas 直描き(プレビューと同じベタ焼きを描く) ---------- */
-function loadCanvasImage(src) {
+function loadOne(src) {
   return new Promise(function (resolve) {
     var image = new Image();
     if (/^https?:/.test(src)) image.crossOrigin = "anonymous";
     image.onload = function(){ resolve(image); };
     image.onerror = function(){ resolve(null); };
     image.src = src;
+  });
+}
+function loadCanvasImage(src) {
+  return loadOne(fastSrc(src, SHEET_W)).then(function (im) {
+    return im || (fastSrc(src, SHEET_W) !== src ? loadOne(src) : null);
   });
 }
 function canvasToBlob(canvas) {
