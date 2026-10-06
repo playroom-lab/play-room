@@ -154,7 +154,7 @@ function renderPrelim() {
   app.innerHTML = head('予選', '4択', `${S.qi + 1} / ${S.groups.length}`, S.qi / S.groups.length) + `
   <h2 class="q">いちばん好きな衣装は？</h2>
   <div class="grid4">${g.map((s, i) => `
-    <button class="pick" data-i="${i}"><img src="${src(s)}" alt="${esc(M(s.m).name)}の衣装"><span>${S.mode === 'box' ? M(s.m).name : 'ABCD'[i]}</span></button>`).join('')}
+    <button class="pick" data-i="${i}"><img src="${src(s)}" alt="${esc(M(s.m).name)}の衣装" loading="lazy" decoding="async"><span>${S.mode === 'box' ? M(s.m).name : 'ABCD'[i]}</span></button>`).join('')}
   </div>
   <p class="hint">選んだ1枚が決勝に進みます（予選${S.groups.length}問で${S.groups.length}衣装が決勝へ）</p>
   <button class="btn ghost" id="undo" ${history.length ? '' : 'disabled'}>ひとつ戻る</button>`;
@@ -165,7 +165,7 @@ function renderInterlude() {
   app.innerHTML = head('予選', 'おわり', `${S.groups.length} / ${S.groups.length}`, 1) + `
   <div class="interlude">
     <h2 class="q">決勝に進む${S.winners.length}衣装</h2>
-    <div class="five ${S.winners.length > 5 ? 'eight' : ''}">${S.winners.map(s => `<img src="${src(s)}" alt="">`).join('')}</div>
+    <div class="five ${S.winners.length > 5 ? 'eight' : ''}">${S.winners.map(s => `<img src="${src(s)}" alt="" loading="lazy" decoding="async">`).join('')}</div>
     <p class="hint">ここからは2択。2枚ずつ比べて、好きな順に並べていきます。</p>
     <button class="btn" id="toFinal" style="width:100%">決勝へ</button>
     <button class="btn ghost" id="undo" style="width:100%">ひとつ戻る</button>
@@ -181,7 +181,7 @@ function renderFinal() {
   app.innerHTML = head('決勝', '2択', `${S.asked + 1}問目`, Math.max(0, done - 1) / Math.max(1, S.total - 1), 'final') + `
   <h2 class="q">どっちの衣装が好き？</h2>
   <div class="grid2">${pair.map(([s, isCur]) => `
-    <button class="pick" data-cur="${isCur ? 1 : 0}"><img src="${src(s)}" alt="${esc(M(s.m).name)}の衣装"><span>${esc(label(s)) || '&nbsp;'}</span></button>`).join('')}
+    <button class="pick" data-cur="${isCur ? 1 : 0}"><img src="${src(s)}" alt="${esc(M(s.m).name)}の衣装" loading="lazy" decoding="async"><span>${esc(label(s)) || '&nbsp;'}</span></button>`).join('')}
     <span class="vs">VS</span>
   </div>
   <p class="hint">写真をタップすると次の問題へ進みます</p>
