@@ -64,8 +64,9 @@ var pinch = null;
 var memberTags = document.getElementById("memberTags");
 var designChips = document.getElementById("designChips");
 var designHint = document.getElementById("designHint");
-var slotGrid = document.getElementById("slotGrid");
 var editor = document.getElementById("editor");
+var editorMore = document.getElementById("editorMore");
+var editRoots = [editor, editorMore];
 var previewCanvas = document.getElementById("previewCanvas");
 var overlay = document.getElementById("overlay");
 var viewBtn = document.getElementById("viewBtn");
@@ -241,43 +242,8 @@ function nextEmptyTheme(fromId) {
 }
 
 /* ---------- 枠一覧(テンプレと同じ 3×2 の並び) ---------- */
-function renderSlots() {
-  slotGrid.innerHTML = "";
-  themes.forEach(function (theme) {
-    var selected = selectedImages[theme.id];
-    var b = document.createElement("button");
-    b.type = "button";
-    b.className = "slot-chip" + (selected ? " filled" : "");
-    b.setAttribute("aria-pressed", theme.id === currentThemeId ? "true" : "false");
-    b.setAttribute("aria-label", theme.label + (selected ? "(選択ずみ)" : "(まだ)"));
-    b.dataset.theme = theme.id;
-
-    var th = document.createElement("span");
-    th.className = "thumb";
-    if (selected && selected.src) {
-      var im = document.createElement("img");
-      im.src = selected.src;
-      im.alt = "";
-      im.style.cssText = getImageAdjustStyle(selected);
-      th.appendChild(im);
-    } else {
-      th.textContent = "+";
-    }
-    var nm = document.createElement("span");
-    nm.className = "nm";
-    nm.textContent = theme.label;
-
-    b.appendChild(th);
-    b.appendChild(nm);
-    b.addEventListener("click", function () { selectSlot(theme.id); });
-    slotGrid.appendChild(b);
-  });
-}
-function updateChipThumb(themeId) {
-  var chip = slotGrid.querySelector('[data-theme="' + themeId + '"] img');
-  var s = selectedImages[themeId];
-  if (chip && s) chip.style.cssText = getImageAdjustStyle(s);
-}
+function renderSlots() {}
+function updateChipThumb() {}
 
 /* ---------- 編集パネル(選んだ枠の操作) ---------- */
 function renderEditor() {
@@ -286,43 +252,44 @@ function renderEditor() {
   var s = selectedImages[theme.id];
   var photo = !!(s && s.src);
   var a = adjustDefaults(s);
-  var next = photo ? nextEmptyTheme(theme.id) : null;
 
-  var h = "";
-  h += '<div class="ed-head"><span class="ed-eyebrow">いま編集中 ' + (idx + 1) + "/" + themes.length + "</span>";
-  h += "<h3>" + theme.label + "</h3>";
-  h += '<p class="ed-state">' + (photo ? (s.type === "upload" ? "アップロード画像" : "候補から選択") : "まだ写真がありません") + "</p></div>";
-
+  /* 固定エリア: 枠名・写真を入れるボタン・拡大スライダー(スクロールなしで常に見える) */
+  var h = '<div class="ed-title"><span class="ed-eyebrow">編集中 ' + (idx + 1) + "/" + themes.length + "</span>";
+  h += "<strong>" + theme.label + "</strong>";
+  h += '<span class="ed-state">' + (photo ? (s.type === "upload" ? "アップロード" : "候補から") : "未選択") + "</span></div>";
   h += '<div class="ed-actions">';
-  h += '<button type="button" class="btn pick" data-act="pick">' + (photo ? "別の写真にする" : "候補から選ぶ") + "</button>";
-  h += '<button type="button" class="btn" data-act="upload">画像をアップロード</button>';
+  h += '<button type="button" class="btn pick" data-act="pick">' + (photo ? "写真を変える" : "候補から選ぶ") + "</button>";
+  h += '<button type="button" class="btn" data-act="upload">アップロード</button>';
+  h += '<button type="button" class="btn next" data-act="next" aria-label="次の枠へ">次へ →</button>';
   h += "</div>";
-
-  if (photo) {
-    h += '<div class="ed-zoom"><span class="ed-label" id="zoomLabel">拡大</span>';
-    h += '<button type="button" class="step" data-act="zoomOut" aria-label="縮小">−</button>';
-    h += '<input type="range" id="zoomRange" data-key="scale" min="' + SCALE_MIN + '" max="' + SCALE_MAX + '" step="1" value="' + a.scale + '" aria-labelledby="zoomLabel">';
-    h += '<button type="button" class="step" data-act="zoomIn" aria-label="拡大">＋</button>';
-    h += '<output id="zoomOut" class="val">' + a.scale + "%</output></div>";
-    h += '<p class="hint"><span class="when-touch">プレビューの写真をドラッグで移動、2本指で拡大できます。</span>';
-    h += '<span class="when-mouse">プレビューの写真をドラッグで移動、ホイールで拡大できます。</span></p>';
-
-    h += '<details class="fine"' + (fineOpen ? " open" : "") + "><summary>スライダーで細かく調整</summary>";
-    h += '<div class="fine-row"><label for="posXRange">左右</label><input type="range" id="posXRange" data-key="posX" min="0" max="100" value="' + a.posX + '"><output class="val" data-for="posX">' + a.posX + "%</output></div>";
-    h += '<div class="fine-row"><label for="posYRange">上下</label><input type="range" id="posYRange" data-key="posY" min="0" max="100" value="' + a.posY + '"><output class="val" data-for="posY">' + a.posY + "%</output></div>";
-    h += '<button type="button" class="btn quiet" data-act="resetAdjust">位置と拡大をもどす</button></details>';
-
-    h += '<div class="ed-foot">';
-    if (next) h += '<button type="button" class="btn next" data-act="next">つぎの空き枠へ（' + next.label + "）→</button>";
-    h += '<button type="button" class="btn quiet" data-act="clear">この枠をからにする</button></div>';
-  } else {
-    h += '<p class="hint">「候補から選ぶ」か、自分の画像をアップロードしてください。</p>';
-  }
+  h += '<div class="ed-zoom' + (photo ? "" : " off") + '"><span class="ed-label" id="zoomLabel">拡大</span>';
+  h += '<button type="button" class="step" data-act="zoomOut" aria-label="縮小"' + (photo ? "" : " disabled") + '>−</button>';
+  h += '<input type="range" id="zoomRange" data-key="scale" min="' + SCALE_MIN + '" max="' + SCALE_MAX + '" step="1" value="' + a.scale + '" aria-labelledby="zoomLabel"' + (photo ? "" : " disabled") + '>';
+  h += '<button type="button" class="step" data-act="zoomIn" aria-label="拡大"' + (photo ? "" : " disabled") + '>＋</button>';
+  h += '<output id="zoomOut" class="val">' + a.scale + "%</output></div>";
   editor.innerHTML = h;
+
+  /* スクロール先: 操作のヒントと細かい調整 */
+  var m = "";
+  if (photo) {
+    m += '<p class="hint"><span class="when-touch">プレビューの写真をドラッグで移動、2本指で拡大。</span>';
+    m += '<span class="when-mouse">プレビューの写真をドラッグで移動、ホイールで拡大。</span></p>';
+    m += '<details class="fine"' + (fineOpen ? " open" : "") + "><summary>スライダーで細かく調整</summary>";
+    m += '<div class="fine-row"><label for="posXRange">左右</label><input type="range" id="posXRange" data-key="posX" min="0" max="100" value="' + a.posX + '"><output class="val" data-for="posX">' + Math.round(a.posX) + "%</output></div>";
+    m += '<div class="fine-row"><label for="posYRange">上下</label><input type="range" id="posYRange" data-key="posY" min="0" max="100" value="' + a.posY + '"><output class="val" data-for="posY">' + Math.round(a.posY) + "%</output></div>";
+    m += '<button type="button" class="btn quiet" data-act="resetAdjust">位置と拡大をもどす</button> ';
+    m += '<button type="button" class="btn quiet" data-act="clear">この枠をからにする</button></details>';
+  } else {
+    m += '<p class="hint">プレビューの枠をタップして選べます。</p>';
+  }
+  editorMore.innerHTML = m;
 }
 
 /* 編集パネルのボタン・スライダー(再描画のたびに作り直さないよう委譲で受ける) */
 function bindEditor() {
+  editRoots.forEach(bindEditorOn);
+}
+function bindEditorOn(editor) {
   editor.addEventListener("click", function (e) {
     var btn = e.target.closest("[data-act]");
     if (!btn) return;
@@ -341,7 +308,7 @@ function bindEditor() {
       renderAll();
     }
     else if (act === "next") {
-      var n = nextEmptyTheme(currentThemeId);
+      var n = nextEmptyTheme(currentThemeId) || themes[(themeIndex(currentThemeId) + 1) % themes.length];
       if (n) { selectSlot(n.id); }
     }
   });
@@ -374,16 +341,16 @@ function afterAdjust(syncInputs) {
   var a = adjustDefaults(s);
   var z = document.getElementById("zoomOut");
   if (z) z.textContent = a.scale + "%";
-  var vx = editor.querySelector('[data-for="posX"]');
-  var vy = editor.querySelector('[data-for="posY"]');
+  var vx = document.querySelector('[data-for="posX"]');
+  var vy = document.querySelector('[data-for="posY"]');
   if (vx) vx.textContent = Math.round(a.posX) + "%";
   if (vy) vy.textContent = Math.round(a.posY) + "%";
   if (syncInputs !== false) {
-    var rs = editor.querySelectorAll("input[data-key]");
+    var rs = document.querySelectorAll("#editor input[data-key], #editorMore input[data-key]");
     for (var i = 0; i < rs.length; i++) rs[i].value = a[rs[i].dataset.key];
   } else {
     /* スライダー操作中は、操作していない側(ドラッグで動いた値)だけ合わせる */
-    var all = editor.querySelectorAll("input[data-key]");
+    var all = document.querySelectorAll("#editor input[data-key], #editorMore input[data-key]");
     for (var j = 0; j < all.length; j++) {
       if (document.activeElement !== all[j]) all[j].value = a[all[j].dataset.key];
     }

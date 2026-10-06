@@ -20,8 +20,8 @@
   --shadow:4px 5px 0 var(--ink);
   --font:"Zen Kaku Gothic New","Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;
   --hand:"Klee One","Zen Kaku Gothic New",sans-serif;
-  --pv:min(calc(100vw - 32px),40vh,480px);
-  --pv:min(calc(100vw - 32px),40dvh,480px);
+  --pv:min(calc(100vw - 32px),36vh,480px);
+  --pv:min(calc(100vw - 32px),36dvh,480px);
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -65,12 +65,12 @@ h1 span{background:linear-gradient(transparent 58%,var(--pink) 58%);padding:0 .1
 #overlay .halo{fill:none;stroke:transparent;pointer-events:none}
 #overlay .halo.on{stroke:#8051bd;stroke-width:7;stroke-dasharray:22 12}
 #overlay .hit:focus-visible{stroke:#8051bd;stroke-width:6}
-.stage-bar{display:flex;gap:8px;align-items:center;justify-content:center;margin:8px auto 0;width:var(--pv)}
+.stage-bar{display:flex;gap:8px;align-items:center;justify-content:center;margin:8px auto 0;width:min(100%,480px)}
 .seg{display:flex;flex:1;border:1.5px solid var(--ink);border-radius:30px;overflow:hidden;background:#fff}
-.seg-btn{appearance:none;flex:1;border:0;background:transparent;cursor:pointer;padding:7px 4px;min-height:38px;font-size:.78rem;font-weight:700;border-right:1.5px solid var(--ink)}
+.seg-btn{white-space:nowrap;appearance:none;flex:1;border:0;background:transparent;cursor:pointer;padding:7px 2px;min-height:38px;font-size:.72rem;font-weight:700;border-right:1.5px solid var(--ink)}
 .seg-btn:last-child{border-right:0}
 .seg-btn[aria-pressed="true"]{background:var(--pink)}
-.view-btn{flex:none;min-height:38px;padding:6px 12px;font-size:.78rem}
+.view-btn{flex:none;min-height:38px;padding:6px 10px;font-size:.72rem;white-space:nowrap}
 .design-hint{display:none}
 
 .panel{display:grid;gap:18px;padding-top:18px}
@@ -102,6 +102,19 @@ input[type=range]{flex:1;min-width:0;height:32px;accent-color:#8051bd;margin:0}
 .fine-row label{flex:none;width:2.4em;font-size:.8125rem}
 .ed-foot{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 
+
+/* 固定エリア内の編集(写真を入れる・拡大) */
+.editor{width:min(100%,480px);margin:8px auto 0}
+.ed-title{display:flex;align-items:baseline;gap:8px;margin-bottom:6px;min-width:0}
+.ed-eyebrow{font-size:.7rem;font-weight:700;letter-spacing:.08em;color:var(--berry);flex:none}
+.ed-title strong{font-size:1rem;font-weight:900;line-height:1.2}
+.ed-state{margin-left:auto;font-size:.72rem;color:var(--muted);flex:none}
+.editor .ed-actions{display:flex;gap:6px}
+.editor .ed-actions .btn{flex:1;min-height:40px;padding:6px 8px;font-size:.78rem;white-space:nowrap}
+.editor .ed-zoom{margin-top:8px;gap:6px}
+.editor .step{width:36px;height:36px}
+.editor .val{min-width:3em}
+.ed-zoom.off{opacity:.45}
 .name-input{width:100%;border:1.5px solid var(--ink);border-radius:5px;padding:10px 12px;font-size:1rem;background:#fff}
 .note{margin:6px 0 0;font-size:.75rem;color:var(--muted)}
 
@@ -134,10 +147,10 @@ footer .credit{margin-top:4px;font-size:.75rem;letter-spacing:.07em}
 .fb p{font-size:.85rem;color:var(--muted);margin:8px 0}
 
 @media (min-width:900px){
-  :root{--pv:min(520px,calc(100vh - 190px));--pv:min(520px,calc(100dvh - 190px))}
+  :root{--pv:min(520px,calc(100vh - 330px));--pv:min(520px,calc(100dvh - 330px))}
   .layout{display:grid;grid-template-columns:minmax(0,520px) minmax(0,1fr);gap:32px;align-items:start}
   .stage{top:16px;margin:0;padding:0;background:transparent;border:0}
-  .pv-wrap,.stage-bar{margin-left:0}
+  .pv-wrap,.stage-bar,.editor{margin-left:0}
   .panel{padding-top:0}
   .modal{align-items:center}
   .sheet{border-radius:8px;box-shadow:var(--shadow)}
@@ -169,6 +182,7 @@ footer .credit{margin-top:4px;font-size:.75rem;letter-spacing:.07em}
         <button type="button" class="btn view-btn" id="viewBtn">大きく見る</button>
       </div>
       <p class="design-hint" id="designHint"></p>
+      <div class="editor" id="editor"></div>
     </div>
 
     <div class="panel">
@@ -178,10 +192,10 @@ footer .credit{margin-top:4px;font-size:.75rem;letter-spacing:.07em}
         <p class="note">メンバーを切り替えると、選んだ写真はリセットされます。</p>
       </section>
 
-      <section class="card" aria-labelledby="h-slots">
-        <h2 id="h-slots"><span class="n">2</span>6つの枠に写真を入れる</h2>
-        <div class="slot-grid" id="slotGrid"></div>
-        <div id="editor" style="margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)" aria-live="polite"></div>
+      <section class="card" aria-labelledby="h-adj">
+        <h2 id="h-adj"><span class="n">2</span>写真を調整する</h2>
+        <p class="note" style="margin:0 0 6px">プレビューの枠をタップして選ぶと、写真を入れたり動かしたりできます。</p>
+        <div id="editorMore" aria-live="polite"></div>
       </section>
 
       <section class="card" aria-labelledby="h-name">
