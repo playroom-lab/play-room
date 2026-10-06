@@ -258,10 +258,10 @@ function origOf(src) {
   var m = /[?&]url=([^&]+)/.exec(src);
   return m && src.indexOf("https://wsrv.nl/") === 0 ? "https://" + decodeURIComponent(m[1]) : src;
 }
-function setImg(img, url, w) {
+function setImg(img, url, w, eager) {
   img.decoding = "async";
-  img.loading = "lazy";
-  img.fetchPriority = "low";
+  img.loading = eager ? "eager" : "lazy";
+  img.fetchPriority = eager ? "auto" : "low";
   img.onerror = function () {
     var o = origOf(img.src);
     if (o !== img.src) { img.onerror = null; img.src = o; }
@@ -287,7 +287,7 @@ function renderSheet() {
     shot.setAttribute("aria-label", (index + 1) + "コマ目 " + cell.name + " の写真を変える");
 
     var img = document.createElement("img");
-    setImg(img, srcFor(index), SHEET_W);
+    setImg(img, srcFor(index), SHEET_W, true);
     img.style.objectPosition = objectPositionFor(selection[index]);
     img.alt = cell.name;
 
@@ -333,7 +333,7 @@ function openPicker(index) {
       button.type = "button";
       button.className = "photo-option" + (member === "group" ? " wide" : "");
       var img = document.createElement("img");
-      setImg(img, srcForChoice(member, num), THUMB_W);
+      setImg(img, srcForChoice(member, num), THUMB_W, false);
       img.style.objectPosition = objectPositionFor(num);
       img.alt = cells[index].name + " " + num;
       img.loading = "lazy";
