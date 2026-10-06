@@ -15,7 +15,8 @@ const MEMBERS = [
 const SHOTS = 20;
 const TOP = 5;
 const M = id => MEMBERS.find(m => m.id === id);
-const src = s => `https://raw.githubusercontent.com/rikomuze/mazzel-outfit/main/photos/${s.m}/${String(s.n).padStart(2, '0')}.jpg`;
+const rawSrc = s => `https://raw.githubusercontent.com/rikomuze/mazzel-outfit/main/photos/${s.m}/${String(s.n).padStart(2, '0')}.jpg`;
+const src = s => PRfast(rawSrc(s), 640);   // 画面表示は軽量版
 const key = s => `${s.m}-${s.n}`;
 const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $ = id => document.getElementById(id);
@@ -110,13 +111,13 @@ function renderHome() {
     <h2>推しメンで選ぶ</h2>
     <p class="meta">1人の20衣装から ・ 4択5問 → 2択で順位決め（10問前後）</p>
     <div class="members">${MEMBERS.map(m => `
-      <button class="mcard" data-member="${m.id}"><img src="https://raw.githubusercontent.com/rikomuze/mazzel-outfit/main/photos/${m.id}/16.jpg" alt="" loading="lazy"><span>${m.name}</span></button>`).join('')}
+      <button class="mcard" data-member="${m.id}"><img src="${PRfast(`https://raw.githubusercontent.com/rikomuze/mazzel-outfit/main/photos/${m.id}/16.jpg`, 360)}" alt="" loading="lazy"><span>${m.name}</span></button>`).join('')}
     </div>
   </section>
   <section class="sec">
     <h2>箱推しで選ぶ</h2>
     <button class="boxcard" id="box">
-      <span class="boxstrip">${MEMBERS.map(m => `<img src="https://raw.githubusercontent.com/rikomuze/mazzel-outfit/main/photos/${m.id}/19.jpg" alt="" loading="lazy">`).join('')}</span>
+      <span class="boxstrip">${MEMBERS.map(m => `<img src="${PRfast(`https://raw.githubusercontent.com/rikomuze/mazzel-outfit/main/photos/${m.id}/19.jpg`, 200)}" alt="" loading="lazy">`).join('')}</span>
       <span class="cap"><b>全員の衣装から選ぶ</b><small>毎回32衣装</small></span>
     </button>
     <p class="meta">各メンバーから4衣装ずつ選ばれた32衣装から ・ 4択8問 → 2択でTOP5（15問前後）・ メンバー名入りのTOP5</p>
@@ -218,7 +219,10 @@ function shareX() {
   const url = 'https://playroom-lab.github.io/play-room/outfit/';
   window.open(`https://x.com/intent/post?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank', 'noopener');
 }
-function loadImg(u) { return new Promise((res, rej) => { const i = new Image(); if(/^https?:/.test(u)) i.crossOrigin = 'anonymous'; i.onload = () => res(i); i.onerror = rej; i.src = u; }); }
+function loadImg(u) {
+  return loadImg1(PRfast(u, 1080)).catch(() => loadImg1(u));
+}
+function loadImg1(u) { return new Promise((res, rej) => { const i = new Image(); if(/^https?:/.test(u)) i.crossOrigin = 'anonymous'; i.onload = () => res(i); i.onerror = rej; i.src = u; }); }
 function cover(ctx, img, x, y, w, h, fy = .2) {
   const r = Math.max(w / img.width, h / img.height), sw = w / r, sh = h / r;
   ctx.drawImage(img, (img.width - sw) / 2, (img.height - sh) * fy, sw, sh, x, y, w, h);
@@ -228,7 +232,7 @@ async function drawResult() {
   const x = c.getContext('2d');
   try { await Promise.all([document.fonts.load('600 60px "Klee One"'), document.fonts.load('700 30px "Zen Kaku Gothic New"')]); } catch (e) {}
   const hand = '"Zen Kaku Gothic New", "Hiragino Sans", sans-serif', goth = '"Zen Kaku Gothic New", "Hiragino Sans", sans-serif';
-  const imgs = await Promise.all(S.ranked.map(s => loadImg(src(s))));
+  const imgs = await Promise.all(S.ranked.map(s => loadImg(rawSrc(s))));
   // desk
   x.fillStyle = '#f7f5ed'; x.fillRect(0, 0, W, H);
   

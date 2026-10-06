@@ -18,12 +18,12 @@ const NAMES = ['KAIRYU','NAOYA','RAN','SEITO','RYUKI','TAKUTO','HAYATO','EIKI'];
 const MEMBERS = NAMES.map((name, i) => ({
   id: 'mazzel-' + name.toLowerCase(), name, order: i, secret: false,
   shots: [
-    ...nums(18).map(x => `https://raw.githubusercontent.com/rikomuze/mazzel-gacha/main/photos/${name.toLowerCase()}/${x}.jpg`),
+    ...nums(18).map(x => PRfast(`https://raw.githubusercontent.com/rikomuze/mazzel-gacha/main/photos/${name.toLowerCase()}/${x}.jpg`, 640)),
     `photos/${name.toLowerCase()}/19.jpg`   // このリポジトリ内の追加ショット
   ]
 }));
 MEMBERS.push({ id: 'mazzel-secret', name: 'MAZZEL 集合', order: 99, secret: true,
-  shots: nums(16).map(x => `https://raw.githubusercontent.com/rikomuze/mazzel-gacha/main/photos/group/${x}.jpg`) });
+  shots: nums(16).map(x => PRfast(`https://raw.githubusercontent.com/rikomuze/mazzel-gacha/main/photos/group/${x}.jpg`, 640)) });
 const M = id => MEMBERS.find(m => m.id === id);
 const NORMALS = MEMBERS.filter(m => !m.secret);
 const SECRETS = MEMBERS.filter(m => m.secret);

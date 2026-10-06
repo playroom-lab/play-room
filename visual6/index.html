@@ -13,7 +13,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Klee+One:wght@400;600&family=Montserrat:wght@500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
 /* スクラップの写真下ラベル(Canvas)専用の手書きフォント */
-@font-face{font-family:"HanaToChoucho";src:url("https://raw.githubusercontent.com/rikomuze/oshi-visual-6/main/assets/fonts/hana-to-choucho.ttf") format("truetype");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"HanaToChoucho";src:url("assets/fonts/hana-sub.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
 :root{
   --bg:#f7f5ed;--ink:#282536;--muted:#625f6d;--line:#d5d1d9;--paper:#fff;
   --pink:#ffd5df;--pink-soft:#ffe7ef;--lime:#dcefa5;--violet:#ded7ff;--sky:#cfe3ff;--berry:#a43e61;
@@ -257,6 +257,6 @@ footer .credit{margin-top:4px;font-size:.75rem;letter-spacing:.07em}
 /* 読み込みエラーを画面に出す(原因調査用) */
 window.addEventListener("error",function(e){var d=document.getElementById("status");if(d){d.textContent="エラー: "+(e.message||"不明")+(e.lineno?" ("+e.lineno+")":"");d.style.pointerEvents="auto";}});
 </script>
-<script src="assets/js/app.js?v=20261006f"></script>
+<script src="assets/js/app.js?v=20261006g"></script>
 </body>
 </html>
