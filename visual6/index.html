@@ -74,10 +74,13 @@ h1 span{background:linear-gradient(transparent 58%,var(--pink) 58%);padding:0 .1
 #overlay .halo.on{stroke:#8051bd;stroke-width:7;stroke-dasharray:22 12}
 #overlay .hit:focus-visible{stroke:#8051bd;stroke-width:6}
 .stage-bar{display:flex;gap:8px;align-items:center;justify-content:center;margin:8px auto 0;width:min(100%,480px)}
+.seg[hidden]{display:none}
+.stage-bar{justify-content:flex-end}
 .seg{display:flex;flex:1;border:1.5px solid var(--ink);border-radius:30px;overflow:hidden;background:#fff}
 .seg-btn{white-space:nowrap;appearance:none;flex:1;border:0;background:transparent;cursor:pointer;padding:7px 2px;min-height:38px;font-size:.72rem;font-weight:700;border-right:1.5px solid var(--ink)}
 .seg-btn:last-child{border-right:0}
 .seg-btn[aria-pressed="true"]{background:var(--pink)}
+.pv-wrap .view-btn{position:absolute;right:8px;bottom:8px;z-index:2}
 .view-btn{flex:none;min-height:38px;padding:6px 10px;font-size:.72rem;white-space:nowrap}
 .design-hint{display:none}
 
@@ -195,10 +198,7 @@ footer .credit{margin-top:4px;font-size:.75rem;letter-spacing:.07em}
       <div class="pv-wrap">
         <canvas id="previewCanvas" width="1200" height="1200" aria-label="仕上がりプレビュー"></canvas>
         <svg id="overlay" aria-label="プレビューの写真を調整"></svg>
-      </div>
-      <div class="stage-bar">
-        <div class="seg" id="designChips" role="group" aria-label="デザイン"></div>
-        <button type="button" class="btn view-btn" id="viewBtn">大きく見る</button>
+        <button type="button" class="btn view-btn" id="viewBtn">拡大表示</button>
       </div>
       <p class="design-hint" id="designHint"></p>
       </div>
@@ -257,6 +257,6 @@ footer .credit{margin-top:4px;font-size:.75rem;letter-spacing:.07em}
 /* 読み込みエラーを画面に出す(原因調査用) */
 window.addEventListener("error",function(e){var d=document.getElementById("status");if(d){d.textContent="エラー: "+(e.message||"不明")+(e.lineno?" ("+e.lineno+")":"");d.style.pointerEvents="auto";}});
 </script>
-<script src="assets/js/app.js?v=20261006d"></script>
+<script src="assets/js/app.js?v=20261006f"></script>
 </body>
 </html>
