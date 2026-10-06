@@ -513,6 +513,15 @@ function updatePinch() {
   if (d > 0) setScale(pinch.s0 * d / pinch.d0);
 }
 
+/* ---------- 候補画像の軽量配信 ---------- */
+function fastRemoteImage(url, width) {
+  if (!/^https:\/\/raw\.githubusercontent\.com\//.test(url)) return url;
+  return "https://wsrv.nl/?url=" + encodeURIComponent(url.replace(/^https:\/\//, "")) + "&w=" + width + "&output=jpg&q=78";
+}
+function presetPhotoUrl(memberId, number, ext) {
+  return "https://raw.githubusercontent.com/rikomuze/oshi-visual-6/main/images/" + memberId + "/" + number + "." + ext;
+}
+
 /* ---------- 候補モーダル ---------- */
 function openModal(themeId) {
   currentThemeId = themeId;
@@ -542,13 +551,16 @@ function renderModalPhotoGrid() {
     button.type = "button";
     button.className = "photo-option";
     var img = document.createElement("img");
-    img.crossOrigin = "anonymous"; img.src = "https://raw.githubusercontent.com/rikomuze/oshi-visual-6/main/images/" + currentMemberId + "/" + number + ".jpg";
+    img.crossOrigin = "anonymous";
+    img.decoding = "async";
+    img.fetchPriority = "low";
+    img.src = fastRemoteImage(presetPhotoUrl(currentMemberId, number, "jpg"), 280);
     img.alt = getCurrentMember().name + " " + number;
     img.loading = "lazy";
     img.onerror = function () {
       if (!img.dataset.fallbackTried) {
         img.dataset.fallbackTried = "true";
-        img.crossOrigin = "anonymous"; img.src = "https://raw.githubusercontent.com/rikomuze/oshi-visual-6/main/images/" + currentMemberId + "/" + number + ".png";
+        img.crossOrigin = "anonymous"; img.src = fastRemoteImage(presetPhotoUrl(currentMemberId, number, "png"), 280);
       } else {
         button.style.display = "none";
       }
