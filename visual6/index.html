@@ -253,6 +253,10 @@ footer .credit{margin-top:4px;font-size:.75rem;letter-spacing:.07em}
 </div>
 
 <input type="file" id="uploadInput" accept="image/*" hidden />
-<script src="assets/js/app.js"></script>
+<script>
+/* 読み込みエラーを画面に出す(原因調査用) */
+window.addEventListener("error",function(e){var d=document.getElementById("status");if(d){d.textContent="エラー: "+(e.message||"不明")+(e.lineno?" ("+e.lineno+")":"");d.style.pointerEvents="auto";}});
+</script>
+<script src="assets/js/app.js?v=20261006b"></script>
 </body>
 </html>
