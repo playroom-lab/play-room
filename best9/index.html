@@ -258,13 +258,15 @@ function origOf(src) {
 }
 function setImg(img, url, w) {
   img.decoding = "async";
+  img.loading = "lazy";
+  img.fetchPriority = "low";
   img.onerror = function () {
     var o = origOf(img.src);
     if (o !== img.src) { img.onerror = null; img.src = o; }
   };
   img.src = fastSrc(url, w);
 }
-var SHEET_W = 640, THUMB_W = 260;
+var SHEET_W = 420, THUMB_W = 180;
 function srcFor(index) { return srcForChoice(cells[index].member, selection[index]); }
 function formatDate(d) {
   return d.getFullYear() + "." + String(d.getMonth() + 1).padStart(2, "0") + "." + String(d.getDate()).padStart(2, "0");
