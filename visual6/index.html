@@ -20,8 +20,8 @@
   --shadow:4px 5px 0 var(--ink);
   --font:"Zen Kaku Gothic New","Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;
   --hand:"Klee One","Zen Kaku Gothic New",sans-serif;
-  --pv:min(calc(100vw - 32px),36vh,480px);
-  --pv:min(calc(100vw - 32px),36dvh,480px);
+  --pv:max(180px,min(calc(100vw - 32px),calc(100vh - 430px),480px));
+  --pv:max(180px,min(calc(100vw - 32px),calc(100dvh - 430px),480px));
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -54,7 +54,15 @@ h1 span{background:linear-gradient(transparent 58%,var(--pink) 58%);padding:0 .1
 .tag{appearance:none;cursor:pointer;border:1.5px solid var(--ink);border-radius:30px;background:var(--paper);padding:7px 14px;min-height:40px;font-size:.8125rem;font-weight:700;letter-spacing:.04em}
 .tag[aria-pressed="true"]{background:var(--ink);color:#fff}
 
-.layout{display:block}
+.layout{display:flex;flex-direction:column}
+.panel{order:-1;padding-bottom:12px}
+.top-card{padding:12px;display:grid;gap:8px}
+.top-card h2{margin:0;font-size:.9rem}
+.top-card .tags{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -12px;padding:2px 12px 6px}
+.top-card .tags::-webkit-scrollbar{display:none}
+.top-card .tag{flex:none}
+.top-card .note{margin:0}
+.name-input{padding:8px 12px;font-size:.9rem}
 .stage{position:sticky;top:0;z-index:20;margin:0 -16px;padding:8px 16px 10px;background:var(--bg);border-bottom:1.5px solid var(--ink)}
 .pv-wrap{position:relative;width:var(--pv);height:var(--pv);margin:0 auto;background:#fff;border:1.5px solid var(--ink);border-radius:5px;box-shadow:3px 4px 0 var(--ink);overflow:hidden}
 #previewCanvas{display:block;width:100%;height:100%}
@@ -73,7 +81,6 @@ h1 span{background:linear-gradient(transparent 58%,var(--pink) 58%);padding:0 .1
 .view-btn{flex:none;min-height:38px;padding:6px 10px;font-size:.72rem;white-space:nowrap}
 .design-hint{display:none}
 
-.panel{display:grid;gap:18px;padding-top:18px}
 
 .slot-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .slot-chip{appearance:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;border:1.5px solid var(--line);border-radius:5px;background:#fff;padding:6px 4px 5px;min-width:0}
@@ -112,9 +119,16 @@ input[type=range]{flex:1;min-width:0;height:32px;accent-color:#8051bd;margin:0}
 .editor .ed-actions{display:flex;gap:6px}
 .editor .ed-actions .btn{flex:1;min-height:40px;padding:6px 8px;font-size:.78rem;white-space:nowrap}
 .editor .ed-zoom{margin-top:8px;gap:6px}
-.editor .step{width:36px;height:36px}
+.editor .step{width:32px;height:32px;font-size:1rem}
 .editor .val{min-width:3em}
-.ed-zoom.off{opacity:.45}
+.ed-sliders.off{opacity:.45}
+.editor .ed-zoom{margin-top:2px}
+.editor .ed-zoom input[type=range]{height:28px}
+.editor .ed-label{width:2.4em;flex:none}
+.ed-sub{display:flex;gap:10px;align-items:center;margin-top:4px;font-family:var(--hand);font-size:.72rem;color:var(--muted)}
+.ed-sub .link{appearance:none;border:0;background:none;cursor:pointer;margin-left:auto;font-size:.75rem;font-weight:700;text-decoration:underline;color:var(--berry);padding:6px 2px;min-height:32px}
+.ed-sub .link+.link{margin-left:0}
+.ed-sub .link:disabled{opacity:.4}
 .name-input{width:100%;border:1.5px solid var(--ink);border-radius:5px;padding:10px 12px;font-size:1rem;background:#fff}
 .note{margin:6px 0 0;font-size:.75rem;color:var(--muted)}
 
@@ -146,12 +160,16 @@ footer .credit{margin-top:4px;font-size:.75rem;letter-spacing:.07em}
 .fb img{max-width:100%;max-height:60vh;max-height:60dvh;border:1.5px solid var(--ink);border-radius:5px}
 .fb p{font-size:.85rem;color:var(--muted);margin:8px 0}
 
+@media (max-width:899px){.lead{display:none}.head{padding-bottom:8px}.nav{padding:8px 0}}
 @media (min-width:900px){
   :root{--pv:min(520px,calc(100vh - 330px));--pv:min(520px,calc(100dvh - 330px))}
-  .layout{display:grid;grid-template-columns:minmax(0,520px) minmax(0,1fr);gap:32px;align-items:start}
-  .stage{top:16px;margin:0;padding:0;background:transparent;border:0}
-  .pv-wrap,.stage-bar,.editor{margin-left:0}
-  .panel{padding-top:0}
+  .layout{display:grid;grid-template-columns:minmax(0,520px) minmax(0,1fr);grid-template-rows:auto 1fr;gap:20px 32px;align-items:start}
+  .stage{display:contents}
+  .pv-block{grid-column:1;grid-row:1/3;position:sticky;top:16px}
+  .panel{order:0;grid-column:2;grid-row:1;padding-bottom:0}
+  .editor{grid-column:2;grid-row:2;width:100%;max-width:none;margin:0;background:#fff;border:1.5px solid var(--ink);border-radius:5px;box-shadow:var(--shadow);padding:16px}
+  .pv-wrap,.stage-bar{margin-left:0}
+  .top-card .tags{flex-wrap:wrap;overflow:visible}
   .modal{align-items:center}
   .sheet{border-radius:8px;box-shadow:var(--shadow)}
   .photo-grid{grid-template-columns:repeat(5,1fr)}
@@ -173,6 +191,7 @@ footer .credit{margin-top:4px;font-size:.75rem;letter-spacing:.07em}
 
   <div class="layout">
     <div class="stage" id="stage">
+      <div class="pv-block">
       <div class="pv-wrap">
         <canvas id="previewCanvas" width="1200" height="1200" aria-label="仕上がりプレビュー"></canvas>
         <svg id="overlay" aria-label="プレビューの写真を調整"></svg>
@@ -182,25 +201,16 @@ footer .credit{margin-top:4px;font-size:.75rem;letter-spacing:.07em}
         <button type="button" class="btn view-btn" id="viewBtn">大きく見る</button>
       </div>
       <p class="design-hint" id="designHint"></p>
+      </div>
       <div class="editor" id="editor"></div>
     </div>
 
     <div class="panel">
-      <section class="card" aria-labelledby="h-member">
-        <h2 id="h-member"><span class="n">1</span>推しを選ぶ</h2>
+      <section class="card top-card" aria-label="推しと名前">
+        <h2 id="h-member">推しを選ぶ</h2>
         <div class="tags" id="memberTags"></div>
+        <input class="name-input" id="userNameInput" type="text" maxlength="20" placeholder="名前（任意・空欄ならメンバー名）" autocomplete="off" aria-label="名前（任意）" />
         <p class="note">メンバーを切り替えると、選んだ写真はリセットされます。</p>
-      </section>
-
-      <section class="card" aria-labelledby="h-adj">
-        <h2 id="h-adj"><span class="n">2</span>写真を調整する</h2>
-        <p class="note" style="margin:0 0 6px">プレビューの枠をタップして選ぶと、写真を入れたり動かしたりできます。</p>
-        <div id="editorMore" aria-live="polite"></div>
-      </section>
-
-      <section class="card" aria-labelledby="h-name">
-        <h2 id="h-name"><span class="n">3</span>名前を入れる（任意）</h2>
-        <input class="name-input" id="userNameInput" type="text" maxlength="20" placeholder="空欄ならメンバー名が入ります" autocomplete="off" />
       </section>
     </div>
   </div>

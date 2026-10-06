@@ -65,8 +65,7 @@ var memberTags = document.getElementById("memberTags");
 var designChips = document.getElementById("designChips");
 var designHint = document.getElementById("designHint");
 var editor = document.getElementById("editor");
-var editorMore = document.getElementById("editorMore");
-var editRoots = [editor, editorMore];
+var editRoots = [editor];
 var previewCanvas = document.getElementById("previewCanvas");
 var overlay = document.getElementById("overlay");
 var viewBtn = document.getElementById("viewBtn");
@@ -262,27 +261,19 @@ function renderEditor() {
   h += '<button type="button" class="btn" data-act="upload">アップロード</button>';
   h += '<button type="button" class="btn next" data-act="next" aria-label="次の枠へ">次へ →</button>';
   h += "</div>";
-  h += '<div class="ed-zoom' + (photo ? "" : " off") + '"><span class="ed-label" id="zoomLabel">拡大</span>';
-  h += '<button type="button" class="step" data-act="zoomOut" aria-label="縮小"' + (photo ? "" : " disabled") + '>−</button>';
-  h += '<input type="range" id="zoomRange" data-key="scale" min="' + SCALE_MIN + '" max="' + SCALE_MAX + '" step="1" value="' + a.scale + '" aria-labelledby="zoomLabel"' + (photo ? "" : " disabled") + '>';
-  h += '<button type="button" class="step" data-act="zoomIn" aria-label="拡大"' + (photo ? "" : " disabled") + '>＋</button>';
+  var dis = photo ? "" : " disabled";
+  h += '<div class="ed-sliders' + (photo ? "" : " off") + '">';
+  h += '<div class="ed-zoom"><span class="ed-label" id="zoomLabel">拡大</span>';
+  h += '<button type="button" class="step" data-act="zoomOut" aria-label="縮小"' + dis + '>−</button>';
+  h += '<input type="range" id="zoomRange" data-key="scale" min="' + SCALE_MIN + '" max="' + SCALE_MAX + '" step="1" value="' + a.scale + '" aria-labelledby="zoomLabel"' + dis + '>';
+  h += '<button type="button" class="step" data-act="zoomIn" aria-label="拡大"' + dis + '>＋</button>';
   h += '<output id="zoomOut" class="val">' + a.scale + "%</output></div>";
+  h += '<div class="ed-zoom"><label class="ed-label" for="posXRange">左右</label><input type="range" id="posXRange" data-key="posX" min="0" max="100" value="' + a.posX + '"' + dis + '><output class="val" data-for="posX">' + Math.round(a.posX) + "%</output></div>";
+  h += '<div class="ed-zoom"><label class="ed-label" for="posYRange">上下</label><input type="range" id="posYRange" data-key="posY" min="0" max="100" value="' + a.posY + '"' + dis + '><output class="val" data-for="posY">' + Math.round(a.posY) + "%</output></div>";
+  h += '</div>';
+  h += '<div class="ed-sub"><span class="when-touch">写真をドラッグで移動・2本指で拡大</span><span class="when-mouse">写真をドラッグで移動・ホイールで拡大</span>';
+  h += '<button type="button" class="link" data-act="resetAdjust"' + dis + '>もどす</button><button type="button" class="link" data-act="clear"' + dis + '>枠をからに</button></div>';
   editor.innerHTML = h;
-
-  /* スクロール先: 操作のヒントと細かい調整 */
-  var m = "";
-  if (photo) {
-    m += '<p class="hint"><span class="when-touch">プレビューの写真をドラッグで移動、2本指で拡大。</span>';
-    m += '<span class="when-mouse">プレビューの写真をドラッグで移動、ホイールで拡大。</span></p>';
-    m += '<details class="fine"' + (fineOpen ? " open" : "") + "><summary>スライダーで細かく調整</summary>";
-    m += '<div class="fine-row"><label for="posXRange">左右</label><input type="range" id="posXRange" data-key="posX" min="0" max="100" value="' + a.posX + '"><output class="val" data-for="posX">' + Math.round(a.posX) + "%</output></div>";
-    m += '<div class="fine-row"><label for="posYRange">上下</label><input type="range" id="posYRange" data-key="posY" min="0" max="100" value="' + a.posY + '"><output class="val" data-for="posY">' + Math.round(a.posY) + "%</output></div>";
-    m += '<button type="button" class="btn quiet" data-act="resetAdjust">位置と拡大をもどす</button> ';
-    m += '<button type="button" class="btn quiet" data-act="clear">この枠をからにする</button></details>';
-  } else {
-    m += '<p class="hint">プレビューの枠をタップして選べます。</p>';
-  }
-  editorMore.innerHTML = m;
 }
 
 /* 編集パネルのボタン・スライダー(再描画のたびに作り直さないよう委譲で受ける) */
