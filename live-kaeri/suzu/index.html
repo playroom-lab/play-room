@@ -56,11 +56,11 @@ const gateWalk=S=>S.tai<20?6:3;
 const hands=S=>["miku","nono","nanase","rui"].filter(k=>S.p[k].st==="done").length;
 
 const SCN={
-  id:"lk-suzu",title:"ライブ帰りシミュレーター すずさん版",start:START,speed:8000,
+  id:"lk-suzu",title:"ライブ帰りシミュレーター すずさん版",start:START,speed:6000,quietMs:5000,ffStep:2250,
   fine:"フィクションです。登場する人物・会場・団体はすべて架空です。",
   clearNote:"おつかれさまでした。次は、ちがう夜で。",
   infoThread:"info",
-  links:[["本編（ライブ帰り）","../"],["はるや版","../haruya/"],["参戦前夜版","../zenya/"]],
+  links:[["本編（ライブ帰り）","../"],["はるや版","../haruya/"]],
   threads:{
     miku:{name:"みく（交換）",short:"みく",col:"#ffb84d",ini:"み"},
     nono:{name:"のの（交換）",short:"のの",col:"#9ac26b",ini:"の"},
@@ -197,6 +197,16 @@ const SCN={
     {at:T(23,6),f:(S,api)=>{if(!S.gated) api.them("mana",["電車きた","すずーー！！"])}}
   ],
   fillers:[
+    {th:"nanase",lines:["いま会場の外に出ました…！"],when:S=>S.p.nanase.st==="coming"&&S.t>=T(22,30)},
+    {th:"nanase",lines:["道がすごい人で","ちょっとずつしか進めないです😭"],when:S=>S.p.nanase.st==="coming"&&S.t>=T(22,36)},
+    {th:"nanase",lines:["駅見えてきました！"],when:S=>S.p.nanase.st==="coming"&&S.p.nanase.arr-S.t<=8},
+    {th:"nanase",lines:["すみません、あと少しです…！"],when:S=>S.p.nanase.st==="coming"&&S.t>=T(22,48)},
+    {th:"mana",lines:["ホームの自販機でココア買った"],when:S=>S.t>=T(22,30)},
+    {th:"mana",lines:["すずのぶんのココアもあるよ","早くおいで"],when:S=>S.t>=T(22,45)},
+    {th:"mana",lines:["隣のおじさんがずっと時計見てる","わかる"],when:S=>S.t>=T(22,40)},
+    {th:"miku",lines:["家に着いたらトレカ飾ります🥹"],when:S=>S.p.miku.st==="done"&&S.t>=T(22,30)},
+    {th:"nono",lines:["無事に帰路につきました","本日は本当にありがとうございました"],when:S=>S.p.nono.st==="done"},
+    {th:"info",f:(S,api)=>api.info("駅","まもなく最終電車の改札を締め切ります。お急ぎください"),when:S=>S.t>=T(22,58)},
     {th:"mana",lines:["ホームから夜景みえる","きれい"]},
     {th:"mana",lines:["交換どう？"],choices:[{t:"順調！",r:["さすが"]},{t:"迷子が出てる",r:["あるある"]},{stamp:["🃏","トレカ"],r:["かわい"]}]},
     {th:"mana",lines:["今日の{name}よすぎた","帰ったら語ろ"]},

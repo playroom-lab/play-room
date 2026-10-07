@@ -63,7 +63,7 @@ function startClock(){
     if(my!==sid||!S||S.over||!$("scene").hidden) return;
     const q=isQuiet();S.qms=q?(S.qms||0)+250:0;
     if(q&&S.qms>=(SCN.quietMs||8000)){S.qms=0;fireFiller()}
-    S.acc+=(q&&S.qms>=1500)?1500:250;
+    S.acc+=(q&&S.qms>=1500)?(S.noFill?3000:(SCN.ffStep||1500)):250;
     if(S.acc>=SCN.speed){S.acc-=SCN.speed;minute()}
     idleTick(250);
   },250);
@@ -81,10 +81,11 @@ function fireFiller(){
     if(S.usedF&&S.usedF[i]) continue;
     if(f.when&&!f.when(S)) continue;
     if(openQ(f.th)||S.th[f.th].asking||S.th[f.th].busy) continue;
-    (S.usedF=S.usedF||{})[i]=1;
+    (S.usedF=S.usedF||{})[i]=1;S.noFill=0;
     if(f.f) f.f(S,api); else if(f.choices) ask(f.th,f.lines,f.choices); else them(f.th,f.lines);
     return;
   }
+  S.noFill=1;
 }
 function minute(){
   S.t++;
