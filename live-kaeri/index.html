@@ -1246,7 +1246,7 @@ function end(kind){
     <button class="go" type="button" id="saveImg">結果を画像で保存</button>
     <button class="go sub" type="button" id="again">もう一度帰る</button>
     <p class="handnote">${kind==="clear"?(S.cards<3?"次は、トレカ3枚に挑戦してみて。":"トレカ3枚、完璧な帰り道。"):"次は、ちがう帰り道で。"}</p>
-    <div class="pcard"><p class="lbl">ほかの夜</p><div class="endmap"><a class="lnk" href="haruya/">はるや版：彼女の帰りを待つ</a><a class="lnk" href="suzu/">すずさん版：東口で交換</a><a class="lnk" href="zenya/">参戦前夜版：遠征の前の晩</a></div></div>
+    <div class="pcard"><p class="lbl">ほかの夜</p><div class="endmap"><a class="lnk" href="haruya/">はるや版：彼女の帰りを待つ</a><a class="lnk" href="suzu/">すずさん版：東口で交換</a></div></div>
     <p class="fine">フィクションです。登場する人物・会場・団体はすべて架空です。</p>`;
     $("again").onclick=showIntro;
     const R={kind,no,got,ending:ENDNAME[kind],text:fill(ENDS[kind]),time:fmt(Math.min(S.t,LAST)),where:where(),yoin:S.yoin,okSwap,okTrain,okBat,cards:S.cards,title:title(),oshi:S.oshi,talk:S.m.talk,photo:S.m.photo,chased:S.m.chased,bat:S.bat};
@@ -1341,7 +1341,7 @@ function showIntro(){
   </div></div>
   <button class="go" type="button" id="start">スマホを見る</button>
   <p class="handnote">展開は毎回ちょっとずつ変わります。</p>
-  <div class="pcard"><p class="lbl">ほかの夜</p><div class="endmap"><a class="lnk" href="haruya/">はるや版：彼女の帰りを待つ</a><a class="lnk" href="suzu/">すずさん版：東口で交換</a><a class="lnk" href="zenya/">参戦前夜版：遠征の前の晩</a></div></div>
+  <div class="pcard"><p class="lbl">ほかの夜</p><div class="endmap"><a class="lnk" href="haruya/">はるや版：彼女の帰りを待つ</a><a class="lnk" href="suzu/">すずさん版：東口で交換</a></div></div>
   <p class="fine">フィクションです。登場する人物・会場・団体はすべて架空です。</p>`;
   const go=()=>{const v=$("oshi").value.trim()||"推し";try{localStorage.setItem("lkOshi",v==="推し"?"":v)}catch(e){}el.hidden=true;begin(v)};
   el.querySelectorAll(".diffs button").forEach(b=>b.onclick=()=>{diff=b.dataset.d;try{localStorage.setItem("lkDiff",diff)}catch(e){}el.querySelectorAll(".diffs button").forEach(x=>x.setAttribute("aria-checked",String(x===b)))});
