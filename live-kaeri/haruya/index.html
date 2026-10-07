@@ -118,6 +118,10 @@ const SCN={
     work:{name:"会社の同期",col:"#9ac26b",ini:"同",n:5,group:1,static:1,last:"明日の資料、朝イチでよろしく〜",lastT:H(2),msgs:[{k:"them",who:"たかの",x:"明日の資料、朝イチでよろしく〜",t:H(2)}]}
   },
   order:["akari","yui","sota","yuma","mom","info","work"],
+  diffs:{
+    normal:{name:"通常",desc:"眠気25からスタート。推しの話を読んでも、少しだけ眠くなりにくい",stats:{sleep:25}},
+    hard:{name:"ムズい",desc:"残業帰りでくたくた。眠気35からスタート。推しの話でぐんぐん眠くなる",stats:{sleep:35},scene:["ムズい","残業帰り","ネクタイをゆるめた瞬間、ソファが呼んでいる。","眠気35からスタート"]}
+  },
   stats:[
     {key:"sleep",label:"眠気",init:35,max:100,color:v=>v>=75?"#ff6b6b":v>=55?"#ffb84d":"var(--violet)",warn:v=>v>=85?" 限界":v>=70?" やばい":""},
     {key:"mood",label:"あかりの機嫌",init:60,max:100,color:v=>v<30?"#ff6b6b":v<50?"#ffb84d":"var(--pink)",warn:v=>v<25?" つめたい":v>=80?" ごきげん":""}
@@ -175,7 +179,7 @@ const SCN={
     if(th!=="akari") return;
     let n=0;for(const m of msgs) if(m.oshi) n++;
     if(!n) return;
-    S.m.oshi+=n;S.zz=(S.zz||0)+n*1.8;const z=Math.floor(S.zz);S.zz-=z;api.change("sleep",z);
+    S.m.oshi+=n;S.zz=(S.zz||0)+n*(S.diff==="hard"?1.8:1.4);const z=Math.floor(S.zz);S.zz-=z;api.change("sleep",z);
   },
   chase:{akari:{ms:26000,max:3,lines:["ねえ","既読ついてるよ？","…寝てないよね？"],on:(S,api)=>api.change("mood",-3)}},
   alerts(S){

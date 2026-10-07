@@ -11,7 +11,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 const ACT=s=>Object.assign({act:true},s);
 const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 
-let SCN,S=null,sid=0,timer=null,seen={},titlesGot={};
+let SCN,S=null,sid=0,timer=null,seen={},titlesGot={},diff="normal";
 
 /* ---------------- skeleton ---------------- */
 function mount(){
@@ -47,8 +47,9 @@ function mount(){
 function fresh(name){
   const th={};
   for(const k of SCN.order){const d=SCN.threads[k];th[k]={msgs:(d.msgs||[]).map(m=>Object.assign({read:true},m)),unread:0,pending:null,queue:[],busy:false,last:d.last||null,lastT:d.lastT||0,aq:[],asking:false,idle:0,chase:0}}
-  const s={name,t:SCN.start,acc:0,view:"list",th,fired:{},over:false,callOn:false,m:{by:{},chased:0,calls:0,miss:0,notif:0,photo:0}};
+  const s={name,diff:SCN.diffs?diff:"normal",t:SCN.start,acc:0,view:"list",th,fired:{},over:false,callOn:false,m:{by:{},chased:0,calls:0,miss:0,notif:0,photo:0}};
   for(const st of SCN.stats) s[st.key]=st.init;
+  if(SCN.diffs){const D=SCN.diffs[s.diff];for(const k in (D.stats||{})) s[k]=D.stats[k]}
   if(SCN.init) SCN.init(s,api);
   return s;
 }
@@ -360,7 +361,7 @@ function end(kind){
       <div class="checks">${R.checks.map(c=>`<div class="${c[1]?"ok":"ng"}"><b>${c[1]?"✓":"—"}</b>${esc(c[0])}</div>`).join("")}</div>
       ${R.big?`<div class="cards"><b>${R.big.n}</b><span>/ ${R.big.of}</span><small>${esc(R.big.label)}</small></div>`:""}
       <div class="stampbox"><small>称号${S.newTitle?"　NEW":""}</small><b>${esc(S.titleObj.name)}</b></div></div>
-    <div class="pcard"><p class="lbl">きろく</p><dl class="kv">${R.kv.map(r=>`<dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd>`).join("")}</dl></div>
+    <div class="pcard"><p class="lbl">きろく</p><dl class="kv">${(SCN.diffs?[["難易度",SCN.diffs[S.diff].name]]:[]).concat(R.kv).map(r=>`<dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd>`).join("")}</dl></div>
     <div class="pcard violet"><p class="lbl">見たエンディング ${got} / ${keys.length}</p><div class="endmap">${keys.map(k=>`<span class="${seen[k]?"got":""}${k===kind?" clear":""}">${seen[k]?esc(SCN.endings[k].name):"？？？"}</span>`).join("")}</div></div>
     <div class="pcard sky"><p class="lbl">集めた称号 ${tGot} / ${SCN.titles.length}</p><div class="endmap titles">${SCN.titles.map(t=>`<span class="${titlesGot[t.id]?"got":""}${t.id===S.titleObj.id?" clear":""}">${titlesGot[t.id]?esc(t.name):"？？？"}</span>`).join("")}</div><p class="thint">「？？？」のヒント：${esc((pick(SCN.titles.filter(t=>!titlesGot[t.id]))||{hint:"ぜんぶ集めました！"}).hint)}</p></div>
     <button class="go" type="button" id="saveImg">結果を画像で保存</button>
@@ -385,7 +386,7 @@ async function makeImage(R){
   x.fillStyle=INK;x.font="700 34px "+G;x.fillText(SCN.title,80,110);
   x.textAlign="right";x.font="600 32px "+HAND;x.fillText("ENDING "+R.got+" / "+R.total,W-80,110);x.textAlign="left";
   x.strokeStyle="#d5d1d9";x.lineWidth=2;x.beginPath();x.moveTo(80,140);x.lineTo(W-80,140);x.stroke();
-  x.save();x.translate(80,215);x.rotate(-3*Math.PI/180);x.font="700 30px "+G;const tag=R.clear?"CLEAR":"ENDING "+R.no;const tw=x.measureText(tag).width;x.fillStyle=INK;x.fillRect(0,-36,tw+36,50);x.fillStyle=PAPER;x.fillText(tag,18,0);x.restore();
+  x.save();x.translate(80,215);x.rotate(-3*Math.PI/180);x.font="700 30px "+G;const tag=(R.clear?"CLEAR":"ENDING "+R.no)+(SCN.diffs&&S&&S.diff==="hard"?"・ムズい":"");const tw=x.measureText(tag).width;x.fillStyle=INK;x.fillRect(0,-36,tw+36,50);x.fillStyle=PAPER;x.fillText(tag,18,0);x.restore();
   let fs=84;x.font="900 "+fs+"px "+G;while(x.measureText(R.ending).width>640&&fs>56){fs-=4;x.font="900 "+fs+"px "+G}
   let y=330;for(const t of wrapText(x,R.ending,640)){const w=x.measureText(t).width;x.save();x.translate(80,y);x.rotate(-1.8*Math.PI/180);x.fillStyle=R.clear?LIME:PINK;x.fillRect(-10,-20,w+20,30);x.restore();x.fillStyle=INK;x.fillText(t,80,y);y+=100}
   x.font="600 38px "+HAND;x.fillStyle=INK;x.fillText(R.time+"、"+R.where+"にて。",80,y-20);
@@ -425,15 +426,17 @@ function showIntro(){
   <div class="pcard sky"><p class="lbl">ゴール</p><p class="goal">${I.goal}</p>${I.goalSub?`<p class="story" style="font-size:13px;color:var(--pmuted)">${I.goalSub}</p>`:""}</div>
   <div class="pcard"><p class="lbl">あそびかた</p><ul class="how">${I.how.map(h=>`<li><b>${esc(h[0])}</b><span>${esc(h[1])}</span></li>`).join("")}</ul></div>
   ${I.field?`<form class="field pcard violet" id="oform"><p class="lbl">${esc(I.field.tag||"推し")}</p><label for="nm">${esc(I.field.label)}</label><input id="nm" type="text" maxlength="12" autocomplete="off" placeholder="${esc(I.field.def)}" value="${esc(last)}"></form>`:""}
+  ${SCN.diffs?`<div class="pcard"><p class="lbl">難易度</p><div class="diffs" role="radiogroup" aria-label="難易度">${["normal","hard"].map(k=>`<button type="button" role="radio" data-d="${k}" aria-checked="${diff===k}"><b>${esc(SCN.diffs[k].name)}</b><small>${esc(SCN.diffs[k].desc)}</small></button>`).join("")}</div></div>`:""}
   <button class="go" type="button" id="start">${esc(I.button||"はじめる")}</button>
   <p class="handnote">展開は毎回ちょっとずつ変わります。</p>
   ${SCN.links?`<div class="pcard"><p class="lbl">ほかの夜</p><div class="endmap">${SCN.links.map(l=>`<a class="lnk" href="${esc(l[1])}">${esc(l[0])}</a>`).join("")}</div></div>`:""}
   <p class="fine">${esc(SCN.fine)}</p>`;
   const go=()=>{let v=I.field?($("nm").value.trim()||I.field.def):"";if(I.field) LS.set(SCN.id+":name",v===I.field.def?"":v);el.hidden=true;begin(v)};
+  el.querySelectorAll(".diffs button").forEach(b=>b.onclick=()=>{diff=b.dataset.d;LS.set(SCN.id+":diff",diff);el.querySelectorAll(".diffs button").forEach(x=>x.setAttribute("aria-checked",String(x===b)))});
   $("start").onclick=go;if($("oform")) $("oform").onsubmit=e=>{e.preventDefault();go()};
 }
-function begin(name){sid++;S=fresh(name);hud();render();runEvents();startClock()}
+function begin(name){sid++;S=fresh(name);hud();render();const D=SCN.diffs&&SCN.diffs[S.diff];if(D&&D.scene) scene.apply(null,D.scene);runEvents();startClock()}
 
 const api={ring,quietWhy(){if(S.callOn)return"call";if(!$("osd").hidden)return"osd";if(!$("scene").hidden)return"scene";for(const k of SCN.order){const T=S.th[k];if(T.busy)return k+" busy";if(T.asking&&!T.pending)return k+" asking";if(T.pending&&!T.pending.end&&!SCN.threads[k].static&&Date.now()-(T.pendAt||0)<6000)return k+" pending"}return "quiet "+(S.qms||0)},$,pick,rnd,shuffle,fmt,esc,ACT,LS,later,addTime,change,applyFx,line,sys,them,me,setPending,endStamp,openQ,ask,banner,info,scene,confirmBox,menu,incoming,callOut,hud,render,openTh,end,fill,get S(){return S},get SCN(){return SCN}};
-window.ChatSim={start(scn){SCN=scn;if(!document.title) document.title=scn.title;seen=LS.get(scn.id+":seen",{});titlesGot=LS.get(scn.id+":titles",{});mount();showIntro()},api,ACT};
+window.ChatSim={start(scn){SCN=scn;diff=LS.get(scn.id+":diff","normal")==="hard"?"hard":"normal";if(!document.title) document.title=scn.title;seen=LS.get(scn.id+":seen",{});titlesGot=LS.get(scn.id+":titles",{});mount();showIntro()},api,ACT};
 })();

@@ -72,6 +72,10 @@ const SCN={
     mom:{name:"母",short:"母",col:"#e7b25e",ini:"母"}
   },
   order:["miku","nono","nanase","rui","mana","dm","mom","info"],
+  diffs:{
+    normal:{name:"通常",desc:"電池36%・体力55からスタート",stats:{bat:36,tai:55}},
+    hard:{name:"ムズい",desc:"開演前に交換の連絡で電池を使いすぎて27%から。ライブで跳びすぎて体力も45",stats:{bat:27,tai:45},scene:["ムズい","電池、使いすぎた","開演前の交換DMで、もう27%。ライブで跳びすぎて脚も重い。","電池27%・体力45からスタート"]}
+  },
   stats:[
     {key:"bat",label:"電池",init:27,max:100,color:v=>v<=10?"#ff6b6b":v<=20?"#ffb84d":"var(--lime)",warn:v=>v<=10?" やばい":""},
     {key:"tai",label:"体力",init:45,max:100,color:v=>v<20?"#ff6b6b":"var(--sky)",warn:v=>v<20?" 歩くのおそい":""}
@@ -262,10 +266,11 @@ function meet(S,api,k){
 }
 function gate(S){
   const open=Object.keys(S.p).filter(k=>["coming","search","lost","meeting","x"].includes(S.p[k].st)).map(k=>SCN.threads[k].short);
-  const go=()=>{S.gated=1;const w=gateWalk(S);A.scene("改札","改札を通る","ホームまで"+w+"分。",open.length?open.join("・")+"さん、ごめんなさい":"");A.addTime(w);
+  const go=()=>{S.gated=1;const w=gateWalk(S);A.addTime(w);
     if(S.over) return;
-    if(S.t>LAST) return A.end("missed");
-    const h=hands(S);A.end(h>=3?"perfect":h>=1?"clear":"empty")};
+    if(S.t>LAST) return A.scene("23:12","ベルが鳴り終わった","階段をかけ上がったら、ドアが閉まるところだった。","まこから「すず……」","",{wait:true,onClose:()=>A.end("missed")});
+    const h=hands(S),k=h>=3?"perfect":h>=1?"clear":"empty",left=LAST-S.t;
+    A.scene(A.fmt(S.t),left<=3?"終電…間に合った！！":"終電、間に合った",left<=3?"発車ベルの中、まこが手を振っている。「すず！！こっち！」":"ホームでまこが待っていた。「おつかれ！どうだった？」",h?"ケースの中に、手渡しで受け取ったトレカが"+h+"枚":"ケースの中身は、来たときのまま","good",{wait:true,onClose:()=>A.end(k)})};
   if(open.length) A.confirmBox("改札に入る？",open.join("・")+"とまだ会えていない。","入る","まだ待つ",go);
   else go();
 }

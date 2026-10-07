@@ -287,6 +287,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #8051bd;outline-offset:2p
 .diffs button[aria-checked="true"]{background:var(--lime);box-shadow:2px 3px 0 var(--ink)}
 .diffs button[data-d="hard"][aria-checked="true"]{background:var(--pink)}
 .endmap a.lnk{display:inline-block;border:1.5px solid var(--ink);background:#fff;border-radius:30px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--ink);text-decoration:none}
+.scard .tapnext{margin:12px 0 0;text-align:right;font-size:12px;font-weight:700;color:var(--ink);animation:blink 1.4s infinite}
 .handnote{margin:0 0 14px;text-align:center;font-family:var(--f-hand);font-weight:600;font-size:14px}
 .end{margin:0;font-size:15px;line-height:1.9}
 .checks{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
@@ -987,12 +988,12 @@ function batteryPrompt(){
 }
 /* ---------------- scene card ---------------- */
 let sceneT=null;
-function scene(tag,title,body,hand,kind){
-  const el=$("scene");el.hidden=false;
-  el.innerHTML=`<div class="scard ${kind||""}" role="status"><span class="tag">${esc(tag)}</span><h3><span>${esc(title)}</span></h3><p>${esc(body)}</p>${hand?`<p class="hand">${esc(hand)}</p>`:""}</div>`;
-  clearTimeout(sceneT);
-  const close=()=>{el.hidden=true;clearTimeout(sceneT)};
-  el.onclick=close;sceneT=setTimeout(close,3200);
+function scene(tag,title,body,hand,kind,opt){
+  const el=$("scene");el.hidden=false;opt=opt||{};
+  el.innerHTML=`<div class="scard ${kind||""}" role="status"><span class="tag">${esc(tag)}</span><h3><span>${esc(title)}</span></h3><p>${esc(body)}</p>${hand?`<p class="hand">${esc(hand)}</p>`:""}${opt.wait?`<p class="tapnext">タップでつづき ›</p>`:""}</div>`;
+  clearTimeout(sceneT);let shut=false;
+  const close=()=>{if(shut)return;shut=true;el.hidden=true;clearTimeout(sceneT);if(opt.onClose)opt.onClose()};
+  el.onclick=close;if(!opt.wait) sceneT=setTimeout(close,3200);
 }
 /* ---------------- notifications: one slim strip at the very top ---------------- */
 let bq=[],bOn=false,bT=null;
@@ -1172,9 +1173,11 @@ function gate(){
   const warn=S.swapDone?(S.rin===2?"みおからまだトレカを受け取っていません。このまま帰りますか？":"ホームへ向かいます。"):S.swapFail?"トレカ交換はできなかった。このまま帰りますか？":"トレカ交換がまだです。改札に入ると「交換できなかった」になります。";
   confirmBox("改札に入りますか？",warn,"入る","まだ",()=>{
     S.boarded=true;
-    if(!S.swapDone) end("noswap");
-    else if(S.tai<D().sleepAt) end("sleep");
-    else end("clear");
+    const k=!S.swapDone?"noswap":S.tai<D().sleepAt?"sleep":"clear";
+    const left=LAST-S.t;
+    const body=left<=3?"発車ベルの中、ドアにすべりこむ。背中でドアが閉まった。":left<=10?"ホームに着いたら、もう電車が来ていた。空いている席はない。":"ホームのベンチで、終電を待てた。";
+    const hand=k==="noswap"?"でも、トレカのケースは空のまま":k==="sleep"?"座った瞬間、まぶたが重くなる…":S.cards>=3?S.oshi+"のトレカ3枚、ちゃんとここにある":S.oshi+"のトレカ、ちゃんとここにある";
+    scene(fmt(S.t),left<=3?"終電…間に合った！！":"終電、間に合った",body,hand,k==="clear"?"good":"",{wait:true,onClose:()=>end(k)});
   });
 }
 const ENDS={

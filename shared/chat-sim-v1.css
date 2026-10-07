@@ -321,3 +321,9 @@ button:focus-visible,a:focus-visible{outline:3px solid #8051bd;outline-offset:2p
 .photo.outfit{background:linear-gradient(180deg,#f3ecff,#fff4f7)}
 .photo.outfit::after{left:38%;top:14%;width:24%;height:72%;border-radius:40% 40% 8px 8px;background:linear-gradient(180deg,#ffd5df 0 45%,#ded7ff 45% 100%)}
 .scard .tapnext{margin:12px 0 0;text-align:right;font-size:12px;font-weight:700;color:var(--ink);animation:blink 1.4s infinite}
+.diffs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.diffs button{display:flex;flex-direction:column;gap:4px;text-align:left;border:1.5px solid var(--ink);border-radius:5px;background:#fff;padding:10px 12px;cursor:pointer;font-family:var(--f-head);color:var(--ink)}
+.diffs button b{font-size:16px;font-weight:900}
+.diffs button small{font-size:11.5px;line-height:1.5;color:var(--pmuted)}
+.diffs button[aria-checked="true"]{background:var(--lime);box-shadow:2px 3px 0 var(--ink)}
+.diffs button[data-d="hard"][aria-checked="true"]{background:var(--pink)}
