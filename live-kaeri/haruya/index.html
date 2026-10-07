@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>ライブ帰りシミュレーター はるや版｜PLAY ROOM</title>
+  <meta name="description" content="彼女が帰ってくるまで、起きていられるか。推しの話を聞くほど眠くなる、ライブ帰りシミュレーターのはるや版。">
+  <meta name="robots" content="noindex">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PLAY ROOM">
+  <meta property="og:title" content="ライブ帰りシミュレーター はるや版">
+  <meta property="og:description" content="彼女が帰ってくるまで、起きていられるか。推しの話を聞くほど眠くなる、ライブ帰りシミュレーターのはるや版。">
+  <meta property="og:url" content="https://playroom-lab.github.io/play-room/live-kaeri/haruya/">
+  <meta property="og:image" content="https://playroom-lab.github.io/play-room/live-kaeri/haruya/ogp.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#f7f5ed">
+  <link rel="icon" href="../../icon-192.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <style>*,*::before,*::after{box-sizing:border-box}[hidden]{display:none!important}img{max-width:100%}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap">
+<link rel="stylesheet" href="../../shared/chat-sim-v1.css">
+</head>
+<body>
+<div class="app" id="app">
+  <div class="band" aria-label="ゲームの状態">
+    <div class="srow">
+      <div class="stat"><div class="lab"><span>眠気<em id="w_sleep"></em></span><b id="v_sleep"></b></div><div class="bar"><span id="b_sleep"></span></div></div><div class="stat"><div class="lab"><span>あかりの機嫌<em id="w_mood"></em></span><b id="v_mood"></b></div><div class="bar"><span id="b_mood"></span></div></div>
+      <div class="train"><small id="tkS"></small><b id="tkB"></b><i id="tkI"></i></div>
+    </div>
+    <button class="pinch" id="pinch" type="button" aria-expanded="false"><i id="pinchI">✓</i><span id="pinchT">いまのピンチはなし</span><small id="pinchN"></small></button>
+    <div class="plist" id="plist" hidden=""></div>
+    <div class="route"><div class="track" id="track"><span class="fill" id="rFill"></span><span class="node" style="left:0%"><span>会場</span></span><span class="node" style="left:25%"><span>駅</span></span><span class="node" style="left:55%"><span>電車</span></span><span class="node" style="left:85%"><span>最寄り</span></span><span class="node last" style="left:100%"><span>家</span></span><span class="walker wait" id="rMe" style="left:0%"></span></div></div>
+    <div class="arow"><div class="stage" id="stage"><b>いま</b><span></span></div><span class="acts" id="acts"></span></div>
+  </div>
+  <div class="phone">
+    <div class="sbar" id="sbar"><span id="clk"></span><span class="r"><span>4G</span><span class="bat" id="bat"><span id="batp"></span><i><b id="batb"></b></i></span></span></div>
+    <div class="view" id="view"></div>
+  </div>
+  <button class="pa" id="pa" type="button" aria-live="polite"><i id="paI"></i><b id="paT"></b><span id="paX"></span></button>
+  <div class="scene" id="scene" hidden=""></div>
+  <div class="ov intro" id="intro"></div>
+  <div class="ov call" id="call" hidden=""></div>
+  <div class="ov osd" id="osd" hidden=""></div>
+  <div class="ov result" id="result" hidden=""></div></div>
+<script src="../../shared/chat-sim-v1.js"></script>
+<script>
+/* ライブ帰りシミュレーター はるや版 */
+(function(){
+const {ACT}=ChatSim;
+const A=ChatSim.api;
+const H=m=>21*60+m;           // 21:mm
+const START=H(34);
+const O=x=>({x,oshi:1});       // 推しの話（読むと眠くなる）
+const at=(S)=>S.arrive;        // 最寄り着
+const home=S=>S.arrive+9;      // 家に着く
+const prep=S=>(S.karaage?1:0)+(S.shelf?1:0)+(S.bath?1:0);
+const left=S=>Math.max(0,home(S)-S.t);
+
+const AQ=(t,fx,r,ex)=>Object.assign({t,fx,r:r||[]},ex||{});
+const AS=(st,fx,r)=>({stamp:st,fx,r:r||[]});
+const TRAIN=[ // 電車で語らせて（2分ごとに1かたまり。かたまりごとの相槌つき）
+  {l:[O("まずね"),O("オープニングで{name}がいちばん最初に出てきたの")],c:[
+    AQ("最初から！？",{sleep:2,mood:2},["そう！心の準備できてなかった"]),
+    AQ("うんうん",{sleep:1,mood:1},[],{aiz:1}),
+    AS(["🎆","どーん"],{mood:1},["それそれ"])]},
+  {l:[O("で、2曲目の前に{name}が"),O("ちょっと笑ったの"),O("あれ絶対なんか思い出し笑い")],c:[
+    AQ("何を思い出したんだろうね",{sleep:2,mood:3},["気になって次の曲入ってこなかった"]),
+    AQ("思い出し笑いかわいいね",{sleep:2,mood:2},["かわいいの"]),
+    AQ("気のせいじゃない？",{mood:-4},["見たもん"])]},
+  {l:[O("あとダンス"),O("前より腕の角度が変わってて"),O("ほんとに細かいんだけど")],c:[
+    AQ("よく気づくね",{sleep:2,mood:3},["見ちゃうの"]),
+    AQ("へえ〜",{sleep:1,mood:1},[],{aiz:1}),
+    AQ("（既読だけつけておく）",{mood:-5},[],{silent:1})]},
+  {l:[O("{name}のソロのところ"),O("声がちょっと震えてて"),O("泣くかと思った")],c:[
+    AQ("それは泣く",{sleep:2,mood:3},["でしょ！？"]),
+    AQ("泣かなかったの？",{sleep:2,mood:2},["…ちょっと泣いた"]),
+    AS(["🥲","うるっ"],{mood:1},["わかってくれる"])]},
+  {l:[O("MCで{name}が"),O("最近ハマってるパンの話してた"),O("たぶん駅前のあの店")],c:[
+    AQ("今度そのパン屋行こうよ",{sleep:1,mood:5},["行く！！","聖地巡礼"]),
+    AQ("パン好きなんだ",{sleep:1,mood:1},[],{aiz:1}),
+    AQ("俺もパン好きだけど",{mood:-1},["知ってる笑"],{jealous:1})]},
+  {l:[O("あとね"),O("最後のあいさつ"),O("「また会おうね」って3回言ってた")],c:[
+    AQ("3回も？",{sleep:2,mood:2},["3回！"]),
+    AQ("また会えるといいね",{sleep:1,mood:4},["うん…絶対会う"]),
+    AQ("なるほど",{sleep:1,mood:0},[],{aiz:1})]},
+  {l:[O("3回目はちょっと噛んでた"),O("それもよかった")],c:[
+    AQ("噛んだのもよかったんだ笑",{sleep:1,mood:3},["そこがいいの"]),
+    AQ("うんうん",{sleep:1,mood:1},[],{aiz:1}),
+    AS(["😂","わら"],{mood:1},["笑うとこじゃない笑"])]},
+  {l:[O("衣装も2着目がほんとによくて"),O("ジャケットの裏地が"),O("ちらっと赤いの")],c:[
+    AQ("裏地まで見てるの？",{sleep:2,mood:2},["見えるの、動くと"]),
+    AQ("写真ある？",{sleep:1,mood:3},["撮影禁止だよ","目に焼きつけた"]),
+    AQ("へえ〜",{sleep:1,mood:0},[],{aiz:1})]},
+  {l:[O("{name}がこっち側の花道来たとき"),O("時が止まった")],c:[
+    AQ("近かった？",{sleep:2,mood:3},["近かった…","まだ手が震えてる"]),
+    AQ("止まってよかったね",{sleep:1,mood:2},["よかった"]),
+    AS(["⏸","とまった"],{mood:2},["それ笑"])]},
+  {l:[O("…ってことがあったの"),"ごめん長くなった"],c:null}
+];
+
+
+const SCN={
+  id:"lk-haruya",title:"ライブ帰りシミュレーター はるや版",start:START,speed:6000,
+  fine:"フィクションです。登場する人物・会場・団体はすべて架空です。",
+  clearNote:"おかえり。次は、ちがう夜で。",
+  infoThread:"info",
+  links:[["本編（ライブ帰り）","../"],["すずさん版","../suzu/"],["参戦前夜版","../zenya/"]],
+  threads:{
+    akari:{name:"あかり",short:"あかり",col:"#ff8fab",ini:"あ"},
+    yuma:{name:"ゆうま",short:"ゆうま",col:"#7fb2ff",ini:"ゆ"},
+    info:{name:"お知らせ",col:"#6b6680",ini:"!",static:1},
+    mom:{name:"母",short:"母",col:"#e7b25e",ini:"母"},
+    yui:{name:"ゆい（あかりの友だち）",short:"ゆい",col:"#e98aae",ini:"ゆ"},
+    sota:{name:"そうた",short:"弟",col:"#5fbfa0",ini:"そ"},
+    work:{name:"会社の同期",col:"#9ac26b",ini:"同",n:5,group:1,static:1,last:"明日の資料、朝イチでよろしく〜",lastT:H(2),msgs:[{k:"them",who:"たかの",x:"明日の資料、朝イチでよろしく〜",t:H(2)}]}
+  },
+  order:["akari","yui","sota","yuma","mom","info","work"],
+  stats:[
+    {key:"sleep",label:"眠気",init:35,max:100,color:v=>v>=75?"#ff6b6b":v>=55?"#ffb84d":"var(--violet)",warn:v=>v>=85?" 限界":v>=70?" やばい":""},
+    {key:"mood",label:"あかりの機嫌",init:60,max:100,color:v=>v<30?"#ff6b6b":v<50?"#ffb84d":"var(--pink)",warn:v=>v<25?" つめたい":v>=80?" ごきげん":""}
+  ],
+  init(S){
+    S.arrive=24*60+3;S.delay=Math.random()<.5?8:0;S.cardAns=A.pick(["左","まんなか","右"]);
+    S.coffee=0;S.wash=0;S.karaage=0;S.bread=0;S.shelf=0;S.bath=0;S.bathFirst=0;S.lying=0;S.game=0;S.stretchT=0;
+    S.karaReq=0;S.shelfReq=0;S.breadReq=0;S.wakeReq=0;S.wakeAsked=0;S.woke=0;S.early=0;S.akSlept=0;S.pick=0;S.talk=-1;S.talkN=TRAIN.length;S.aiz=0;S.silent=0;
+    S.m.oshi=0;S.m.yawn=0;S.out=0;S.jealous=0;S.car=1;S.yuiHelp=0;
+  },
+  ticket(S){
+    if(S.pick) return {small:"あかりと",big:"駅で合流",sub:"あと"+Math.max(0,S.pickAt-S.t)+"分"};
+    if(S.t<23*60+12) return {small:"あかりの終電",big:"23:12",sub:"まだ会場の近く"};
+    return {small:"おかえりまで",big:"あと"+left(S)+"分",sub:A.fmt(home(S))+"ごろ帰宅",cls:left(S)<=15?"hot":""};
+  },
+  route:{
+    nodes:[[0,"会場"],[25,"駅"],[55,"電車"],[85,"最寄り"],[100,"家"]],
+    pct(S){const t=S.t;
+      if(t<H(41)) return 0;
+      if(t<H(100)) return (t-H(41))/(H(100)-H(41))*25;
+      if(t<23*60+12) return 25;
+      if(S.akSlept&&t>=at(S)) return 92;
+      if(t<at(S)) return 55+(t-(23*60+12))/(at(S)-(23*60+12))*30;
+      if(S.pick) return 85;
+      return Math.min(100,85+(t-at(S))/9*15);
+    },
+    wait(S){const t=S.t;return t<H(41)||(t>=H(100)&&t<23*60+12)||(S.delay&&S.delayOn&&t<at(S))}
+  },
+  minute(S,api,n){
+    if(S.wakeAsked&&!S.woke&&!S.akSlept&&S.t>=at(S)) S.akSlept=1;
+    const every=S.lying?1:S.t>=23*60?3:4;
+    if(n%every===0) api.change("sleep",1);
+    if(S.lying&&n%3===0&&!S.m.lyNote){S.m.lyNote=1;api.scene("ソファ","気持ちよすぎる","クッションが体の形に沈んでいく。","ちょっとだけ、ちょっとだけ…")}
+    const T=S.th.akari;
+    if(api.openQ("akari")&&S.t-T.pendT>=5&&(S.t-T.pendT)%2===1) api.change("mood",-1);
+    const la=(S.lastAns&&S.lastAns.akari)||START;
+    if(S.t-la>=10&&n%4===0&&!S.akSlept) api.change("mood",-1);
+    if(n%7===0&&!S.akSlept) api.change("mood",-1);
+    if(S.delayMsg&&!T.busy&&!api.openQ("akari")&&!T.asking){S.delayMsg=0;api.them("akari",["ちょっと待って","電車止まった…","8分遅れるって","{home}くらいになるかも"]);return}
+    if(S.talk>=0&&S.talk<S.talkN&&n%2===0&&!T.busy&&!api.openQ("akari")&&!T.asking){
+      const chunk=TRAIN[S.talk];S.talk++;
+      const last=S.talk>=S.talkN||!chunk.c;
+      if(last) api.them("akari",TRAIN[TRAIN.length-1].l);
+      else api.ask("akari",chunk.l,chunk.c.map(c=>Object.assign({},c,{on:(S)=>{if(c.aiz)S.aiz++;if(c.silent)S.silent++;if(c.jealous)S.jealous++}})));
+      if(last) S.talk=99;
+    }
+    if(S.pick&&!S.akSlept&&S.t>=S.pickAt) finish(S,api,"pickup");
+    if(!S.pick&&!S.akSlept&&S.t>=home(S)) finish(S,api,"home");
+  },
+  onStat(S,api,k){
+    if(k==="sleep"&&S.sleep>=100) api.end("sofa");
+    if(k==="sleep"&&S.sleep>=85&&!S.m.warn85){S.m.warn85=1;api.scene("眠気","まぶたが重い","スマホの文字がにじんで見える。","やばい、なにか動かないと")}
+  },
+  onRead(S,api,th,msgs){
+    if(th!=="akari") return;
+    let n=0;for(const m of msgs) if(m.oshi) n++;
+    if(!n) return;
+    S.m.oshi+=n;S.zz=(S.zz||0)+n*1.8;const z=Math.floor(S.zz);S.zz-=z;api.change("sleep",z);
+  },
+  chase:{akari:{ms:26000,max:3,lines:["ねえ","既読ついてるよ？","…寝てないよね？"],on:(S,api)=>api.change("mood",-3)}},
+  alerts(S){
+    const a=[];
+    if(S.sleep>=75) a.push({lv:3,x:"眠気が限界に近い（100で寝落ち）"});
+    else if(S.sleep>=55) a.push({lv:2,x:"だんだん眠くなってきた"});
+    if(S.lying) a.push({lv:2,x:"ソファで横になっている"});
+    if(S.mood<30) a.push({lv:3,x:"あかりの機嫌がかなり悪い",th:"akari"});
+    else if(S.mood<45) a.push({lv:2,x:"あかりの機嫌がちょっと悪い",th:"akari"});
+    if(S.wakeAsked&&!S.woke&&!S.akSlept&&S.t>=at(S)-10&&S.t<at(S)) a.push({lv:3,x:"いまコールして起こす時間！"});
+    if(S.karaReq&&!S.karaage&&left(S)<=40) a.push({lv:2,x:"からあげ棒、まだ買ってない"});
+    if(S.shelfReq&&!S.shelf&&left(S)<=30) a.push({lv:1,x:"棚がまだ段ボールのまま"});
+    return a;
+  },
+  stage(S){
+    const acts=[];
+    let text=S.lying?"ソファで横になっている…":"家のリビングにいる";
+    if(S.t>=23*60+12&&!S.pick) text+="・あかりの帰宅 "+A.fmt(home(S))+"ごろ";
+    if(S.lying) acts.push({label:"起き上がる",pulse:1,on:()=>{S.lying=0;A.change("sleep",-2);A.hud()}});
+    else acts.push({label:"やること",on:()=>doMenu(S)});
+    if(S.wakeAsked&&!S.woke&&S.t<at(S)) acts.push({label:"あかりにコール",sub:S.t<at(S)-10,pulse:S.t>=at(S)-10,on:()=>wakeCall(S)});
+    if(!S.pick&&!S.akSlept&&S.t>=at(S)-10&&S.t<at(S)+3) acts.push({label:"駅まで迎えに行く",sub:1,on:()=>A.confirmBox("駅まで迎えに行く？","歩いて8分。最寄り駅の改札で待つ。","行く","やめる",()=>{S.pick=1;S.pickAt=Math.max(S.t+8,at(S));S.lying=0;A.change("sleep",-6);A.scene("外へ","夜風がつめたい","サンダルをつっかけて駅へ向かう。","眠気が少し飛んだ");A.me("akari",{x:"駅まで迎えに行くね"});later(()=>A.them("akari",["え！！","うれしい","待ってる"]),1500);A.hud()})});
+    return {text,ready:S.t>=at(S)-10&&!S.pick,acts};
+  },
+  where(S){return {sofa:"リビングのソファ",terminal:"終点の駅前",pickup:"最寄り駅の改札"}[S.endKind]||"家の玄関"},
+  endOrder:["best","home","pickup","bet","cold","sofa","terminal"],
+  endings:{
+    best:{name:"最高のおかえり",clear:1,text:"玄関を開けたあかりが固まる。机にからあげ棒、棚にはグッズの場所、お風呂も沸いてる。「え、なにこれ」って言いながら、もう泣き笑いだった。{name}の話は、明日の朝ごはんのときにもう一回ちゃんと聞く。"},
+    home:{name:"おかえりが言えた",clear:1,text:"ちゃんと起きて「おかえり」が言えた。あかりは靴も脱がずに{name}の話の続きを始める。眠いけど、うれしそうだからまあいいか。"},
+    pickup:{name:"駅まで迎えに",clear:1,text:"改札から出てきたあかりが、こっちを見つけて小走りになる。紙袋ふたつ、片方持つ。帰り道はずっと{name}の話。夜の道がいつもより短かった。"},
+    bet:{name:"1000円の勝ち",clear:1,text:"「おかえり」のあと、そうたに証拠の写真を送る。『まじか』『兄ちゃん本気出しすぎ』。明日の朝ごはんは、1000円の話と{name}の話の続き。"},
+    cold:{name:"冷たいおかえり",text:"起きてはいた。でも「…ただいま」の声が低い。返事がそっけなかったこと、たぶん全部覚えてる。今夜の{name}の話は、もう聞かせてもらえない。"},
+    sofa:{name:"ソファで寝落ち",black:1,text:"気づいたら朝だった。体には毛布。テーブルにはあかりのメモ「おかえりって言ってほしかったな」。その横に、{name}のトレカが1枚置いてあった。{betline}"},
+    terminal:{name:"終点までお迎え",text:"「…終点」のメッセージで飛び起きた。{carline}帰りの車内で、あかりは{name}の話をもう一周した。帰りついたのは2時すぎ。"}
+  },
+  result(S,kind){
+    const awake=kind!=="sofa";
+    return {
+      ticket:kind==="sofa"?["眠気","100"]:["機嫌",String(S.mood)],
+      checks:[["起きて待てた",awake],["機嫌よし",S.mood>=70],["準備3つ",prep(S)===3]],
+      big:{n:prep(S),of:3,label:"おかえりの準備（からあげ棒・棚・お風呂）",short:"おかえりの準備"},
+      stats:[["眠気",String(S.sleep)],["機嫌",String(S.mood)],["推しの話",S.m.oshi+"件"],["コーヒー",S.coffee+"杯"]],
+      kv:[["読んだ推しの話",S.m.oshi+"件"],["あかりへの返信",(S.m.by.akari||0)+"回"],["コーヒー",S.coffee+"杯"],["からあげ棒",S.karaage?(S.bread?"買った（メロンパンも）":"買った"):"買ってない"],["棚",S.shelf?"組み立てた":"段ボールのまま"],["お風呂",S.bath?(S.bathFirst?"沸かして先に入った":"沸かした"):"沸かしてない"],["起こすコール",S.woke?"かけた":S.wakeAsked?"かけられなかった":"—"],["電車の遅れ",S.delay?S.delay+"分":"なし"]]
+    };
+  },
+  titles:[
+    {id:"noSleep",name:"推しの話で寝ない男",hint:"推しの話をたくさん読んで、最高のおかえり",ok:(S,k)=>k==="best"&&S.m.oshi>=28},
+    {id:"ideal",name:"理想の彼氏",hint:"準備を全部そろえて、ごきげんで迎える",ok:(S,k)=>k==="best"},
+    {id:"betlose",name:"1000円の負け",hint:"弟の賭けに乗って寝落ち",ok:(S,k)=>S.bet&&k==="sofa"},
+    {id:"blanket",name:"毛布をかけられた男",hint:"ゴール目前で力つきる",ok:(S,k)=>k==="sofa"&&S.t>=at(S)-15},
+    {id:"sofa",name:"寝落ち彼氏",hint:"ソファには勝てない",ok:(S,k)=>k==="sofa"},
+    {id:"taxi",name:"タクシーで終点へ",hint:"車を貸した夜に",ok:(S,k)=>k==="terminal"&&!S.car},
+    {id:"driver",name:"終点までドライバー",hint:"起こすコールを忘れる",ok:(S,k)=>k==="terminal"},
+    {id:"bath",name:"先に風呂入った男",hint:"沸かしたお風呂に、つい",ok:S=>S.bathFirst},
+    {id:"kidoku",name:"既読スルー彼氏",hint:"返事をしないまま帰りを迎える",ok:(S,k)=>k==="cold"&&(S.m.by.akari||0)<6},
+    {id:"cold",name:"冷えた空気",hint:"機嫌を下げすぎた",ok:(S,k)=>k==="cold"},
+    {id:"pickup",name:"迎えの人",hint:"駅まで歩く",ok:(S,k)=>k==="pickup"},
+    {id:"jealous",name:"推しに妬く彼氏",hint:"推しと自分を比べる",ok:S=>S.jealous>=2},
+    {id:"gamer",name:"ゲーマー彼氏",hint:"友だちの誘いに乗る",ok:S=>S.game},
+    {id:"alarm",name:"目覚まし係",hint:"ちょうどいいタイミングでコールする",ok:(S,k)=>S.woke&&!S.early},
+    {id:"bet",name:"1000円の勝者",hint:"弟の賭けに乗って起きている",ok:(S,k)=>k==="bet"},
+    {id:"karaage",name:"からあげ棒の男",hint:"頼まれたもの＋気づかい",ok:S=>S.karaage&&S.bread},
+    {id:"shelf",name:"棚職人",hint:"段ボールを開ける",ok:S=>S.shelf},
+    {id:"coffee",name:"カフェインの力",hint:"コーヒーにたよる",ok:S=>S.coffee>=2},
+    {id:"listen",name:"推し担当の聞き役",hint:"推しの話を読み続ける",ok:S=>S.m.oshi>=30},
+    {id:"aiz",name:"相槌マシーン",hint:"「うんうん」",ok:S=>S.aiz>=3},
+    {id:"kind",name:"ふつうに優しい彼氏",hint:"いつもの夜",ok:()=>true}
+  ],
+  intro:{
+    tag:"はるや版",h1:"ライブ<span>帰り</span>シミュレーター",note:"彼女が帰ってくるまで、起きていられるか。",
+    ticket:["おかえり","0:12"],storyLabel:"今夜のはるや",
+    story:"21時34分、家のリビング。彼女のあかりはライブに行っていて、さっき終演したらしい。終電で帰ってくるのは0時すぎ。<br>仕事帰りで、もう眠い。そしてあかりは、推しの話をするときがいちばん楽しそうだ。",
+    goal:"あかりが帰ってくるまで起きていて、「おかえり」を言う。",
+    goalSub:"からあげ棒・棚・お風呂の「おかえりの準備」がそろうと、さらにいいことがある。",
+    how:[["眠気","あかりの推しの話を読むと眠くなる。100で寝落ち"],["返信","返事を待たせると機嫌が下がる。追撃も来る"],["やること","コーヒーや買い物で目を覚ます。時間はたつ"],["ピンチ","上の「いまのピンチ」を見て、急ぐものから片づける"]],
+    field:{tag:"あかりの推し",label:"あかりの推しの名前",def:"推し",short:"あかりの推し"},
+    button:"待ちはじめる"
+  },
+  events:[
+    {at:START,f:(S,api)=>api.ask("akari",["終わったーーー！！！","生きてる","やばいやばいやばい"],[
+      {t:"おつかれ！どうだった？",fx:{mood:2},r:["聞いてくれる！？","あとで全部話す","いま規制退場待ち"]},
+      {t:"おつかれ〜",fx:{mood:1},r:["反応うすくない？笑"]},
+      {stamp:["🎉","おつかれ"],fx:{mood:1},r:["ありがと〜！"]}])},
+    {at:H(43),f:(S,api)=>api.ask("akari",[O("ねえ聞いて"),O("{name}が1曲目で"),O("こっち見た"),O("絶対見た")],[
+      {t:"よかったじゃん！",fx:{mood:2}},
+      {t:"何曲目のどのへん？",fx:{mood:4,sleep:2},r:[O("1曲目のサビ！！"),O("右に来たとき"),O("指さしてたの"),O("たぶんうちらのブロック")]},
+      {t:"気のせいでは",fx:{mood:-12},r:["は？","見たの"]},
+      {t:"俺のことは見てないの？",fx:{mood:-2},on:S=>S.jealous++,r:["ライブ中に彼氏は見ない","…ちょっとだけ思い出した","うそ"]}])},
+    {at:H(52),f:(S,api)=>api.ask("akari",["ねえお願い","帰りコンビニ寄る元気ないかも","からあげ棒たべたい…"],[
+      {t:"買っとく！",fx:{mood:3},on:S=>S.karaReq=1,r:["神","すき"]},
+      {t:"パンもいる？",fx:{mood:4},on:S=>{S.karaReq=1;S.breadReq=1},r:["天才","メロンパン！"]},
+      {t:"コンビニ遠いんだよなぁ",fx:{mood:-7},on:S=>S.karaReq=1,r:["…じゃあいいよ","（いいよじゃない）"]}])},
+    {at:H(58),f:(S,api)=>api.ask("akari",["交換相手見つからない","人多すぎ","どうしよ"],[
+      {t:"落ち着いて。待ち合わせどこ？",fx:{mood:3},r:["東口の柱","あ、いた！"]},
+      {t:"交換ってなに？",fx:{mood:-2},r:[O("トレカ！"),O("{name}のが出なくて"),O("同じのが3枚出たから"),O("交換するの"),O("全部で8種類あって、{name}のは…"),"あ、いた！行ってくる"]},
+      {t:"がんばれ",fx:{mood:1},r:["がんばる"]}])},
+    {at:22*60+5,f:(S,api)=>api.ask("yuma",["今日ひま？","一戦やらん？","20分だけ"],[
+      {t:"やる",cost:"20分たつ・その間あかりに返信できない",fx:{},on:(S)=>later(()=>{S.game=1;api.scene("20分後","対戦おわり","1勝2敗。座りっぱなしで、かえって体が重い。","スマホにはあかりからの通知がたまっている");api.addTime(20);api.change("sleep",-2);api.change("mood",-4)},900),r:["よっしゃ"]},
+      {t:"今日は彼女待ち",fx:{},r:["えらい","起きてられんの？笑"]},
+      {stamp:["🙏","ごめん"],fx:{},r:["また今度な"]}])},
+    {at:22*60+12,f:(S,api)=>api.ask("akari",["見て！！！",{photo:"cards3"},"交換できた","この中で私のお気に入りはどれでしょう"],[
+      {t:"左！",fx:{},on:(S,api,c)=>quiz(S,api,"左"),r:[]},
+      {t:"まんなか",fx:{},on:(S,api,c)=>quiz(S,api,"まんなか"),r:[]},
+      {t:"右でしょ",fx:{},on:(S,api,c)=>quiz(S,api,"右"),r:[]},
+      {t:"全員かっこいい",fx:{mood:-3},r:["それはそう","でも当てて"]},
+      {t:"俺の写真もトレカにして",fx:{mood:1},on:S=>S.jealous++,r:["誰が買うの笑","…1枚なら買う"]}])},
+    {at:22*60+20,f:(S,api)=>api.ask("akari",["あとさ","今日グッズ増えたけど怒らないでね","棚、届いてたよね…？"],[
+      {t:"棚組み立てとくよ",fx:{mood:4},on:S=>S.shelfReq=1,r:["え、うれしい","玄関の段ボールのやつ！"]},
+      {t:"また買ったの？",fx:{mood:-9},on:S=>S.shelfReq=1,r:["また買ったの","…"]},
+      {t:"怒らないよ",fx:{mood:2},on:S=>S.shelfReq=1,r:["やさし","ついでに棚組み立ててくれたら泣く"]}])},
+    {at:22*60+30,f:(S,api)=>{api.info("雨雲レーダー","あかりのいるエリアで雨が降りはじめました","rain");later(()=>api.ask("akari",["雨ふってきた","傘ない…"],[
+      {t:"迎えに行こうか？",fx:{mood:5},r:["遠いよ笑","でもうれしい","駅まで走る！"]},
+      {t:"折りたたみ持ってないの？",fx:{mood:-5},r:["持ってたら言わない"]},
+      {t:"濡れないようにね",fx:{mood:1},r:["うん"]}]),2500)}},
+    {at:22*60+40,f:(S,api)=>api.them("akari",["駅ついた","ホームすごい人"])},
+    {at:22*60+48,f:(S,api)=>api.ask("akari",["ねえMCの話していい？"],[
+      {t:"聞かせて",fx:{mood:4},r:[O("{name}がね"),O("「今日来てくれた人の顔、全部覚えて帰る」って"),O("むり"),O("覚えて帰って"),O("あとメンバーに髪型いじられてて"),O("照れてた"),O("かわいすぎる")]},
+      {t:"長くなる？",fx:{mood:-4},r:["なる",O("{name}がね"),O("「顔、全部覚えて帰る」って言ったの"),O("以上")]},
+      {t:"帰ってきたら直接聞きたい",fx:{mood:2},on:S=>S.listenLater=1,r:["わかった！","帰ったら全部話す"]},
+      {t:"で、{name}と俺どっちが好き？",fx:{mood:-4},on:S=>S.jealous++,r:["比べないで","ジャンルが違うの","…いまは{name}"]}])},
+    {at:22*60+8,f:(S,api)=>api.ask("yui",["はるやくん？あかりの友だちのゆいです🙏","あかり、グッズ買いすぎて袋3つ持ってる笑","最寄りまで迎えに来てあげたら泣いて喜ぶと思う"],[
+      {t:"教えてくれてありがとう",on:S=>S.yuiHelp=1,r:["いえいえ！","あと、あの子電車で寝たら起きないので気をつけて笑"]},
+      {t:"迎え…考えときます",r:["ぜひ！"]},
+      {stamp:["🙇","ぺこり"],r:["よろしくです！"]}])},
+    {at:22*60+35,f:(S,api)=>api.ask("sota",["兄ちゃん","明日の朝、車借りていい？","バイト遅刻しそうで"],[
+      {t:"いいよ",on:S=>S.car=0,r:["神","鍵は玄関ね、了解"]},
+      {t:"何時から？",r:["7時","…だめ？"],after:()=>api.later(()=>api.ask("sota",["で、いい？"],[{t:"いいよ",on:S=>S.car=0,r:["ありがと兄ちゃん"]},{t:"今夜使うかもしれないからダメ",r:["今夜？","ああ、あかりさんか"]}]),1500)},
+      {t:"今夜使うかもしれないからダメ",r:["今夜？","ああ、あかりさんライブか"]}])},
+    {at:23*60+5,f:(S,api)=>api.them("akari",["電車まだ来ない","寒い"])},
+    {at:23*60+8,f:(S,api)=>api.ask("sota",["てかまだ起きてんの？珍しい","あかりさん帰ってくるまで起きてられるか","寝落ちに1000円"],[
+      {t:"賭けにならない、起きてるし",r:["その顔はもう眠い"]},
+      {t:"1000円は乗った",on:S=>S.bet=1,r:["よし","証拠写真よろしく"]},
+      {stamp:["😴","ねむい"],r:["ほらもう眠い"]}])},
+    {at:23*60+26,f:(S,api)=>api.ask("yui",["あかり電車で寝てない？","さっきから既読つかない笑"],[
+      {t:"起こす係やります",r:["たのもしい！","最寄りの1個前くらいがベスト"]},
+      {t:"たぶん推しの話を打ってます",r:["それはありえる笑"]},
+      {stamp:["🫡","了解"],r:["お願いします！"]}])},
+    {at:23*60+12,f:(S,api)=>{api.them("akari",["乗れた！！！","最寄り0:03着","{home}くらいに家"]);if(S.karaReq&&!S.karaage) later(()=>api.them("akari",["からあげ棒…（圧）"]),6000)}},
+    {at:23*60+18,f:(S,api)=>api.ask("akari",["電車長いから","語っていい？"],[
+      {t:"どうぞどうぞ",fx:{mood:3},on:S=>S.talk=0,r:["やった"]},
+      {t:"手短にね",fx:{mood:-3},on:S=>{S.talk=4;},r:["…善処する"]},
+      {t:"ちょっと眠いかも",fx:{mood:-6},on:S=>{S.talk=5},r:["え、もう？？","まだ寝ないでよ"]}])},
+    {at:23*60+35,f:(S,api)=>{if(S.delay){S.delayOn=1;S.arrive+=S.delay;api.info("運行情報","あかりの乗っている路線：線路点検の影響で約"+S.delay+"分の遅れ");S.delayMsg=1}else api.them("yuma",["寝る","彼女さんによろしく"])}},
+    {at:23*60+46,f:(S,api)=>(S.wakeAsked=1,api.ask("akari",["ねえお願い","このままだと寝ちゃう","最寄りの1個前で鳴らして起こして","電車だから出られないけど","{wake}ごろ"],[
+      {t:"任せて",fx:{mood:2},on:S=>S.wakeReq=1,r:["たのんだ"]},
+      {t:"俺のほうが先に寝そう",fx:{mood:-3},on:S=>S.wakeReq=1,r:["寝たら許さん"]},
+      {stamp:["👌","OK"],fx:{mood:1},on:S=>S.wakeReq=1,r:["おねがいね"]}]))},
+    {at:S=>at(S),f:(S,api)=>{
+      if(S.akSlept) return;
+      if(S.pick) return;
+      api.ask("akari",["最寄りついた〜！","歩いて帰る"],[
+        {t:"気をつけてね",fx:{mood:1},r:["うん！"]},
+        {t:"走らなくていいよ",fx:{mood:2},r:["走ってない笑"]},
+        {stamp:["🏠","まってる"],fx:{mood:1},r:["かわい"]}])}},
+    {at:S=>at(S)+6,f:(S,api)=>{if(S.akSlept) api.them("akari",["…","やばい","寝てた","いま終点…"],{then:()=>later(()=>api.end("terminal"),2200)})}}
+  ],
+  fillers:[
+    {th:"akari",lines:["人ずっと多い","前に進まない"],when:S=>S.t<22*60+40},
+    {th:"akari",lines:[{photo:"goods"},"今日の戦利品","並べたらかわいい"],when:S=>S.t<23*60},
+    {th:"akari",lines:[O("あとね"),O("{name}の衣装の袖が"),O("ちょっとだけ長かったの"),O("かわいい")]},
+    {th:"akari",lines:[O("今日の{name}"),O("髪型が前と違って"),O("ずっと見てた")]},
+    {th:"akari",lines:["隣の席の人と仲良くなった","交換も一緒に探してくれた"],when:S=>S.t<22*60+50},
+    {th:"akari",lines:["のど痛い","叫びすぎた"]},
+    {th:"akari",lines:["ねえ起きてる？"],choices:[{t:"起きてるよ",fx:{mood:2},r:["えらい"]},{t:"ギリギリ",fx:{mood:1},r:["がんばって笑"]},{stamp:["💪","ムキッ"],fx:{mood:1},r:["たのもしい"]}],when:S=>S.t>22*60+30},
+    {th:"yuma",lines:["今日なにしてんの"],choices:[{t:"彼女待ち",r:["ライブだっけ","えらいな"]},{t:"眠気と戦ってる",r:["負けるなよ笑"]},{stamp:["😴","ねむい"],r:["寝るなよ笑"]}]},
+    {th:"yuma",lines:["新作の発売日決まったって","買う？"],choices:[{t:"買う",r:["一緒にやろ"]},{t:"金ない",r:["わかる"]}]},
+    {th:"work",lines:[["たかの","資料どこまでできた？"]],choices:[{t:"8割",r:[["たかの","神"]]},{t:"寝る前にやる",fx:{sleep:2},r:[["たかの","たのむ〜"]]},{stamp:["🙏","おまかせ"],r:[["みなみ","かわいいスタンプ"]]}]},
+    {th:"work",lines:[["みなみ","明日の会議、9時からに変わったって"],["たかの","はや"]]},
+    {th:"mom",lines:["元気？","週末こっち帰ってくる？"],choices:[{t:"たぶん帰る",r:["じゃあ唐揚げにする"]},{t:"あかりと予定ある",r:["あら","よろしく言っといて"]},{stamp:["👍","了解"],r:["スタンプだけ…"]}]},
+    {th:"mom",lines:["みかん送ったから","あかりちゃんと食べて"]},
+    {th:"akari",lines:[O("思い出したんだけど"),O("{name}が水飲むとき"),O("ちょっと上向くのが好き")]},
+    {th:"akari",lines:["ペンライトの電池切れた","最後の曲だけ暗かった"]},
+    {th:"akari",lines:["電車の中みんなタオル持ってる","仲間しかいない"],when:S=>S.t>23*60+12},
+    {th:"akari",lines:["窓に映った自分の顔","疲れてる笑"],when:S=>S.t>23*60+12},
+    {th:"yuma",lines:["てか明日休み？"],choices:[{t:"仕事",r:["おつ"]},{t:"休みたい",r:["わかる"]}]},
+    {th:"yuma",lines:["さっきの試合見た？","延長えぐかった"]},
+    {th:"work",lines:[["たかの","明日ネクタイの日らしい"],["みなみ","まじ？"]]},
+    {th:"info",f:(S,api)=>api.info("ニュース","今夜は流星群が見ごろ。23時ごろから東の空に")},
+    {th:"info",f:(S,api)=>api.info("ニュース","明日の天気：晴れ。朝は冷え込みます")},
+    {th:"info",f:(S,api)=>api.info("コンビニ","からあげ棒、今夜だけ20円引き"),when:S=>!S.karaage}
+  ],
+  fill(S,s){return s.replace(/\{betline\}/g,S.bet?"スマホには、そうたから「1000円ね」。":"").replace(/\{carline\}/g,S.car?"車のキーをつかんで出発。":"車は弟に貸してしまった。タクシーを呼んで終点へ。").replace(/\{home\}/g,A.fmt(home(S))).replace(/\{wake\}/g,A.fmt(at(S)-5))}
+};
+
+function later(fn,ms){A.later(fn,ms)}
+function quiz(S,api,a){
+  if(a===S.cardAns){api.change("mood",9);later(()=>api.them("akari",["え！！正解","わかってるじゃん",O("この{name}、表情がいちばんいいの")]),400)}
+  else{api.change("mood",-8);later(()=>api.them("akari",["…ちがう","お気に入りは"+S.cardAns,"いちばん見せびらかしたのに"]),400)}
+}
+function finish(S,api,kind){
+  if(S.reunion) return;S.reunion=1;
+  const say=[],hand=[];
+  if(kind==="pickup"){api.change("mood",8);say.push("え、ほんとに来てくれた…！","袋ひとつ持って笑")}
+  else say.push("ただいま〜！！","起きてた！えらい");
+  if(S.karaReq){if(S.karaage){say.push(S.bread?"からあげ棒とメロンパン…！最高":"からあげ棒ある！！");api.change("mood",4)}else{say.push("…からあげ棒は？");hand.push("頼まれていたのに、買っていない");api.change("mood",-10)}}
+  if(S.shelfReq){if(S.shelf){say.push("棚できてる…グッズの場所！");api.change("mood",3)}else{say.push("棚、まだ段ボールだね…");api.change("mood",-4)}}
+  if(S.bath) say.push("お風呂わいてる…神");else if(kind!=="pickup") say.push("お風呂入りたい〜");
+  if(S.listenLater) say.push("で、MCの話の続きなんだけど");
+  const title=say.shift();
+  api.scene(kind==="pickup"?"合流":"ただいま","「"+title+"」",say.map(x=>"「"+x+"」").join(" "),hand.join("・")||(kind==="pickup"?"紙袋をひとつ受け取る":"玄関で、あかりが笑っている"),"",{wait:true,onClose:()=>{
+    if(S.mood<25) return api.end("cold");
+    if(S.bet) return api.end("bet");
+    if(kind==="pickup") return api.end("pickup");
+    if(prep(S)===3&&S.mood>=70) return api.end("best");
+    api.end("home");
+  }});
+
+}
+function act(S,min,sleep,title,body,hand){
+  S.lying=0;A.scene(min+"分",title,body,hand);A.addTime(min);A.change("sleep",sleep);A.hud();
+}
+function doMenu(S){
+  const L=left(S);
+  const items=[
+    {label:"コーヒーを淹れる",sub:S.coffee>=2?"もう飲めない":"眠気−15・3分（あと"+(2-S.coffee)+"杯）",disabled:S.coffee>=2,on:()=>{S.coffee++;act(S,3,-15,"コーヒー","ドリップの音で少し目が覚める。",S.coffee===2?"これ以上は寝られなくなる":"にがい")}},
+    {label:"顔を洗う",short:"顔洗い（2回）",done:S.wash>=2,sub:"眠気"+[-8,-5][Math.min(S.wash,1)]+"・2分（あと"+(2-S.wash)+"回）",on:()=>{const d=[-8,-5][Math.min(S.wash,1)];S.wash++;act(S,2,d,"洗面所","冷たい水。",S.wash>2?"だんだん慣れてきた":"しゃっきり")}},
+    {label:"ストレッチ",sub:S.t<S.stretchT?"さっきやった":"眠気−3・1分",disabled:S.t<S.stretchT,on:()=>{S.stretchT=S.t+20;act(S,1,-3,"ストレッチ","肩をまわす。ゴキッと鳴った。","")}},
+    {label:"コンビニに行く",short:"コンビニ",done:S.karaage,sub:L<16?"帰りに間に合わない":"眠気−12・12分"+(S.karaReq?"・からあげ棒":""),disabled:L<16,on:()=>{S.karaage=1;if(S.breadReq) S.bread=1;act(S,12,-12,"コンビニ","夜風で目が覚める。からあげ棒、最後の1本。",S.breadReq?"メロンパンも買った":"ついでに自分のアイスも");A.me("akari",{photo:"karaage"});A.later(()=>A.them("akari",["！！！","最後の1本？","すき"]),1500);A.change("mood",5)}},
+    {label:"棚を組み立てる",short:"棚",done:S.shelf,sub:L<18?"時間が足りない":"眠気−6・15分・その間は返信できない",disabled:L<18,on:()=>{S.shelf=1;act(S,15,-6,"組み立て","説明書どおりに、ネジ12本。",S.shelfReq?"あかりのグッズの場所ができた":"なんの棚かは知らない")}},
+    {label:"お風呂を沸かす",short:"お風呂",done:!!S.bath,sub:"2分",on:()=>{S.bath=1;act(S,2,0,"お風呂","スイッチを押した。","「お風呂が沸きました」まで20分")}},
+    {label:"先にお風呂に入る",sub:!S.bath?"まだ沸いてない":S.bathFirst?"もう入った":"15分・あったまる",disabled:!S.bath||S.bathFirst,on:()=>{S.bathFirst=1;act(S,15,18,"お風呂","お湯につかると、体の芯から力が抜けていく。","…まずい、ねむい")}},
+    {label:"ソファで横になる",sub:"ちょっとだけ",disabled:S.lying,on:()=>{S.lying=1;A.change("sleep",8);A.scene("ソファ","ちょっとだけ","目を閉じるだけ。寝ない。","")}}
+  ];
+  A.menu("やること","時間がたつ間も、あかりからの連絡は届く。",items);
+}
+function wakeCall(S){
+  const w=at(S);
+  if(S.t<w-10){S.early++;A.ring("akari",()=>{A.change("mood",-1);A.later(()=>A.them("akari",["まだ早いよ笑","起きてるから大丈夫","{wake}ごろでお願い"]),1200)});return}
+  A.ring("akari",()=>{S.woke=1;A.change("mood",6);A.change("sleep",-4);A.hud();A.later(()=>A.them("akari",["……","はっ","起きた！！","コールありがと、あぶなかった"]),1500)});
+}
+window.HARUYA=SCN;
+})();
+ChatSim.start(window.HARUYA);
+</script>
+</body>
+</html>
