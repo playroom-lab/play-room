@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>ライブ帰りシミュレーター すずさん版｜PLAY ROOM</title>
+  <meta name="description" content="終電まで82分、交換相手は3人。駅の東口で手渡し交換を済ませる、ライブ帰りシミュレーターのすずさん版。">
+  <meta name="robots" content="noindex">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PLAY ROOM">
+  <meta property="og:title" content="ライブ帰りシミュレーター すずさん版">
+  <meta property="og:description" content="終電まで82分、交換相手は3人。駅の東口で手渡し交換を済ませる、ライブ帰りシミュレーターのすずさん版。">
+  <meta property="og:url" content="https://playroom-lab.github.io/play-room/live-kaeri/suzu/">
+  <meta property="og:image" content="https://playroom-lab.github.io/play-room/live-kaeri/suzu/ogp.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#f7f5ed">
+  <link rel="icon" href="../../icon-192.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <style>*,*::before,*::after{box-sizing:border-box}[hidden]{display:none!important}img{max-width:100%}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap">
+<link rel="stylesheet" href="../../shared/chat-sim-v1.css">
+</head>
+<body>
+<div class="app" id="app">
+  <div class="band" aria-label="ゲームの状態">
+    <div class="srow">
+      <div class="stat"><div class="lab"><span>電池<em id="w_bat"></em></span><b id="v_bat"></b></div><div class="bar"><span id="b_bat"></span></div></div><div class="stat"><div class="lab"><span>体力<em id="w_tai"></em></span><b id="v_tai"></b></div><div class="bar"><span id="b_tai"></span></div></div>
+      <div class="train"><small id="tkS"></small><b id="tkB"></b><i id="tkI"></i></div>
+    </div>
+    <button class="pinch" id="pinch" type="button" aria-expanded="false"><i id="pinchI">✓</i><span id="pinchT">いまのピンチはなし</span><small id="pinchN"></small></button>
+    <div class="plist" id="plist" hidden=""></div>
+    
+    <div class="arow"><div class="stage" id="stage"><b>いま</b><span></span></div><span class="acts" id="acts"></span></div>
+  </div>
+  <div class="phone">
+    <div class="sbar" id="sbar"><span id="clk"></span><span class="r"><span>4G</span><span class="bat" id="bat"><span id="batp"></span><i><b id="batb"></b></i></span></span></div>
+    <div class="view" id="view"></div>
+  </div>
+  <button class="pa" id="pa" type="button" aria-live="polite"><i id="paI"></i><b id="paT"></b><span id="paX"></span></button>
+  <div class="scene" id="scene" hidden=""></div>
+  <div class="ov intro" id="intro"></div>
+  <div class="ov call" id="call" hidden=""></div>
+  <div class="ov osd" id="osd" hidden=""></div>
+  <div class="ov result" id="result" hidden=""></div></div>
+<script src="../../shared/chat-sim-v1.js"></script>
+<script>
+/* ライブ帰りシミュレーター すずさん版 */
+(function(){
+const A=ChatSim.api;
+const T=(h,m)=>h*60+m;
+const START=T(21,50),LAST=T(23,12);
+const gateWalk=S=>S.tai<20?6:3;
+const hands=S=>["miku","nono","nanase","rui"].filter(k=>S.p[k].st==="done").length;
+
+const SCN={
+  id:"lk-suzu",title:"ライブ帰りシミュレーター すずさん版",start:START,speed:8000,
+  fine:"フィクションです。登場する人物・会場・団体はすべて架空です。",
+  clearNote:"おつかれさまでした。次は、ちがう夜で。",
+  infoThread:"info",
+  links:[["本編（ライブ帰り）","../"],["はるや版","../haruya/"],["参戦前夜版","../zenya/"]],
+  threads:{
+    miku:{name:"みく（交換）",short:"みく",col:"#ffb84d",ini:"み"},
+    nono:{name:"のの（交換）",short:"のの",col:"#9ac26b",ini:"の"},
+    nanase:{name:"ななせ（交換）",short:"ななせ",col:"#7fb2ff",ini:"な"},
+    rui:{name:"るい",short:"るい",col:"#c9a0ff",ini:"る"},
+    mana:{name:"まこ",short:"まこ",col:"#ff8fab",ini:"ま"},
+    info:{name:"お知らせ",col:"#6b6680",ini:"!",static:1},
+    dm:{name:"交換DM",short:"DM",col:"#9aa0ab",ini:"✉"},
+    mom:{name:"母",short:"母",col:"#e7b25e",ini:"母"}
+  },
+  order:["miku","nono","nanase","rui","mana","dm","mom","info"],
+  diffs:{
+    normal:{name:"通常",desc:"電池36%・体力55からスタート",stats:{bat:36,tai:55}},
+    hard:{name:"ムズい",desc:"開演前に交換の連絡で電池を使いすぎて27%から。ライブで跳びすぎて体力も45",stats:{bat:27,tai:45},scene:["ムズい","電池、使いすぎた","開演前の交換DMで、もう27%。ライブで跳びすぎて脚も重い。","電池27%・体力45からスタート"]}
+  },
+  stats:[
+    {key:"bat",label:"電池",init:27,max:100,color:v=>v<=10?"#ff6b6b":v<=20?"#ffb84d":"var(--lime)",warn:v=>v<=10?" やばい":""},
+    {key:"tai",label:"体力",init:45,max:100,color:v=>v<20?"#ff6b6b":"var(--sky)",warn:v=>v<20?" 歩くのおそい":""}
+  ],
+  init(S){
+    const mk=(arr)=>({st:"wait",arr,find:0,waved:0});
+    S.p={miku:mk(START+A.rnd(8,12)),nono:mk(START+A.rnd(22,26)),nanase:mk(START+A.rnd(58,82)),rui:mk(0)};
+    S.p.miku.st="coming";S.p.nono.st="coming";S.p.nanase.st="coming";
+    S.ruiNoShow=Math.random()<.35;S.mikuTwist=Math.random()<.5;S.gated=0;S.trading=0;S.photos=0;S.calls=0;S.pickNono=0;S.mail=0;S.declined=0;S.rain=0;S.roof=0;S.waveN=0;
+    S.th.miku.lastT=START-20;S.th.miku.last="今日よろしくお願いします〜！！🥹💐";S.th.miku.msgs.push({k:"them",x:"今日よろしくお願いします〜！！🥹💐",t:START-20,read:true});
+    S.th.nono.lastT=START-35;S.th.nono.last="本日はよろしくお願いいたします。方向音痴なのでご迷惑をおかけするかもしれません";S.th.nono.msgs.push({k:"them",x:"本日はよろしくお願いいたします。方向音痴なのでご迷惑をおかけするかもしれません",t:START-35,read:true});
+    S.th.nanase.lastT=START-50;S.th.nanase.last="すみません、規制退場おそいブロックかもです…本当にすみません";S.th.nanase.msgs.push({k:"them",x:"すみません、規制退場おそいブロックかもです…本当にすみません",t:START-50,read:true});
+  },
+  ticket(S){const l=LAST-S.t;return {small:"終電",big:"23:12",sub:"あと"+Math.max(0,l)+"分",cls:l<=15?"hot":""}},
+  minute(S,api,n){
+    if(n%4===0) api.change("bat",-1);
+    if(n%5===0) api.change("tai",-1);
+    if(S.rain&&!S.roof&&n%3===0) api.change("tai",-1);
+    for(const k in S.p){const p=S.p[k];
+      if(k==="rui"&&p.st==="coming"&&S.ruiNoShow&&p.arr&&S.t>=p.arr-6){p.st="noshow";api.them("rui",["すみません","連れとはぐれて今日は行けなくなりました","また今度"]);continue}
+      if(p.st==="coming"&&p.arr&&S.t>=p.arr) arrive(S,api,k);
+      if(p.st==="search"){p.find--;if(p.find<=0){p.st="meeting";api.later(()=>meet(S,api,k),300)}}
+    }
+    if(!S.gated&&S.t>=LAST) api.end("missed");
+  },
+  onStat(S,api,k){if(k==="bat"&&S.bat<=0) api.end("dead")},
+  chase:{
+    nono:{ms:22000,max:2,lines:["すずさん…？","どこですか😭"]},
+    nanase:{ms:24000,max:2,lines:["すみません…！","見ていただけてますか？"]}
+  },
+  alerts(S){
+    const a=[];const l=LAST-S.t,w=gateWalk(S);
+    if(!S.gated&&l<=w+3) a.push({lv:3,x:"もう改札に入らないと終電に間に合わない"});
+    else if(!S.gated&&l<=w+10) a.push({lv:2,x:"そろそろ改札に入る時間（ホームまで"+w+"分）"});
+    if(S.bat<=10) a.push({lv:3,x:"電池が残り"+S.bat+"%"});
+    for(const k in S.p){const p=S.p[k];if(p.st==="search") a.push({lv:2,x:SCN.threads[k].short+"がすずさんを探している",th:k});if(p.st==="lost") a.push({lv:3,x:SCN.threads[k].short+"がちがう出口にいるかも",th:k})}
+    if(S.rain&&!S.roof) a.push({lv:1,x:"雨に打たれている（体力が減る）"});
+    return a;
+  },
+  stage(S){
+    const acts=[];const searching=Object.keys(S.p).filter(k=>S.p[k].st==="search"&&!S.p[k].waved);
+    let text="東口・柱の横で待っている"+(S.roof?"（屋根の下）":"")+"・手渡し "+hands(S)+"件";
+    if(searching.length) acts.push({label:"手を振る",pulse:1,on:()=>{for(const k of searching){S.p[k].waved=1;S.p[k].find=Math.max(1,S.p[k].find-2)}S.waveN++;A.scene("目印","手を振る","トレカのケースを高く上げる。","気づいてー！");A.hud()}});
+    if(S.p.nono.st==="lost"&&!S.pickNono) acts.push({label:"西口へ迎えに行く",sub:1,on:()=>A.confirmBox("西口へ迎えに行く？","連絡通路を抜けて片道6分。体力も使う。","行く","やめる",()=>{S.pickNono=1;S.roof=1;A.scene("6分","西口へ","人の流れに逆らって連絡通路を歩く。","いた、あの紫のショッパー！");A.addTime(6);A.change("tai",-6);meet(S,A,"nono")})});
+    if(S.rain&&!S.roof) acts.push({label:"屋根の下に移る",sub:1,on:()=>{S.roof=1;A.scene("移動","屋根の下へ","柱から3歩だけ。","みんなに伝えなきゃ");A.hud()}});
+    acts.push({label:"改札に入る",sub:LAST-S.t>gateWalk(S)+12,pulse:LAST-S.t<=gateWalk(S)+10,on:()=>gate(S)});
+    return {text,ready:LAST-S.t<=gateWalk(S)+10,acts};
+  },
+  where(S){return {missed:"東口のロータリー",dead:"東口の柱の横"}[S.endKind]||"終電の車内"},
+  endOrder:["perfect","clear","empty","missed","dead"],
+  endings:{
+    perfect:{name:"全員と手渡しできた",clear:1,text:"ケースの中に、{name}が並んでいる。全部、ちゃんと手で受け取ったもの。終電の車内で、交換してくれた人たちに「ありがとうございました」を送った。"},
+    clear:{name:"交換して帰れた",clear:1,text:"全部とはいかなかったけど、{name}のトレカは増えた。走りこんだ終電で、ケースを抱えて座る。次はもっとうまく待ち合わせできる気がする。"},
+    empty:{name:"手ぶらで終電",text:"終電には乗れた。でもケースの中身は来たときのまま。{name}のトレカは、また次の機会に。"},
+    missed:{name:"終電を見送った",text:"改札の向こうで、終電の発車ベルが鳴りおわった。手の中には{name}のトレカ。今夜はタクシーか、始発か。"},
+    dead:{name:"電池ゼロ",black:1,text:"画面が真っ暗になった。誰がどこにいるのか、もうわからない。柱の横で、トレカのケースを高く上げつづけた。"}
+  },
+  result(S,kind){
+    const h=hands(S);
+    return {
+      ticket:["手渡し",String(h)],
+      checks:[["手渡し3件以上",h>=3],["終電",kind==="perfect"||kind==="clear"||kind==="empty"],["電池が残った",S.bat>0]],
+      big:{n:h,of:3,label:"手渡しで交換"+(S.p.rui.st==="done"?"（追加のるいも）":""),short:"手渡しで交換"},
+      stats:[["電池",S.bat+"%"],["体力",String(S.tai)],["手渡し",h+"件"],["郵送",S.mail+"件"]],
+      kv:[["みく",lab(S.p.miku)],["のの",lab(S.p.nono)],["ななせ",lab(S.p.nanase)],["るい（追加）",S.p.rui.arr?lab(S.p.rui):"—"],["手を振った",S.waveN+"回"],["電池",S.bat+"%"]]
+    };
+  },
+  titles:[
+    {id:"four",name:"交換の鬼",hint:"追加の申し込みも受けて、全員と手渡し",ok:(S,k)=>k==="perfect"&&S.p.rui.st==="done"},
+    {id:"perfect",name:"東口の主",hint:"3人と手渡しして終電",ok:(S,k)=>k==="perfect"},
+    {id:"kind",name:"私服もゆずれる人",hint:"みくのお願いを聞く",ok:S=>S.twistOk},
+    {id:"west",name:"西口まで迎えに行く人",hint:"迷子を迎えに行く",ok:S=>S.pickNono&&S.p.nono.st==="done"},
+    {id:"decline",name:"手渡し優先の人",hint:"「今回は手渡しを優先したくて」",ok:S=>S.declined},
+    {id:"mail",name:"郵送でも優しい人",hint:"間に合わない人に郵送を",ok:S=>S.mail},
+    {id:"wave",name:"ケース高く掲げ係",hint:"何度も手を振る",ok:S=>S.waveN>=3},
+    {id:"dead",name:"暗闇の柱",hint:"電池を使いすぎる",ok:(S,k)=>k==="dead"},
+    {id:"missed",name:"ロータリーの人",hint:"待ちすぎる",ok:(S,k)=>k==="missed"},
+    {id:"rain",name:"雨にも負けず",hint:"雨の中で待ちつづける",ok:S=>S.rain&&!S.roof},
+    {id:"empty",name:"また次の機会に",hint:"交換ゼロで帰る",ok:(S,k)=>k==="empty"},
+    {id:"clear",name:"ちゃんと帰る人",hint:"交換して終電",ok:(S,k)=>k==="clear"},
+    {id:"normal",name:"東口の交換担当",hint:"いつもの夜",ok:()=>true}
+  ],
+  intro:{
+    tag:"すずさん版",h1:"ライブ<span>帰り</span>シミュレーター",note:"終電まで82分。交換相手は3人。",
+    ticket:["LAST TRAIN","23:12"],storyLabel:"今夜のすずさん",
+    story:"21時50分、駅の東口。規制退場の早いブロックだったすずは、柱の横で交換相手を待っている。<br>今夜の約束は3人。みんな、それぞれの場所から駅に向かっている。",
+    goal:"3人と手渡しで交換して、終電に乗る。",
+    goalSub:"電池が切れると、誰とも連絡がとれなくなる。",
+    how:[["目印","具体的に伝えるほど、相手がすぐ見つけてくれる"],["手を振る","探している人がいるときに上のボタンで"],["改札","入るタイミングは自分で。ホームまで3分"],["電池","写真や電話で減る。0%で終わり"]],
+    field:{tag:"すずの推し",label:"すずの推しの名前",def:"推し",short:"すずの推し"},
+    button:"東口で待つ"
+  },
+  events:[
+    {at:START+1,f:(S,api)=>api.them("mana",["すず交換ファイト","うちら先にホーム行ってるね","終電23:12だよ！！"])},
+    {at:START+3,f:(S,api)=>api.ask("miku",["いま駅向かってます！！🏃‍♀️💨","はじめての交換で緊張してます🥹","目印ありますか？"],[
+      {t:"東口の柱の横、白いトートです",on:S=>S.p.miku.mark=2,r:["了解です！"]},
+      {t:"東口にいます！",on:S=>S.p.miku.mark=6,r:["東口ですね！"]},
+      {t:"服の写真送りますね",cost:"電池−3",fx:{bat:-3},on:S=>{S.p.miku.mark=1;S.photos++},r:["わかりやすい！ありがとうございます"]}])},
+    {at:START+8,f:(S,api)=>api.ask("nanase",["すみません、まだ規制退場で座席です…","本当にすみません、たぶんだいぶ遅くなります"],[
+      {t:"大丈夫です、待ってます！",r:["ありがとうございます😭"]},
+      {t:"何時ごろになりそうですか？",r:["23時…ぎりぎりかもです","急ぎます"]},
+      {stamp:["🙆","OK"],r:["ほんとすみません"]}])},
+    {at:START+14,f:(S,api)=>api.ask("nono",["まもなく到着いたします","念のため確認なのですが、すずさんは何口でしたでしょうか"],[
+      {t:"東口です！改札出て右",on:S=>S.nonoTold=1,r:["右ですね！"]},
+      {t:"東口の柱の横です",on:S=>S.nonoTold=0,r:["はい！"]},
+      {stamp:["👍","了解"],on:S=>S.nonoTold=0,r:["…？"]}])},
+    {at:T(22,20),f:(S,api)=>{S.rain=1;api.info("雨雲レーダー","いる場所で雨が降りはじめました","rain")}},
+    {at:T(22,24),f:(S,api)=>{S.p.rui.st="dm";api.ask("rui",["交換ポスト見ました","交換に出してる私の推しのトレカ、まだありますか","西口にいます"],[
+      {t:"はい！東口の柱の横です",on:S=>{S.p.rui.st="coming";S.p.rui.arr=S.t+A.rnd(20,28)},r:["行きます","20分くらい"]},
+      {t:"今日はもう締め切りました",r:["了解です、またの機会に！"]},
+      {t:"終電なので23時までなら",on:S=>{S.p.rui.st="coming";S.p.rui.arr=S.t+A.rnd(18,24)},r:["了解","急ぎます"]}])}},
+    {at:T(22,46),f:(S,api)=>{if(S.p.nanase.arr>T(22,56)&&S.p.nanase.st==="coming") api.ask("nanase",["やっと出られました…","でもまだ会場の近くで","間に合わないかもです","郵送でもいいですか…？"],[
+      {t:"待ちます！走らなくて大丈夫",r:["ありがとうございます、急ぎます！"]},
+      {t:"郵送でお願いします",on:S=>{S.p.nanase.st="mail";S.mail++},r:["ありがとうございます、住所DMします！"]},
+      {t:"今回は手渡しを優先したくて…",on:S=>{S.p.nanase.st="cancel";S.declined=1},r:["わかりました、すみません🙏","また機会があればぜひ"]}]);
+      else api.them("nanase",["出られました！","いま向かってます"])}},
+    {at:T(22,50),f:(S,api)=>api.them("mana",["ホームめっちゃ人いる","すずまだ？"])},
+    {at:T(23,0),f:(S,api)=>api.them("mana",["あと12分だよ！？","ホームまで3分かかるからね"])},
+    {at:T(23,6),f:(S,api)=>{if(!S.gated) api.them("mana",["電車きた","すずーー！！"])}}
+  ],
+  fillers:[
+    {th:"mana",lines:["ホームから夜景みえる","きれい"]},
+    {th:"mana",lines:["交換どう？"],choices:[{t:"順調！",r:["さすが"]},{t:"迷子が出てる",r:["あるある"]},{stamp:["🃏","トレカ"],r:["かわい"]}]},
+    {th:"mana",lines:["今日の{name}よすぎた","帰ったら語ろ"]},
+    {th:"mana",lines:["コンビニで肉まん買った","すずの分ないよ"],when:S=>S.t>22*60+20},
+    {th:"dm",lines:["はじめまして、譲りに出してるトレカ、売っていただけませんか？"],choices:[{t:"交換のみなんです、すみません",r:["了解です！"]},{t:"今日は締め切りました",r:["わかりました"]}]},
+    {th:"dm",lines:["交換ポスト見ました！アクスタも出してますか？"],choices:[{t:"トレカだけです",r:["失礼しました！"]},{stamp:["🙇","ごめんなさい"],r:["いえいえ！"]}]},
+    {th:"mana",lines:["{name}のトレカ何枚になった？"],choices:[{t:"いま数えてる",r:["見せてね"]},{stamp:["✌","ピース"],r:["ドヤってる"]}]},
+    {th:"mana",lines:["となりの人、同じタオル持ってる","仲間"]},
+    {th:"mana",lines:["電光掲示板に終電出てる","23:12 各停"],when:S=>S.t>22*60+40},
+    {th:"dm",lines:["今日の交換ってまだ受付してますか？"],choices:[{t:"ごめんなさい、締め切りました",r:["了解です！"]},{t:"東口の柱で23時まで",r:["今日は行けなさそうです、また！"]}]},
+    {th:"info",f:(S,api)=>api.info("雨雲レーダー","雨は23時ごろに弱まる見込みです","rain"),when:S=>S.rain},
+    {th:"info",f:(S,api)=>api.info("交換アカウント","「{name} 交換」のポストが新しく12件")},
+    {th:"mom",lines:["雨大丈夫？"],when:S=>S.rain},
+    {th:"info",f:(S,api)=>api.info("交換アカウント","あなたのポストに3件のいいねがつきました")},
+    {th:"info",f:(S,api)=>api.info("駅","人身事故の影響で、隣の路線に遅れが出ています")},
+    {th:"mom",lines:["何時に帰るの？"],choices:[{t:"終電で帰る",r:["気をつけてね"]},{t:"交換終わったら",r:["交換？","まあいいわ、気をつけて"]},{stamp:["🚃","でんしゃ"],r:["鍵持ってる？"]}]},
+    {th:"mom",lines:["お風呂わかしとくね"]},
+    {th:"nono",lines:["いま電車おりました！"],when:S=>S.p.nono.st==="coming"},
+    {th:"nanase",lines:["やっと通路まで来ました…"],when:S=>S.p.nanase.st==="coming"&&S.t<T(22,35)},
+    {th:"nanase",lines:["まだ座席です😭","アナウンスまだです"],when:S=>S.p.nanase.st==="coming"&&S.t<T(22,15)},
+    {th:"rui",lines:["向かってます","黒キャップ"],when:S=>S.p.rui.st==="coming"&&!S.ruiNoShow},
+    {th:"miku",lines:["無事に電車乗れました！","今日はほんとにありがとうございました🙏"],when:S=>S.p.miku.st==="done"}
+  ],
+  fill(S,s){return s}
+};
+
+const EXTRA={
+  miku:[["あの、少しだけお話してもいいですか…？","今日の私の推し、ほんとによくて"],[
+    {t:"ぜひ！5分だけ",cost:"5分たつ",on:S=>{S.talked=(S.talked||0)+1;A.scene("5分","感想を少しだけ","「あそこ見ました！？」「見ました！！」","止まらない…");A.addTime(5)},r:["ありがとうございます、たのしかった！"]},
+    {t:"ごめんなさい、このあとも交換があって",r:["あっ、そうですよね！がんばってください"]}]],
+  nono:[["あ、すずさん他にもダブりってありますか？","ランダムの缶バッジも探してて"],[
+    {t:"見てみますね",cost:"3分たつ",on:S=>{S.badge=1;A.scene("3分","ケースを探す","缶バッジ、1個だけあった。","ののさん、すごく喜んでる");A.addTime(3)},r:["えっ、うれしい…！ありがとうございます"]},
+    {t:"今日はトレカだけなんです",r:["了解です！ありがとうございました"]}]],
+  rui:[["写真撮ってもいいですか？","交換記念に、トレカだけ"],[
+    {t:"どうぞ！送ってもらえますか",cost:"電池−2",fx:{bat:-2},on:S=>S.photos++,r:[{photo:"card"},"送りました！"]},
+    {t:"急いでるのでまた今度で",r:["了解です、ありがとうございました！"]}]]
+};
+function lab(p){return {done:"手渡しで交換",mail:"郵送にした",cancel:"お断りした",dm:"返事してない",noshow:"来られなくなった",wait:"—"}[p.st]||"会えなかった"}
+function arrive(S,api,k){
+  const p=S.p[k];
+  if(k==="nono"&&!S.nonoTold){p.st="lost";api.them("nono",["着きました！","改札出て、左に出ました","柱…どこだろう"]);
+    api.later(()=>api.ask("nono",["大きい柱ないです…","コンビニとバス停が見えます"],[
+      {t:"それ西口かも！何口って書いてありますか？",r:["あっ、西口です😭"],after:()=>nonoFix(S,api)},
+      {t:"柱の横です！白いトート！",r:["うーん、見当たらないです…"],after:()=>{api.change("bat",-1);api.later(()=>api.ask("nono",["案内板見たら西口でした😭"],nonoChoices(S)),4000)}}]),2500);return}
+  p.st="search";p.find=p.mark||(k==="miku"?7:3);if(k==="rui"||k==="nanase") p.find=4;
+  if(S.rain&&S.roof&&!p.toldRoof) p.find+=1;
+  api.them(k,["着きました！","探しますね"]);
+}
+function nonoChoices(S){return [
+  {t:"迎えに行きます！そこにいてください",on:S=>{S.pickNono=1},r:["ありがとうございます…！"],after:()=>{A.scene("6分","西口へ","連絡通路を抜けて西口へ。","いた、紫のショッパー！");A.addTime(6);A.change("tai",-6);meet(S,A,"nono")}},
+  {t:"連絡通路を通って東口まで来てもらえますか",r:["がんばります！"],after:()=>{S.p.nono.st="search";S.p.nono.find=8}},
+  {t:"真ん中の改札前で会いましょう",r:["はい！"],after:()=>{A.scene("3分","真ん中の改札へ","すずも少しだけ移動する。","");A.addTime(3);A.change("tai",-2);S.p.nono.st="search";S.p.nono.find=2}}]}
+function nonoFix(S,api){api.later(()=>api.ask("nono",["どうしましょう…"],nonoChoices(S)),1200)}
+function meet(S,api,k){
+  const p=S.p[k];if(p.st==="done"||S.over) return;if(S.callOn||!A.$("scene").hidden){api.later(()=>meet(S,api,k),1500);return}
+  if(k==="miku"&&S.mikuTwist&&!S.twistDone){S.twistDone=1;p.st="meeting";const T0=S.th[k];if(T0.pending&&!T0.pending.end){T0.pending=null;T0.asking=false}T0.aq=[];api.ask("miku",["いました！！🥹","あの…ごめんなさい、実は","衣装のじゃなくて、私の推しの私服のほうと交換ってできたりしますか…？🙏"],[
+      {t:"大丈夫ですよ！",cost:"1分",on:()=>{S.twistOk=1;api.addTime(1)},r:["えっ神ですか😭😭","一生大事にします"],after:()=>{p.st="x";meet(S,api,k)}},
+      {t:"ごめんなさい、私服は手放せなくて",r:["ですよね！！予定どおりで大丈夫です🙇‍♀️"],after:()=>{p.st="x";meet(S,api,k)}}]);return}
+  p.st="done";const TT=S.th[k];if(TT.pending&&!TT.pending.end){TT.pending=null;TT.asking=false}TT.aq=[];
+  api.them(k,["いました！","今日はありがとうございます！"]);
+  api.scene("交換",SCN.threads[k].short+"と交換","ケースからトレカを出して、手渡しで交換。","{name}、おかえり");
+  api.addTime(2);
+  const ex=EXTRA[k];
+  if(ex) api.later(()=>api.ask(k,ex[0],ex[1].map(c=>Object.assign({},c,{after:()=>api.later(()=>api.endStamp(k,[{t:"（スタンプ）ありがとうございました",stamp:["🙇","ありがとうございました"]},{t:"（スタンプ）またぜひ",stamp:["💐","またぜひ"]}]),1500)}))),3500);
+  else api.later(()=>api.endStamp(k,[{t:"（スタンプ）ありがとうございました",stamp:["🙇","ありがとうございました"]},{t:"（スタンプ）またぜひ",stamp:["💐","またぜひ"]}]),4000);
+  api.hud();
+}
+function gate(S){
+  const open=Object.keys(S.p).filter(k=>["coming","search","lost","meeting","x"].includes(S.p[k].st)).map(k=>SCN.threads[k].short);
+  const go=()=>{S.gated=1;const w=gateWalk(S);A.addTime(w);
+    if(S.over) return;
+    if(S.t>LAST) return A.scene("23:12","ベルが鳴り終わった","階段をかけ上がったら、ドアが閉まるところだった。","まこから「すず……」","",{wait:true,onClose:()=>A.end("missed")});
+    const h=hands(S),k=h>=3?"perfect":h>=1?"clear":"empty",left=LAST-S.t;
+    A.scene(A.fmt(S.t),left<=3?"終電…間に合った！！":"終電、間に合った",left<=3?"発車ベルの中、まこが手を振っている。「すず！！こっち！」":"ホームでまこが待っていた。「おつかれ！どうだった？」",h?"ケースの中に、手渡しで受け取ったトレカが"+h+"枚":"ケースの中身は、来たときのまま","good",{wait:true,onClose:()=>A.end(k)})};
+  if(open.length) A.confirmBox("改札に入る？",open.join("・")+"とまだ会えていない。","入る","まだ待つ",go);
+  else go();
+}
+window.SUZU=SCN;
+})();
+ChatSim.start(window.SUZU);
+</script>
+</body>
+</html>
