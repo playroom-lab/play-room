@@ -114,7 +114,7 @@ const SCN={
     info:{name:"お知らせ",col:"#6b6680",ini:"!",static:1},
     mom:{name:"母",short:"母",col:"#e7b25e",ini:"母"},
     yui:{name:"ゆい（あかりの友だち）",short:"ゆい",col:"#e98aae",ini:"ゆ"},
-    sota:{name:"そうた",short:"弟",col:"#5fbfa0",ini:"そ"},
+    sota:{name:"コウタ",short:"弟",col:"#5fbfa0",ini:"コ"},
     work:{name:"会社の同期",col:"#9ac26b",ini:"同",n:5,group:1,static:1,last:"明日の資料、朝イチでよろしく〜",lastT:H(2),msgs:[{k:"them",who:"たかの",x:"明日の資料、朝イチでよろしく〜",t:H(2)}]}
   },
   order:["akari","yui","sota","yuma","mom","info","work"],
@@ -206,7 +206,7 @@ const SCN={
     best:{name:"最高のおかえり",clear:1,text:"玄関を開けたあかりが固まる。机にからあげ棒、棚にはグッズの場所、お風呂も沸いてる。「え、なにこれ」って言いながら、もう泣き笑いだった。{name}の話は、明日の朝ごはんのときにもう一回ちゃんと聞く。"},
     home:{name:"おかえりが言えた",clear:1,text:"ちゃんと起きて「おかえり」が言えた。あかりは靴も脱がずに{name}の話の続きを始める。眠いけど、うれしそうだからまあいいか。"},
     pickup:{name:"駅まで迎えに",clear:1,text:"改札から出てきたあかりが、こっちを見つけて小走りになる。紙袋ふたつ、片方持つ。帰り道はずっと{name}の話。夜の道がいつもより短かった。"},
-    bet:{name:"1000円の勝ち",clear:1,text:"「おかえり」のあと、そうたに証拠の写真を送る。『まじか』『兄ちゃん本気出しすぎ』。明日の朝ごはんは、1000円の話と{name}の話の続き。"},
+    bet:{name:"1000円の勝ち",clear:1,text:"「おかえり」のあと、コウタに証拠の写真を送る。『まじか』『兄ちゃん本気出しすぎ』。明日の朝ごはんは、1000円の話と{name}の話の続き。"},
     cold:{name:"冷たいおかえり",text:"起きてはいた。でも「…ただいま」の声が低い。返事がそっけなかったこと、たぶん全部覚えてる。今夜の{name}の話は、もう聞かせてもらえない。"},
     sofa:{name:"ソファで寝落ち",black:1,text:"気づいたら朝だった。体には毛布。テーブルにはあかりのメモ「おかえりって言ってほしかったな」。その横に、{name}のトレカが1枚置いてあった。{betline}"},
     terminal:{name:"終点までお迎え",text:"「…終点」のメッセージで飛び起きた。{carline}帰りの車内で、あかりは{name}の話をもう一周した。帰りついたのは2時すぎ。"}
@@ -357,7 +357,7 @@ const SCN={
     {th:"info",f:(S,api)=>api.info("ニュース","明日の天気：晴れ。朝は冷え込みます")},
     {th:"info",f:(S,api)=>api.info("コンビニ","からあげ棒、今夜だけ20円引き"),when:S=>!S.karaage}
   ],
-  fill(S,s){return s.replace(/\{betline\}/g,S.bet?"スマホには、そうたから「1000円ね」。":"").replace(/\{carline\}/g,S.car?"車のキーをつかんで出発。":"車は弟に貸してしまった。タクシーを呼んで終点へ。").replace(/\{home\}/g,A.fmt(home(S))).replace(/\{wake\}/g,A.fmt(at(S)-5))}
+  fill(S,s){return s.replace(/\{betline\}/g,S.bet?"スマホには、コウタから「1000円ね」。":"").replace(/\{carline\}/g,S.car?"車のキーをつかんで出発。":"車は弟に貸してしまった。タクシーを呼んで終点へ。").replace(/\{home\}/g,A.fmt(home(S))).replace(/\{wake\}/g,A.fmt(at(S)-5))}
 };
 
 function later(fn,ms){A.later(fn,ms)}
@@ -393,7 +393,7 @@ function doMenu(S){
     {label:"コーヒーを淹れる",sub:S.coffee>=2?"もう飲めない":"眠気−15・3分（あと"+(2-S.coffee)+"杯）",disabled:S.coffee>=2,on:()=>{S.coffee++;act(S,3,-15,"コーヒー","ドリップの音で少し目が覚める。",S.coffee===2?"これ以上は寝られなくなる":"にがい")}},
     {label:"顔を洗う",short:"顔洗い（2回）",done:S.wash>=2,sub:"眠気"+[-8,-5][Math.min(S.wash,1)]+"・2分（あと"+(2-S.wash)+"回）",on:()=>{const d=[-8,-5][Math.min(S.wash,1)];S.wash++;act(S,2,d,"洗面所","冷たい水。",S.wash>2?"だんだん慣れてきた":"しゃっきり")}},
     {label:"ストレッチ",sub:S.t<S.stretchT?"さっきやった":"眠気−3・1分",disabled:S.t<S.stretchT,on:()=>{S.stretchT=S.t+20;act(S,1,-3,"ストレッチ","肩をまわす。ゴキッと鳴った。","")}},
-    {label:"コンビニに行く",short:"コンビニ",done:S.karaage,sub:L<16?"帰りに間に合わない":"眠気−12・12分"+(S.karaReq?"・からあげ棒":""),disabled:L<16,on:()=>{S.karaage=1;if(S.breadReq) S.bread=1;act(S,12,-12,"コンビニ","夜風で目が覚める。からあげ棒、最後の1本。",S.breadReq?"メロンパンも買った":"ついでに自分のアイスも");A.me("akari",{photo:"karaage"});A.later(()=>A.them("akari",["！！！","最後の1本？","すき"]),1500);A.change("mood",5)}},
+    {label:"コンビニに行く",short:"コンビニ",done:S.karaage,sub:!S.karaReq?"いまは用事がない":L<16?"帰りに間に合わない":"眠気−12・12分・からあげ棒",disabled:!S.karaReq||L<16,on:()=>{S.karaage=1;if(S.breadReq) S.bread=1;act(S,12,-12,"コンビニ","夜風で目が覚める。からあげ棒、最後の1本。",S.breadReq?"メロンパンも買った":"ついでに自分のアイスも");A.me("akari",{photo:"karaage"});A.later(()=>A.them("akari",["！！！","最後の1本？","すき"]),1500);A.change("mood",5)}},
     {label:"棚を組み立てる",short:"棚",done:S.shelf,sub:L<18?"時間が足りない":"眠気−6・15分・その間は返信できない",disabled:L<18,on:()=>{S.shelf=1;act(S,15,-6,"組み立て","説明書どおりに、ネジ12本。",S.shelfReq?"あかりのグッズの場所ができた":"なんの棚かは知らない")}},
     {label:"お風呂を沸かす",short:"お風呂",done:!!S.bath,sub:"2分",on:()=>{S.bath=1;act(S,2,0,"お風呂","スイッチを押した。","「お風呂が沸きました」まで20分")}},
     {label:"先にお風呂に入る",sub:!S.bath?"まだ沸いてない":S.bathFirst?"もう入った":"15分・あったまる",disabled:!S.bath||S.bathFirst,on:()=>{S.bathFirst=1;act(S,15,18,"お風呂","お湯につかると、体の芯から力が抜けていく。","…まずい、ねむい")}},
