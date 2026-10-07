@@ -345,7 +345,7 @@ function render(scroll){
 function pickTitle(kind){return SCN.titles.find(t=>t.ok(S,kind))||SCN.titles[SCN.titles.length-1]}
 function end(kind){
   if(!S||S.over) return;
-  S.over=true;S.endKind=kind;clearInterval(timer);closePlist();
+  S.over=true;S.endKind=kind;clearInterval(timer);S.name="推し";closePlist();
   ["call","osd","scene"].forEach(id=>$(id).hidden=true);$("pa").classList.remove("on");
   seen[kind]=1;LS.set(SCN.id+":seen",seen);
   S.titleObj=pickTitle(kind);S.newTitle=!titlesGot[S.titleObj.id];titlesGot[S.titleObj.id]=1;LS.set(SCN.id+":titles",titlesGot);
@@ -402,7 +402,7 @@ async function makeImage(R){
   x.save();x.translate(cx+430,ky+14);x.rotate(-2*Math.PI/180);x.fillStyle=PAPER;x.fillRect(0,0,cw-470,112);x.strokeStyle=INK;x.lineWidth=3;x.strokeRect(0,0,cw-470,112);x.fillStyle=MUTED;x.font="700 22px "+G;x.fillText("称号",20,36);x.fillStyle=INK;let tf=42;x.font="600 "+tf+"px "+HAND;while(x.measureText(R.title).width>cw-510&&tf>24){tf-=2;x.font="600 "+tf+"px "+HAND}x.fillText(R.title,20,88);x.restore();
   const sy=ky+200;x.strokeStyle="#d5d1d9";x.lineWidth=2;x.setLineDash([8,8]);x.beginPath();x.moveTo(cx+40,sy-30);x.lineTo(cx+cw-40,sy-30);x.stroke();x.setLineDash([]);
   const sw=(cw-80)/R.stats.length;R.stats.forEach(([l,v],i)=>{const sx=cx+40+sw*i;x.fillStyle=MUTED;x.font="700 24px "+G;x.fillText(l,sx,sy+10);x.fillStyle=INK;x.font="900 46px "+G;x.fillText(v,sx,sy+66)});
-  x.fillStyle=MUTED;x.font="500 26px "+G;x.textAlign="center";x.fillText((R.nameLabel?R.nameLabel+"："+R.name+"　｜　":"")+"フィクションです",W/2,Math.max(H-40,cy+ch+60));x.textAlign="left";
+  x.fillStyle=MUTED;x.font="500 26px "+G;x.textAlign="center";x.fillText("フィクションです",W/2,Math.max(H-40,cy+ch+60));x.textAlign="left";
   return await new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(new Error("toBlob")),"image/png"));
 }
 async function saveResult(blobP){

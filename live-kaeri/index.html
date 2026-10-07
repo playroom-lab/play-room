@@ -1218,7 +1218,7 @@ function title(){return S.titleObj?S.titleObj.name:"ちゃんと帰れるオタ�
 function where(){if(S.stage==="seat") return "座席";if(S.stage==="station") return "〇〇駅 東口";return S.pos<PLAZA?"会場前":"駅までの道"}
 function end(kind){
   if(!S||S.over) return;
-  S.over=true;clearInterval(timer);
+  S.over=true;clearInterval(timer);S.oshi="推し";
   ["call","osd","viewer","scene"].forEach(id=>$(id).hidden=true);$("pa").classList.remove("on");
   seen[kind]=1;try{localStorage.setItem("lkSeen2",JSON.stringify(seen))}catch(e){}
   S.titleObj=pickTitle(kind);const newTitle=!titlesGot[S.titleObj.id];titlesGot[S.titleObj.id]=1;try{localStorage.setItem("lkTitles",JSON.stringify(titlesGot))}catch(e){}
@@ -1292,7 +1292,7 @@ async function makeResultImage(R){
   const st=[["語った回数",R.talk+"回"],["送った写真",R.photo+"枚"],["追撃された",R.chased+"回"],["残りの電池",R.bat+"%"]];const sw=(cw-80)/4;
   st.forEach(([l,v],i)=>{const sx=cx+40+sw*i;x.fillStyle=MUTED;x.font="700 24px "+G;x.fillText(l,sx,sy+10);x.fillStyle=INK;x.font="900 46px "+G;x.fillText(v,sx,sy+66)});
   // footer
-  x.fillStyle=MUTED;x.font="500 26px "+G;x.textAlign="center";x.fillText("推し："+R.oshi+"　｜　フィクションです",W/2,H-70);x.textAlign="left";
+  x.fillStyle=MUTED;x.font="500 26px "+G;x.textAlign="center";x.fillText("フィクションです",W/2,H-70);x.textAlign="left";
   return await new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(new Error("toBlob")),"image/png"));
 }
 async function saveResult(blobP){

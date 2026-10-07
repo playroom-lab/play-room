@@ -296,7 +296,6 @@ button:focus-visible,a:focus-visible{outline:3px solid #8051bd;outline-offset:2p
 .photo.room::after{left:22%;top:22%;width:56%;height:48%;border-radius:2px;background:repeating-linear-gradient(90deg,#d8c7ad 0 24%,#bfa98a 24% 25%);box-shadow:0 0 0 3px #a68d6b}
 .endmap a.lnk{display:inline-block;border:1.5px solid var(--ink);background:#fff;border-radius:30px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--ink);text-decoration:none}
 .bub.oshi{position:relative}
-.bub.oshi::after{content:"💤";position:absolute;right:-8px;top:-8px;font-size:11px;opacity:.75}
 .photo.cards3{background:linear-gradient(135deg,#ece6ff,#fff0f4)}
 .photo.cards3::before,.photo.cards3::after{content:"";position:absolute;top:18%;width:22%;height:62%;border-radius:5px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.15),inset 0 0 0 4px #ffd5df}
 .photo.cards3::before{left:12%;transform:rotate(-6deg)}
