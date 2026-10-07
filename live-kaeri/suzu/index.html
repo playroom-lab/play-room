@@ -179,7 +179,7 @@ const SCN={
       {t:"東口の柱の横です",on:S=>S.nonoTold=0,r:["はい！"]},
       {stamp:["👍","了解"],on:S=>S.nonoTold=0,r:["…？"]}])},
     {at:T(22,20),f:(S,api)=>{S.rain=1;api.info("雨雲レーダー","いる場所で雨が降りはじめました","rain")}},
-    {at:T(22,24),f:(S,api)=>{S.p.rui.st="dm";api.ask("rui",["交換ポスト見ました","{name}、まだありますか","西口にいます"],[
+    {at:T(22,24),f:(S,api)=>{S.p.rui.st="dm";api.ask("rui",["交換ポスト見ました","交換に出してる私の推しのトレカ、まだありますか","西口にいます"],[
       {t:"はい！東口の柱の横です",on:S=>{S.p.rui.st="coming";S.p.rui.arr=S.t+A.rnd(20,28)},r:["行きます","20分くらい"]},
       {t:"今日はもう締め切りました",r:["了解です、またの機会に！"]},
       {t:"終電なので23時までなら",on:S=>{S.p.rui.st="coming";S.p.rui.arr=S.t+A.rnd(18,24)},r:["了解","急ぎます"]}])}},
@@ -197,7 +197,7 @@ const SCN={
     {th:"mana",lines:["交換どう？"],choices:[{t:"順調！",r:["さすが"]},{t:"迷子が出てる",r:["あるある"]},{stamp:["🃏","トレカ"],r:["かわい"]}]},
     {th:"mana",lines:["今日の{name}よすぎた","帰ったら語ろ"]},
     {th:"mana",lines:["コンビニで肉まん買った","すずの分ないよ"],when:S=>S.t>22*60+20},
-    {th:"dm",lines:["はじめまして、{name}のトレカ譲っていただけませんか？"],choices:[{t:"交換のみなんです、すみません",r:["了解です！"]},{t:"今日は締め切りました",r:["わかりました"]}]},
+    {th:"dm",lines:["はじめまして、譲りに出してるトレカ、売っていただけませんか？"],choices:[{t:"交換のみなんです、すみません",r:["了解です！"]},{t:"今日は締め切りました",r:["わかりました"]}]},
     {th:"dm",lines:["交換ポスト見ました！アクスタも出してますか？"],choices:[{t:"トレカだけです",r:["失礼しました！"]},{stamp:["🙇","ごめんなさい"],r:["いえいえ！"]}]},
     {th:"mana",lines:["{name}のトレカ何枚になった？"],choices:[{t:"いま数えてる",r:["見せてね"]},{stamp:["✌","ピース"],r:["ドヤってる"]}]},
     {th:"mana",lines:["となりの人、同じタオル持ってる","仲間"]},
@@ -220,10 +220,10 @@ const SCN={
 };
 
 const EXTRA={
-  miku:[["あの、少しだけお話してもいいですか…？","今日の{name}、ほんとによくて"],[
+  miku:[["あの、少しだけお話してもいいですか…？","今日の私の推し、ほんとによくて"],[
     {t:"ぜひ！5分だけ",cost:"5分たつ",on:S=>{S.talked=(S.talked||0)+1;A.scene("5分","感想を少しだけ","「あそこ見ました！？」「見ました！！」","止まらない…");A.addTime(5)},r:["ありがとうございます、たのしかった！"]},
     {t:"ごめんなさい、このあとも交換があって",r:["あっ、そうですよね！がんばってください"]}]],
-  nono:[["あ、すずさん{name}のダブりって他にもありますか？","ランダムの缶バッジも探してて"],[
+  nono:[["あ、すずさん他にもダブりってありますか？","ランダムの缶バッジも探してて"],[
     {t:"見てみますね",cost:"3分たつ",on:S=>{S.badge=1;A.scene("3分","ケースを探す","缶バッジ、1個だけあった。","ののさん、すごく喜んでる");A.addTime(3)},r:["えっ、うれしい…！ありがとうございます"]},
     {t:"今日はトレカだけなんです",r:["了解です！ありがとうございました"]}]],
   rui:[["写真撮ってもいいですか？","交換記念に、トレカだけ"],[
@@ -248,7 +248,7 @@ function nonoChoices(S){return [
 function nonoFix(S,api){api.later(()=>api.ask("nono",["どうしましょう…"],nonoChoices(S)),1200)}
 function meet(S,api,k){
   const p=S.p[k];if(p.st==="done"||S.over) return;if(S.callOn||!A.$("scene").hidden){api.later(()=>meet(S,api,k),1500);return}
-  if(k==="miku"&&S.mikuTwist&&!S.twistDone){S.twistDone=1;p.st="meeting";const T0=S.th[k];if(T0.pending&&!T0.pending.end){T0.pending=null;T0.asking=false}T0.aq=[];api.ask("miku",["いました！！🥹","あの…ごめんなさい、実は","衣装のじゃなくて私服の{name}と交換ってできたりしますか…？🙏"],[
+  if(k==="miku"&&S.mikuTwist&&!S.twistDone){S.twistDone=1;p.st="meeting";const T0=S.th[k];if(T0.pending&&!T0.pending.end){T0.pending=null;T0.asking=false}T0.aq=[];api.ask("miku",["いました！！🥹","あの…ごめんなさい、実は","衣装のじゃなくて、私の推しの私服のほうと交換ってできたりしますか…？🙏"],[
       {t:"大丈夫ですよ！",cost:"1分",on:()=>{S.twistOk=1;api.addTime(1)},r:["えっ神ですか😭😭","一生大事にします"],after:()=>{p.st="x";meet(S,api,k)}},
       {t:"ごめんなさい、私服は手放せなくて",r:["ですよね！！予定どおりで大丈夫です🙇‍♀️"],after:()=>{p.st="x";meet(S,api,k)}}]);return}
   p.st="done";const TT=S.th[k];if(TT.pending&&!TT.pending.end){TT.pending=null;TT.asking=false}TT.aq=[];
