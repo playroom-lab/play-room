@@ -39,7 +39,6 @@
     .preview{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;height:218px;border-bottom:1.5px solid var(--ink);border-radius:3px 3px 0 0;padding:25px}
     .gacha .preview{background:var(--pink)}
     .outfit .preview{background:var(--lime)}
-    .bias .preview{background:var(--violet);padding:20px 15px}
     .train .preview{background:var(--sky)}
     .visual6 .preview{background:#ffe7ef}
     .best9 .preview{background:#dfeaff}
@@ -48,6 +47,9 @@
     .photo{display:block;width:100%;height:100%;object-fit:cover;object-position:center;border:6px solid #fff;box-shadow:0 3px 7px #28253626}
     .gacha .photo{transform:rotate(-5deg);max-width:250px;object-position:center 34%}
     .outfit .photo{transform:rotate(4deg);width:128px;object-position:center 30%}
+    .shot{display:block;height:100%;width:auto;max-width:100%;object-fit:contain;background:#fff;border:1.5px solid var(--ink);box-shadow:3px 4px 0 var(--ink);transform:rotate(-3deg)}
+    .tool:nth-child(even) .shot{transform:rotate(3deg)}
+    .preview:has(.shot){padding:18px 20px 24px}
     .preview-label{position:absolute;right:9px;bottom:9px;margin:0;padding:2px 8px;background:#fff;border:1px solid var(--ink);font-size:0.8125rem;font-weight:700;letter-spacing:.04em;transform:rotate(-3deg)}
     .tool-copy{min-width:0;overflow-wrap:anywhere;display:flex;flex-direction:column;flex:1;padding:20px}
     .eyebrow{flex-wrap:wrap;display:flex;align-items:center;gap:10px;margin:0 0 8px;font-size:0.8125rem;font-weight:700;letter-spacing:.07em;color:var(--muted)}
@@ -57,7 +59,6 @@
     .open{display:block;margin-top:auto;padding:8px 15px;align-self:flex-start;border:1px solid var(--ink);border-radius:30px;font-size:0.875rem;font-weight:700;line-height:1.5}
     .gacha .open{background:var(--pink)}
     .outfit .open{background:var(--lime)}
-    .bias .open{background:var(--violet)}
     .train .open{background:var(--sky)}
     .visual6 .open{background:#ffe7ef}
     .best9 .open{background:#dfeaff}
@@ -83,12 +84,14 @@
       .room-number{padding:7px 10px;font-size:0.75rem;margin-bottom:4px}
       .room-number strong{font-size:1.75rem}
       .tools{grid-template-columns:1fr;gap:18px;padding:8px 3px 26px 0}
-      .tool{display:grid;grid-template-columns:112px minmax(0,1fr);box-shadow:3px 4px 0 var(--ink)}
+      .tool{display:grid;grid-template-columns:120px minmax(0,1fr);box-shadow:3px 4px 0 var(--ink)}
       .preview{height:auto;min-height:176px;border-bottom:0;border-right:1.5px solid var(--ink);border-radius:3px 0 0 3px;padding:13px 10px}
       .gacha .photo{height:114px;width:85px;object-position:39% center;border-width:4px}
       .outfit .photo{height:139px;width:81px;border-width:4px}
+      .preview:has(.shot){padding:14px 10px}
+      .shot{width:100%;height:auto;max-height:100%}
+      .preview:has(.shot) .preview-label{display:none}
       .preview-label{right:5px;bottom:10px;font-size:0.75rem;padding:0 5px}
-      .bias .preview{padding:10px 4px}
       .chat-preview{max-width:96px;gap:5px}
       .chat-preview span{font-size:0.625rem;padding:4px 7px;border-radius:10px}
       .map-preview{width:108px;height:134px;max-width:none}
@@ -125,13 +128,13 @@
         <h1>推し活の<span>あそび場。</span></h1>
         <p class="hero-note">ちょっと寄り道、推しと遊ぼう。</p>
       </div>
-      <p class="room-number">TOOLS<strong>10</strong></p>
+      <p class="room-number">TOOLS<strong>07</strong></p>
     </header>
     <main>
       <div class="tools" aria-label="遊びツール一覧">
         <a class="tool gacha" href="./gacha/" aria-labelledby="gacha-title" aria-describedby="gacha-desc">
           <div class="preview" aria-hidden="true">
-            <img class="photo" src="https://wsrv.nl/?url=rikomuze.github.io%2Fmazzel-gacha%2Fphotos%2Fgroup%2F01.jpg&w=480&output=jpg&q=80" alt="" width="400" height="300">
+            <img class="shot" src="./assets/thumbs/gacha.jpg" alt="" width="329" height="560" loading="lazy" decoding="async">
             <span class="preview-label">自引きしたい！</span>
           </div>
           <div class="tool-copy">
@@ -144,7 +147,7 @@
 
         <a class="tool outfit" href="./outfit/" aria-labelledby="outfit-title" aria-describedby="outfit-desc">
           <div class="preview" aria-hidden="true">
-            <img class="photo" src="https://wsrv.nl/?url=rikomuze.github.io%2Fmazzel-outfit%2Fphotos%2Fnaoya%2F07.jpg&w=480&output=jpg&q=80" alt="" width="180" height="240">
+            <img class="shot" src="./assets/thumbs/outfit.jpg" alt="" width="356" height="560" loading="lazy" decoding="async">
             <span class="preview-label">好きな衣装 TOP 5</span>
           </div>
           <div class="tool-copy">
@@ -155,90 +158,26 @@
           </div>
         </a>
 
-        <a class="tool bias" href="./bias-map/" aria-labelledby="bias-title" aria-describedby="bias-desc">
-          <div class="preview" aria-hidden="true">
-            <svg class="map-preview" viewBox="0 0 220 205" xmlns="http://www.w3.org/2000/svg">
-              <rect x="1" y="1" width="218" height="203" rx="3" fill="white"/>
-              <path d="M110 31V175 M35 103H184" fill="none" stroke="#aaa2bb" stroke-width="1"/>
-              <g fill="#62576e" font-size="14" text-anchor="middle" font-family="sans-serif">
-                <text x="110" y="23">彼氏感</text><text x="110" y="194">神々しい</text>
-                <text x="27" y="84">メロい</text><text x="183" y="125">かわいい</text>
-              </g>
-              <circle cx="79" cy="65" r="15" fill="#ffd5df" stroke="#c797a4"/>
-              <circle cx="143" cy="86" r="12" fill="#dcefa5" stroke="#a2b86a"/>
-              <circle cx="93" cy="145" r="17" fill="#ded7ff" stroke="#a39ac4"/>
-              <text x="110" y="111" fill="#62576e" text-anchor="middle" font-size="10" font-family="sans-serif">＋</text>
-            </svg>
-          </div>
-          <div class="tool-copy">
-            <p class="eyebrow"><span class="number">03</span> MAKE YOUR MAP</p>
-            <h2 id="bias-title">BIAS MAP</h2>
-            <p class="tool-desc" id="bias-desc">写真をマップに並べて、あなたの「推し解釈」を一枚に。</p>
-            <span class="open">マップをつくる</span>
-          </div>
-        </a>
-
         <a class="tool train" href="./live-kaeri/" aria-labelledby="train-title" aria-describedby="train-desc">
           <div class="preview" aria-hidden="true">
-            <div class="chat-preview">
-              <span class="sys">LAST TRAIN 23:12</span>
-              <span>柱の前にいます！</span>
-              <span class="me">今向かってます！</span>
-              <span>ねえ生きてる？笑</span>
-            </div>
+            <img class="shot" src="./assets/thumbs/live-kaeri.jpg" alt="" width="448" height="560" loading="lazy" decoding="async">
             <span class="preview-label">終電まで98分</span>
           </div>
           <div class="tool-copy">
-            <p class="eyebrow"><span class="number">04</span> CHAT GAME</p>
+            <p class="eyebrow"><span class="number">03</span> CHAT GAME</p>
             <h2 id="train-title">ライブ帰りシミュレーター</h2>
             <p class="tool-desc" id="train-desc">規制退場から終電まで。トレカを手渡しで交換して、電池を残して帰れる？</p>
             <span class="open">帰り道へいく</span>
           </div>
         </a>
 
-        <a class="tool train" href="./live-kaeri/haruya/" aria-labelledby="haruya-title" aria-describedby="haruya-desc">
-          <div class="preview" aria-hidden="true">
-            <div class="chat-preview">
-              <span class="sys">おかえり 0:12</span>
-              <span>1曲目でこっち見た</span>
-              <span class="me">よかったじゃん！</span>
-              <span>からあげ棒たべたい…</span>
-            </div>
-            <span class="preview-label">彼女の帰りを待つ</span>
-          </div>
-          <div class="tool-copy">
-            <p class="eyebrow"><span class="number">05</span> CHAT GAME</p>
-            <h2 id="haruya-title">ライブ帰り はるや版</h2>
-            <p class="tool-desc" id="haruya-desc">彼女が帰ってくるまで、起きていられる？推しの話を聞くほど眠くなる。</p>
-            <span class="open">起きて待つ</span>
-          </div>
-        </a>
-
-        <a class="tool train" href="./live-kaeri/suzu/" aria-labelledby="suzu-title" aria-describedby="suzu-desc">
-          <div class="preview" aria-hidden="true">
-            <div class="chat-preview">
-              <span class="sys">LAST TRAIN 23:12</span>
-              <span>着きました！どこですか？</span>
-              <span class="me">東口の柱の横です</span>
-              <span>…西口でした</span>
-            </div>
-            <span class="preview-label">交換相手は3人</span>
-          </div>
-          <div class="tool-copy">
-            <p class="eyebrow"><span class="number">06</span> CHAT GAME</p>
-            <h2 id="suzu-title">ライブ帰り すずさん版</h2>
-            <p class="tool-desc" id="suzu-desc">駅の東口で、終電までに3人と手渡し交換できる？</p>
-            <span class="open">東口で待つ</span>
-          </div>
-        </a>
-
         <a class="tool visual6" href="./visual6/" aria-labelledby="visual6-title" aria-describedby="visual6-desc">
           <div class="preview" aria-hidden="true">
-            <img class="photo" src="https://wsrv.nl/?url=rikomuze.github.io%2Fmuze-tool-box%2Fassets%2Fimages%2Foshi-visual-6.jpeg&w=480&output=jpg&q=80" alt="" width="400" height="400">
+            <img class="shot" src="./assets/thumbs/visual6.jpg" alt="" width="560" height="560" loading="lazy" decoding="async">
             <span class="preview-label">好きな6枚を一枚に</span>
           </div>
           <div class="tool-copy">
-            <p class="eyebrow"><span class="number">07</span> PICK SIX</p>
+            <p class="eyebrow"><span class="number">04</span> PICK SIX</p>
             <h2 id="visual6-title">推しビジュ6選</h2>
             <p class="tool-desc" id="visual6-desc">好きなビジュ6枚を選んで、タグ画っぽい一枚にまとめる。</p>
             <span class="open">6枚を選ぶ</span>
@@ -247,11 +186,11 @@
 
         <a class="tool best9" href="./best9/" aria-labelledby="best9-title" aria-describedby="best9-desc">
           <div class="preview" aria-hidden="true">
-            <img class="photo" src="https://wsrv.nl/?url=rikomuze.github.io%2Fmuze-tool-box%2Fassets%2Fimages%2Fbest-visual-photo-20260918-v3.jpg&w=480&output=jpg&q=80" alt="" width="400" height="400">
+            <img class="shot" src="./assets/thumbs/best9.jpg" alt="" width="386" height="560" loading="lazy" decoding="async">
             <span class="preview-label">アー写で最強9マス</span>
           </div>
           <div class="tool-copy">
-            <p class="eyebrow"><span class="number">08</span> BEST NINE</p>
+            <p class="eyebrow"><span class="number">05</span> BEST NINE</p>
             <h2 id="best9-title">最強9マス アー写</h2>
             <p class="tool-desc" id="best9-desc">好きなアー写で組む、自分だけの最強ビジュ9マス。</p>
             <span class="open">9マスをつくる</span>
@@ -260,11 +199,11 @@
 
         <a class="tool best9-performance" href="./best9-performance/" aria-labelledby="best9p-title" aria-describedby="best9p-desc">
           <div class="preview" aria-hidden="true">
-            <img class="photo" src="https://wsrv.nl/?url=rikomuze.github.io%2Fmuze-tool-box%2Fassets%2Fimages%2Fbest-visual-costume-20260918-v3.jpg&w=480&output=jpg&q=80" alt="" width="400" height="400">
+            <img class="shot" src="./assets/thumbs/best9-performance.jpg" alt="" width="386" height="560" loading="lazy" decoding="async">
             <span class="preview-label">パフォ衣装で9マス</span>
           </div>
           <div class="tool-copy">
-            <p class="eyebrow"><span class="number">09</span> PERFORMANCE NINE</p>
+            <p class="eyebrow"><span class="number">06</span> PERFORMANCE NINE</p>
             <h2 id="best9p-title">最強9マス パフォ衣装</h2>
             <p class="tool-desc" id="best9p-desc">好きなパフォーマンス衣装で組む、もうひとつの最強9マス。</p>
             <span class="open">衣装を選ぶ</span>
@@ -273,11 +212,11 @@
 
         <a class="tool diagnosis" href="./diagnosis/" aria-labelledby="diagnosis-title" aria-describedby="diagnosis-desc">
           <div class="preview" aria-hidden="true">
-            <img class="photo" src="https://wsrv.nl/?url=rikomuze.github.io%2Fmuze-tool-box%2Fassets%2Fimages%2Fotaku-numa.jpeg&w=480&output=jpg&q=80" alt="" width="400" height="400">
+            <img class="shot" src="./assets/thumbs/diagnosis.jpg" alt="" width="448" height="560" loading="lazy" decoding="async">
             <span class="preview-label">あなたは何タイプ？</span>
           </div>
           <div class="tool-copy">
-            <p class="eyebrow"><span class="number">10</span> FIND YOUR TYPE</p>
+            <p class="eyebrow"><span class="number">07</span> FIND YOUR TYPE</p>
             <h2 id="diagnosis-title">オタク沼診断</h2>
             <p class="tool-desc" id="diagnosis-desc">何に沸いて、どう沼ってる？ 12問で20通りのタイプを診断。</p>
             <span class="open">診断する</span>
