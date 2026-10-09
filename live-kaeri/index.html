@@ -246,6 +246,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #8051bd;outline-offset:2p
 /* ---- intro & result: paper room style ---- */
 .intro,.result{background:var(--paper);color:var(--ink);overflow-y:auto;padding:0 20px calc(28px + env(safe-area-inset-bottom,0px));font-family:var(--f-head);line-height:1.7}
 .pnav{display:flex;justify-content:space-between;align-items:center;padding:18px 0 14px;border-bottom:1px solid var(--pline);font-size:13px;font-weight:700;letter-spacing:.045em}
+.pnav a{color:inherit;text-decoration:none}
 .pnav span:last-child{font-family:var(--f-hand);font-weight:600;border-bottom:1px solid var(--ink);letter-spacing:0}
 .hero{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;padding:28px 0 20px}
 .hero>div{min-width:0}
@@ -1231,7 +1232,7 @@ function end(kind){
     const got=ENDKEYS.filter(k=>seen[k]).length;
     const no=String(ENDKEYS.indexOf(kind)+1).padStart(2,"0");
     const okSwap=S.swapDone,okTrain=kind==="clear"||kind==="noswap"||kind==="sleep",okBat=S.bat>0;
-    el.innerHTML=`<div class="pnav"><span>ライブ帰りシミュレーター</span><span>ENDING ${got} / ${ENDKEYS.length}</span></div>
+    el.innerHTML=`<div class="pnav"><a href="../">PLAY ROOM</a><span>ENDING ${got} / ${ENDKEYS.length}</span></div>
     <header class="hero${kind==="clear"?" clear":""}"><div><p class="tag">${kind==="clear"?"CLEAR":"ENDING "+no}</p><h2><span>${esc(ENDNAME[kind])}</span></h2><p class="note">${fmt(Math.min(S.t,LAST))}、${esc(where())}にて。</p></div><p class="ticket">余韻<strong>${S.yoin}</strong></p></header>
     <div class="pcard pink"><p class="lbl">今夜のこと</p><p class="end">${esc(fill(ENDS[kind]))}</p>
       <div class="checks"><div class="${okSwap?"ok":"ng"}"><b>${okSwap?"✓":"—"}</b>手渡し交換</div><div class="${okTrain?"ok":"ng"}"><b>${okTrain?"✓":"—"}</b>終電</div><div class="${okBat?"ok":"ng"}"><b>${okBat?"✓":"—"}</b>電池</div></div>
@@ -1323,7 +1324,7 @@ function showIntro(){
   ["result","call","osd","viewer","scene"].forEach(id=>$(id).hidden=true);$("osd").className="ov osd";
   $("view").innerHTML="";
   const el=$("intro");el.hidden=false;
-  el.innerHTML=`<div class="pnav"><span>ライブ帰りシミュレーター</span><span>エンディング7種</span></div>
+  el.innerHTML=`<div class="pnav"><a href="../">PLAY ROOM</a><span>エンディング7種</span></div>
   <header class="hero"><div><p class="tag">CHAT GAME</p><h1>ライブ<span>帰り</span>シミュレーター</h1><p class="note">終電まで、あと98分。</p></div><p class="ticket">LAST TRAIN<strong>23:12</strong></p></header>
   <div class="pcard pink"><p class="lbl">21:34</p><p class="story">最後の曲の余韻が、まだ耳に残っている。規制退場の<em>アナウンス待ち</em>。手渡しのトレカ交換が<em>1件</em>残っていて、終電は<em>23:12</em>。<br>スマホが、震えた。</p></div>
   <div class="pcard sky"><p class="lbl">ゴール</p><p class="goal"><em>手渡しでトレカ交換</em>して、<em>電池を残したまま</em>、<em>終電に乗る</em>。</p><p class="story" style="font-size:13px;color:var(--pmuted)">寄り道すれば、推しのトレカは最大3枚まで集められる。</p></div>
