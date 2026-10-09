@@ -23,7 +23,7 @@ const MEMBERS = NAMES.map((name, i) => ({
   id: 'mazzel-' + name.toLowerCase(), name, order: i, secret: false,
   shots: [
     ...nums(18).map(x => PRfast(`https://raw.githubusercontent.com/rikomuze/mazzel-gacha/main/photos/${name.toLowerCase()}/${x}.jpg`, 640)),
-    `photos/${name.toLowerCase()}/19.jpg`,  // このリポジトリ内の追加ショット
+    PRlocal(`photos/${name.toLowerCase()}/19.jpg`, 640),  // このリポジトリ内の追加ショット
     // パフォ衣装編（最強9マスと同じ写真）。集めた記録は番号で保存しているので、必ず末尾に追加する
     ...PERF_MEMBER.map(n => PRfast(`${PERF}${name.toLowerCase()}/${n}.png`, 640))
   ]
@@ -236,7 +236,7 @@ function renderTop() {
     .sort((a, b) => (a === me ? -1 : b === me ? 1 : 0) || (players[b].pulls - players[a].pulls));
   $('players').innerHTML = ids.map(id => {
     const p = players[id], o = M(p.oshi);
-    return `<div class="pchip ${id === me ? 'me on' : ''}"><span class="dot">${o ? `<img src="${esc(o.shots[0])}" alt="">` : '?'}</span>${esc(p.name)}${id === me ? '（自分）' : ''} <small>${p.pulls}袋</small></div>`;
+    return `<div class="pchip ${id === me ? 'me on' : ''}"><span class="dot">${o ? `<img src="${esc(PRthumb(o.shots[0]))}" alt="">` : '?'}</span>${esc(p.name)}${id === me ? '（自分）' : ''} <small>${p.pulls}袋</small></div>`;
   }).join('');
 
   // 結果・コレクション・設定のタブは、参加して袋を開けられる状態になってから出す
@@ -251,7 +251,7 @@ function renderTop() {
 // 推しを写真で選ぶボタンの並び
 function oshiPicker(sel) {
   return `<div class="oshi-pick" role="radiogroup" aria-label="推し">${NORMALS.map(m =>
-    `<button type="button" role="radio" aria-checked="${m.id === sel}" data-oshi="${m.id}"><img src="${esc(m.shots[0])}" alt=""><span>${esc(m.name)}</span></button>`).join('')}</div>`;
+    `<button type="button" role="radio" aria-checked="${m.id === sel}" data-oshi="${m.id}"><img src="${esc(PRthumb(m.shots[0]))}" alt=""><span>${esc(m.name)}</span></button>`).join('')}</div>`;
 }
 function bindPicker(form) {
   form.querySelectorAll('[data-oshi]').forEach(b => b.onclick = () => {
@@ -326,7 +326,7 @@ function renderInvite() {
     <code class="url">${esc(url)}</code>
     <div class="actions">${navigator.share ? '<button class="btn" id="shareLink">招待リンクを送る</button>' : ''}<button class="btn ${navigator.share ? 'ghost' : ''}" id="copyInvite">リンクをコピー</button></div>
     <div class="joined"><span class="lbl">参加中</span>${[me, ...others.map(([id]) => id)].map(id => { const q = players[id], o = M(q?.oshi);
-      return q ? `<span class="pchip ${id === me ? 'me on' : ''}"><span class="dot">${o ? `<img src="${esc(o.shots[0])}" alt="">` : ''}</span>${esc(q.name)}${id === me ? '（自分）' : ''}</span>` : ''; }).join('')}
+      return q ? `<span class="pchip ${id === me ? 'me on' : ''}"><span class="dot">${o ? `<img src="${esc(PRthumb(o.shots[0]))}" alt="">` : ''}</span>${esc(q.name)}${id === me ? '（自分）' : ''}</span>` : ''; }).join('')}
       ${others.length ? '' : '<span class="wait">お友達を待っています…</span>'}</div>
     <button class="btn big" data-act="start">${others.length ? 'みんなで開封をはじめる' : '開封をはじめる'}</button>
     <p class="hint">はじめたあとも、上の「お友達を招待」からいつでも呼べます。</p>
@@ -485,7 +485,7 @@ function renderPanel() {
       <p class="mystats"><span><b>${my.pulls}</b>袋</span><span>自引き<b>${my.hits}</b>回</span><span>写真<b>${shotCount(my)}</b>/${SHOT_TOTAL}</span></p>
       <h2>さっき開いた袋</h2>
       ${feed.length ? `<ul class="feed">${feed.map(f => { const m = M(f.m), src = m?.shots[f.s ?? 0];
-        return `<li class="${f.hit ? 'hit' : ''}"><i>${src ? `<img src="${esc(src)}" alt="" loading="lazy">` : ''}</i>
+        return `<li class="${f.hit ? 'hit' : ''}"><i>${src ? `<img src="${esc(PRthumb(src))}" alt="" loading="lazy">` : ''}</i>
         <span>${esc(m?.name || '')}${f.hit ? ' 自引き！' : m?.secret ? ' シークレット' : ''}</span><time>${ago(f.t)}</time></li>`; }).join('')}</ul>`
         : '<p class="hint">袋を開けると、ここに記録されます。</p>'}
       <button class="btn ghost" id="share">自分の結果をコピー</button>` : `<h2>自引きランキング</h2>
@@ -494,7 +494,7 @@ function renderPanel() {
         : '<p class="hint">まだ誰も参加していません。上の開封所から参加すると、ここに並びます。</p>'}
       <h2>さっき開いた袋</h2>
       ${feed.length ? `<ul class="feed">${feed.map(f => { const m = M(f.m), src = m?.shots[f.s ?? 0];
-        return `<li class="${f.hit ? 'hit' : ''}"><i>${src ? `<img src="${esc(src)}" alt="" loading="lazy">` : ''}</i>
+        return `<li class="${f.hit ? 'hit' : ''}"><i>${src ? `<img src="${esc(PRthumb(src))}" alt="" loading="lazy">` : ''}</i>
         <span>${esc(f.who)}：${esc(m?.name || '')}${f.hit ? ' 自引き！' : m?.secret ? ' シークレット' : ''}</span><time>${ago(f.t)}</time></li>`; }).join('')}</ul>`
         : '<p class="hint">袋が開くと、誰が何を引いたかがここに流れます。</p>'}
       ${my && my.name ? `<button class="btn ghost" id="share">自分の結果をコピー</button>` : ''}`;
@@ -509,7 +509,7 @@ function renderPanel() {
       const dup = MEMBERS.reduce((s, m) => s + dupOf(p, m.id), 0);
       return `<div class="pl"><div class="pl-h"><b>${esc(p.name)}${id === me ? '（自分）' : ''}</b><span>${own}/${MEMBERS.length}人 ・ 写真${shotCount(p)}/${SHOT_TOTAL} ・ ダブり${dup}枚</span></div>
       <div class="coll">${MEMBERS.map(m => { const c = cnt(p, m.id); const g = got(p, m.id); const src = m.shots[g[g.length - 1] ?? 0];
-        return c ? `<button class="mini" data-open="${esc(id)}" data-mem="${m.id}" aria-label="${esc(p.name)}の${esc(m.name)}のカードを見る"><span class="in"><img src="${esc(src)}" alt="" loading="lazy"></span>
+        return c ? `<button class="mini" data-open="${esc(id)}" data-mem="${m.id}" aria-label="${esc(p.name)}の${esc(m.name)}のカードを見る"><span class="in"><img src="${esc(PRthumb(src))}" alt="" loading="lazy"></span>
           <span class="sh">${g.length}/${m.shots.length}</span>
           ${p.oshi === m.id ? '<span class="star">推し</span>' : ''}<span class="cnt">×${c}</span></button>`
         : `<div class="mini none" title="${esc(m.name)}">?</div>`; }).join('')}</div></div>`; }).join('')
@@ -543,9 +543,9 @@ function renderCards() {
       <div><b>${esc(m.name)}</b><span>${esc(p.name)}${dlgState.pid === me ? '（自分）' : ''}のカード ・ 写真${g.length}/${m.shots.length} ・ ${c}枚引いた（ダブり${dupOf(p, m.id)}枚）</span></div>
       <button class="dlg-x" id="dlgClose" aria-label="閉じる"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
     </div>
-    ${pick !== null ? `<figure class="dlg-big"><img src="${esc(m.shots[pick])}" alt="${esc(m.name)}の写真 No.${pick + 1}"><figcaption>No.${String(pick + 1).padStart(2, '0')}</figcaption></figure>` : ''}
+    ${pick !== null ? `<figure class="dlg-big"><img src="${esc(PRfull(m.shots[pick]))}" alt="${esc(m.name)}の写真 No.${pick + 1}"><figcaption>No.${String(pick + 1).padStart(2, '0')}</figcaption></figure>` : ''}
     <div class="dlg-grid">${m.shots.map((src, k) => g.includes(k)
-      ? `<button class="dlg-cell ${k === pick ? 'on' : ''}" data-k="${k}" aria-label="No.${k + 1}を大きく見る"><img src="${esc(src)}" alt="" loading="lazy"><span>${String(k + 1).padStart(2, '0')}</span></button>`
+      ? `<button class="dlg-cell ${k === pick ? 'on' : ''}" data-k="${k}" aria-label="No.${k + 1}を大きく見る"><img src="${esc(PRthumb(src))}" alt="" loading="lazy"><span>${String(k + 1).padStart(2, '0')}</span></button>`
       : `<div class="dlg-cell none"><span>${String(k + 1).padStart(2, '0')}</span>?</div>`).join('')}
     </div>`;
   $('dlgClose').onclick = () => d.close();

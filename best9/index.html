@@ -162,6 +162,7 @@
   </div>
 </div>
 
+<script src="../assets/fast-img.js"></script>
 <script>
 /* =====================================================================
    ロジック — 機能は現行版と同一(9コマ×候補15枚/初期01/ランダム/保存)。
@@ -247,15 +248,9 @@ function choicesFor(member) {
   if (member === "group") return [16].concat(existing);
   return ["new3", "new2", "new1"].concat(existing);
 }
-/* 軽量化: 元画像(約1MB)をそのまま読まず、リサイズ配信(wsrv.nl)で小さく読む。失敗したら元画像に自動で戻る */
-function fastSrc(url, w) {
-  if (!/^https:\/\/raw\.githubusercontent\.com\//.test(url)) return url;
-  return "https://wsrv.nl/?url=" + encodeURIComponent(url.replace(/^https:\/\//, "")) + "&w=" + w + "&output=jpg&q=82";
-}
-function origOf(src) {
-  var m = /[?&]url=([^&]+)/.exec(src);
-  return m && src.indexOf("https://wsrv.nl/") === 0 ? "https://" + decodeURIComponent(m[1]) : src;
-}
+/* 軽量化: サイト内の WebP 版(../assets/fast-img.js)で読む。失敗したら元画像に自動で戻る */
+function fastSrc(url, w) { return window.PRfast ? PRfast(url, w) : url; }
+function origOf(src) { return window.PRorig ? PRorig(src) : src; }
 function setImg(img, url, w, eager) {
   img.decoding = "async";
   img.loading = eager ? "eager" : "lazy";
