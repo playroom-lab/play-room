@@ -172,7 +172,7 @@
 (function () {
 "use strict";
 
-/* ---------- データ：パフォーマンス衣装編も https://raw.githubusercontent.com/rikomuze/mazzel-best-visual-performance/main/images/メンバー/01.png〜15.png を読む ---------- */
+/* ---------- データ：パフォーマンス衣装編も https://raw.githubusercontent.com/rikomuze/mazzel-best-visual-performance/main/images/メンバー/01.png〜12.png（集合は group/01〜09.png）を読む ---------- */
 var cells = [
   { member: "kairyu", name: "KAIRYU" },
   { member: "naoya",  name: "NAOYA" },
@@ -191,7 +191,10 @@ var imageCounts = {
 };
 
 /* ---------- 状態 ---------- */
-var selection = cells.map(function(cell){ return cell.member === "group" ? 15 : "new1"; }); // 初期表示は最新画像
+/* 実際にある写真の枚数（メンバー各12枚・集合9枚）。
+   new1〜new3 は new-20260918/メンバー名.jpg（縦に3枚つながった画像）を上・中・下で切り出したもの */
+var PHOTO_COUNT = { group: 9, member: 12 };
+var selection = cells.map(function(cell){ return cell.member === "group" ? PHOTO_COUNT.group : "new1"; }); // 初期表示は最新画像
 var currentCellIndex = null;
 var lastFocused = null;
 
@@ -244,8 +247,9 @@ function objectPositionFor(choice) {
   return "center top";
 }
 function choicesFor(member) {
-  var existing = [15];
-  for (var i = 1; i <= 14; i++) existing.push(i);
+  var n = member === "group" ? PHOTO_COUNT.group : PHOTO_COUNT.member;
+  var existing = [n];
+  for (var i = 1; i < n; i++) existing.push(i);
   if (member === "group") return existing;
   return ["new1", "new2", "new3"].concat(existing);
 }
