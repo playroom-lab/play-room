@@ -356,7 +356,7 @@ function end(kind){
     const got=keys.filter(k=>seen[k]).length;const no=String(keys.indexOf(kind)+1).padStart(2,"0");
     const R=SCN.result(S,kind);const clear=!!E.clear;
     const tGot=SCN.titles.filter(t=>titlesGot[t.id]).length;
-    el.innerHTML=`<div class="pnav"><span>${esc(SCN.title)}</span><span>ENDING ${got} / ${keys.length}</span></div>
+    el.innerHTML=`<div class="pnav"><a href="../../">PLAY ROOM</a><span>ENDING ${got} / ${keys.length}</span></div>
     <header class="hero${clear?" clear":""}"><div><p class="tag">${clear?"CLEAR":"ENDING "+no}</p><h2><span>${esc(E.name)}</span></h2><p class="note">${fmt(S.t)}、${esc(SCN.where(S))}にて。</p></div><p class="ticket">${esc(R.ticket[0])}<strong>${esc(R.ticket[1])}</strong></p></header>
     <div class="pcard pink"><p class="lbl">今夜のこと</p><p class="end">${esc(fill(E.text))}</p>
       <div class="checks">${R.checks.map(c=>`<div class="${c[1]?"ok":"ng"}"><b>${c[1]?"✓":"—"}</b>${esc(c[0])}</div>`).join("")}</div>
@@ -421,7 +421,7 @@ function showIntro(){
   ["result","call","osd","scene"].forEach(id=>$(id).hidden=true);$("osd").className="ov osd";$("view").innerHTML="";closePlist();
   const I=SCN.intro,el=$("intro");el.hidden=false;
   const last=I.field?LS.get(SCN.id+":name",""):"";
-  el.innerHTML=`<div class="pnav"><span>${esc(SCN.title)}</span><span>エンディング${SCN.endOrder.length}種</span></div>
+  el.innerHTML=`<div class="pnav"><a href="../../">PLAY ROOM</a><span>エンディング${SCN.endOrder.length}種</span></div>
   <header class="hero"><div><p class="tag">${esc(I.tag)}</p><h1>${I.h1}</h1><p class="note">${esc(I.note)}</p></div><p class="ticket">${esc(I.ticket[0])}<strong>${esc(I.ticket[1])}</strong></p></header>
   <div class="pcard pink"><p class="lbl">${esc(I.storyLabel||"はじまり")}</p><p class="story">${I.story}</p></div>
   <div class="pcard sky"><p class="lbl">ゴール</p><p class="goal">${I.goal}</p>${I.goalSub?`<p class="story" style="font-size:13px;color:var(--pmuted)">${I.goalSub}</p>`:""}</div>

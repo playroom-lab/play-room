@@ -306,7 +306,7 @@ body{margin:0;background:var(--desk);padding:0 20px calc(32px + env(safe-area-in
 .wrap{max-width:720px;gap:20px}
 .room-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 0;border-bottom:1px solid var(--line)}
 .room-nav a{font-weight:700;letter-spacing:.045em;font-size:.875rem;text-decoration:none;color:var(--pencil)}
-.room-nav .old-version{font-family:var(--hand);font-weight:600;letter-spacing:0;border-bottom:1px solid var(--pencil)}
+.room-nav .old-version{font-family:var(--hand);font-weight:600;letter-spacing:0}
 .room-hero{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:12px 0 6px}
 .room-hero>div{min-width:0}
 .room-label{display:inline-block;margin:0 0 15px;background:var(--pencil);color:var(--desk);padding:3px 10px;font-size:.75rem;font-weight:700;letter-spacing:.08em;transform:rotate(-3deg)}
