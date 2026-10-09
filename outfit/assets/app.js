@@ -1,9 +1,10 @@
 /* Outfit選手権 — PLAY ROOM
  * 予選は4択、決勝は2択（二分挿入でTOP5を順位付け）。
- *   推しメンモード: 1人20衣装 → 4択5問 → 5衣装 → 決勝で5衣装の順位を決める
+ *   推しメンモード: 毎回20衣装をランダムに選ぶ → 4択5問 → 5衣装 → 決勝で5衣装の順位を決める
  *   箱推しモード:   各メンバー4衣装ずつ計32衣装 → 4択8問（1問に4人ちがうメンバー）→ 8衣装 → 決勝でTOP5
- * 写真: https://raw.githubusercontent.com/rikomuze/mazzel-outfit/main/photos/<member>/01〜20.jpg
- *   01〜15 = 最強9マス（アー写編）, 16〜18 = 最新アー写を3分割, 19〜20 = パフォ衣装編の4枚目・12枚目
+ * 写真: 最強9マスの「アー写編」と「パフォ衣装編」と同じ写真から、毎回ランダムに選ぶ
+ *   アー写編  : mazzel-best-visual/images/<member>/01〜15.png ＋ new-20260918/<member>-1〜3.png
+ *   パフォ衣装: mazzel-best-visual-performance/images/<member>/01〜11・13〜18.png（12枚目は使わない）
  */
 (() => {
 'use strict';
@@ -13,9 +14,22 @@ const MEMBERS = [
   ['ryuki', 'RYUKI'], ['takuto', 'TAKUTO'], ['hayato', 'HAYATO'], ['eiki', 'EIKI']
 ].map(([id, name]) => ({ id, name }));
 const SHOTS = 20;
+const range = n => Array.from({ length: n }, (_, i) => i + 1);
 const TOP = 5;
 const M = id => MEMBERS.find(m => m.id === id);
-const rawSrc = s => `https://raw.githubusercontent.com/rikomuze/mazzel-outfit/main/photos/${s.m}/${String(s.n).padStart(2, '0')}.jpg`;
+const pad2 = n => String(n).padStart(2, '0');
+// 写真の候補（メンバー共通の番号）。'a..' はアー写編、'p..' はパフォ衣装編
+const POOL = [
+  ...range(15).map(n => 'a' + pad2(n)), 'n1', 'n2', 'n3',
+  ...[13, 14, 15, 16, 17, 18, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(n => 'p' + pad2(n))
+];
+const rawSrc = s => {
+  const BV = 'https://raw.githubusercontent.com/rikomuze/mazzel-best-visual/main/images/';
+  const PF = 'https://raw.githubusercontent.com/rikomuze/mazzel-best-visual-performance/main/images/';
+  if (s.n[0] === 'n') return `${BV}new-20260918/${s.m}-${s.n.slice(1)}.png`;
+  if (s.n[0] === 'p') return `${PF}${s.m}/${s.n.slice(1)}.png`;
+  return `${BV}${s.m}/${s.n.slice(1)}.png`;
+};
 const src = s => PRfast(rawSrc(s), 640);   // 画面表示は軽量版
 const key = s => `${s.m}-${s.n}`;
 const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -23,7 +37,6 @@ const $ = id => document.getElementById(id);
 const app = $('app');
 
 function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-const range = n => Array.from({ length: n }, (_, i) => i + 1);
 
 /* ---------- state ---------- */
 let S = { screen: 'home' };
@@ -37,7 +50,7 @@ function undo() { if (history.length) { S = history.pop(); render(); } }
 
 /* ---------- setup ---------- */
 function startMember(mid) {
-  const shots = shuffle(range(SHOTS)).map(n => ({ m: mid, n }));
+  const shots = shuffle(POOL).slice(0, SHOTS).map(n => ({ m: mid, n }));
   const groups = [];
   for (let i = 0; i < shots.length; i += 4) groups.push(shots.slice(i, i + 4));
   go({ screen: 'prelim', mode: 'member', member: mid, groups, qi: 0, winners: [] }, false);
@@ -45,7 +58,7 @@ function startMember(mid) {
 function startBox() {
   // 各メンバーから4衣装ずつ。1問に4人ちがうメンバーが並ぶように、メンバー順を回して8組つくる。
   const order = shuffle(MEMBERS.map(m => m.id));
-  const pool = {}; order.forEach(m => { pool[m] = shuffle(range(SHOTS)).slice(0, 4); });
+  const pool = {}; order.forEach(m => { pool[m] = shuffle(POOL).slice(0, 4); });
   const groups = [];
   for (let g = 0; g < 8; g++) {
     const grp = [0, 1, 2, 3].map(k => { const m = order[(g + k) % 8]; return { m, n: pool[m].pop() }; });
@@ -109,7 +122,7 @@ function renderHome() {
   </section>
   <section class="sec">
     <h2>推しメンで選ぶ</h2>
-    <p class="meta">1人の20衣装から ・ 4択5問 → 2択で順位決め（10問前後）</p>
+    <p class="meta">アー写・パフォ衣装から毎回ちがう20衣装 ・ 4択5問 → 2択で順位決め（10問前後）</p>
     <div class="members">${MEMBERS.map(m => `
       <button class="mcard" data-member="${m.id}"><img src="${PRfast(`https://raw.githubusercontent.com/rikomuze/mazzel-outfit/main/photos/${m.id}/16.jpg`, 360)}" alt="" loading="lazy"><span>${m.name}</span></button>`).join('')}
     </div>

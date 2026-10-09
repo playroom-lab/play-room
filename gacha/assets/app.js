@@ -14,16 +14,25 @@ const $ = id => document.getElementById(id);
 const nums = n => Array.from({length:n}, (_, k) => String(k + 1).padStart(2, '0'));
 
 /* ---------- members (static) ---------- */
+// アー写編の写真（01〜18）は mazzel-gacha に入っている。ここではパフォ衣装編を足す
+const PERF = 'https://raw.githubusercontent.com/rikomuze/mazzel-best-visual-performance/main/images/';
+const PERF_MEMBER = ['13','14','15','16','17','18','01','02','03','04','05','06','07','08','09','10','11']; // 12枚目は使わない
+const PERF_GROUP = nums(9);
 const NAMES = ['KAIRYU','NAOYA','RAN','SEITO','RYUKI','TAKUTO','HAYATO','EIKI'];
 const MEMBERS = NAMES.map((name, i) => ({
   id: 'mazzel-' + name.toLowerCase(), name, order: i, secret: false,
   shots: [
     ...nums(18).map(x => PRfast(`https://raw.githubusercontent.com/rikomuze/mazzel-gacha/main/photos/${name.toLowerCase()}/${x}.jpg`, 640)),
-    `photos/${name.toLowerCase()}/19.jpg`   // このリポジトリ内の追加ショット
+    `photos/${name.toLowerCase()}/19.jpg`,  // このリポジトリ内の追加ショット
+    // パフォ衣装編（最強9マスと同じ写真）。集めた記録は番号で保存しているので、必ず末尾に追加する
+    ...PERF_MEMBER.map(n => PRfast(`${PERF}${name.toLowerCase()}/${n}.png`, 640))
   ]
 }));
 MEMBERS.push({ id: 'mazzel-secret', name: 'MAZZEL 集合', order: 99, secret: true,
-  shots: nums(16).map(x => PRfast(`https://raw.githubusercontent.com/rikomuze/mazzel-gacha/main/photos/group/${x}.jpg`, 640)) });
+  shots: [
+    ...nums(16).map(x => PRfast(`https://raw.githubusercontent.com/rikomuze/mazzel-gacha/main/photos/group/${x}.jpg`, 640)),
+    ...PERF_GROUP.map(x => PRfast(`${PERF}group/${x}.png`, 640))
+  ] });
 const M = id => MEMBERS.find(m => m.id === id);
 const NORMALS = MEMBERS.filter(m => !m.secret);
 const SECRETS = MEMBERS.filter(m => m.secret);
@@ -257,7 +266,7 @@ function renderStart() {
   setStage(`<div class="start">
     <h2>どうやって遊ぶ？</h2>
     <button class="choice" data-go="solo"><span class="ic" aria-hidden="true">1</span><b>ひとりで開ける</b>
-      <span>この端末だけで、自分のペースでアー写を集める。</span>${cont}</button>
+      <span>この端末だけで、自分のペースで写真を集める。</span>${cont}</button>
     <button class="choice" data-go="friends"><span class="ic two" aria-hidden="true">2+</span><b>お友達と開ける</b>
       <span>開封所を作って招待リンクを送ると、それぞれのスマホから参加できて、みんなの開封結果がリアルタイムで並ぶ。</span></button>
   </div>`, true);
@@ -407,7 +416,7 @@ function tear(fromLink) {
   else if (m.secret) view.verdict = 'シークレット！';
   else view.verdict = c > 1 ? `${m.name}（${c}枚目）` : `${m.name}、はじめまして`;
   const n = got(p, m.id).length, tot = m.shots.length;
-  const shotNote = isNew ? `新しいアー写！ ${m.name}のアー写 ${n}/${tot}` : `持っているアー写（${n}/${tot}）`;
+  const shotNote = isNew ? `新しい写真！ ${m.name}の写真 ${n}/${tot}` : `持っている写真（${n}/${tot}）`;
   view.note = shotNote;
   saveMe();
   setTimeout(() => { tearing = false; view.stage = 'reveal'; renderAll(); }, willHit ? 1350 : 450);
@@ -473,7 +482,7 @@ function renderPanel() {
     const my = mine();
     const solo = mode === 'local';
     el.innerHTML = solo ? `<h2>自分の記録</h2>
-      <p class="mystats"><span><b>${my.pulls}</b>袋</span><span>自引き<b>${my.hits}</b>回</span><span>アー写<b>${shotCount(my)}</b>/${SHOT_TOTAL}</span></p>
+      <p class="mystats"><span><b>${my.pulls}</b>袋</span><span>自引き<b>${my.hits}</b>回</span><span>写真<b>${shotCount(my)}</b>/${SHOT_TOTAL}</span></p>
       <h2>さっき開いた袋</h2>
       ${feed.length ? `<ul class="feed">${feed.map(f => { const m = M(f.m), src = m?.shots[f.s ?? 0];
         return `<li class="${f.hit ? 'hit' : ''}"><i>${src ? `<img src="${esc(src)}" alt="" loading="lazy">` : ''}</i>
@@ -492,13 +501,13 @@ function renderPanel() {
     const sh = $('share');
     if (sh) sh.onclick = () => {
       const o = M(my.oshi);
-      copy(`【推しガチャ開封所】${solo ? '' : my.name}（${o?.name || ''}推し）は${my.pulls}袋で自引き${my.hits}回！アー写${shotCount(my)}/${SHOT_TOTAL} #推しガチャ`, 'コピーしました');
+      copy(`【推しガチャ開封所】${solo ? '' : my.name}（${o?.name || ''}推し）は${my.pulls}袋で自引き${my.hits}回！写真${shotCount(my)}/${SHOT_TOTAL} #推しガチャ`, 'コピーしました');
     };
   } else if (view.tab === 'coll') {
     el.innerHTML = ps.length ? ps.map(([id, p]) => {
       const own = MEMBERS.filter(m => cnt(p, m.id)).length;
       const dup = MEMBERS.reduce((s, m) => s + dupOf(p, m.id), 0);
-      return `<div class="pl"><div class="pl-h"><b>${esc(p.name)}${id === me ? '（自分）' : ''}</b><span>${own}/${MEMBERS.length}人 ・ アー写${shotCount(p)}/${SHOT_TOTAL} ・ ダブり${dup}枚</span></div>
+      return `<div class="pl"><div class="pl-h"><b>${esc(p.name)}${id === me ? '（自分）' : ''}</b><span>${own}/${MEMBERS.length}人 ・ 写真${shotCount(p)}/${SHOT_TOTAL} ・ ダブり${dup}枚</span></div>
       <div class="coll">${MEMBERS.map(m => { const c = cnt(p, m.id); const g = got(p, m.id); const src = m.shots[g[g.length - 1] ?? 0];
         return c ? `<button class="mini" data-open="${esc(id)}" data-mem="${m.id}" aria-label="${esc(p.name)}の${esc(m.name)}のカードを見る"><span class="in"><img src="${esc(src)}" alt="" loading="lazy"></span>
           <span class="sh">${g.length}/${m.shots.length}</span>
@@ -531,10 +540,10 @@ function renderCards() {
   const g = got(p, m.id), c = cnt(p, m.id), pick = dlgState.pick;
   d.innerHTML = `
     <div class="dlg-head">
-      <div><b>${esc(m.name)}</b><span>${esc(p.name)}${dlgState.pid === me ? '（自分）' : ''}のカード ・ アー写${g.length}/${m.shots.length} ・ ${c}枚引いた（ダブり${dupOf(p, m.id)}枚）</span></div>
+      <div><b>${esc(m.name)}</b><span>${esc(p.name)}${dlgState.pid === me ? '（自分）' : ''}のカード ・ 写真${g.length}/${m.shots.length} ・ ${c}枚引いた（ダブり${dupOf(p, m.id)}枚）</span></div>
       <button class="dlg-x" id="dlgClose" aria-label="閉じる"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
     </div>
-    ${pick !== null ? `<figure class="dlg-big"><img src="${esc(m.shots[pick])}" alt="${esc(m.name)}のアー写 No.${pick + 1}"><figcaption>No.${String(pick + 1).padStart(2, '0')}</figcaption></figure>` : ''}
+    ${pick !== null ? `<figure class="dlg-big"><img src="${esc(m.shots[pick])}" alt="${esc(m.name)}の写真 No.${pick + 1}"><figcaption>No.${String(pick + 1).padStart(2, '0')}</figcaption></figure>` : ''}
     <div class="dlg-grid">${m.shots.map((src, k) => g.includes(k)
       ? `<button class="dlg-cell ${k === pick ? 'on' : ''}" data-k="${k}" aria-label="No.${k + 1}を大きく見る"><img src="${esc(src)}" alt="" loading="lazy"><span>${String(k + 1).padStart(2, '0')}</span></button>`
       : `<div class="dlg-cell none"><span>${String(k + 1).padStart(2, '0')}</span>?</div>`).join('')}
