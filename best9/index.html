@@ -172,6 +172,7 @@
 
 <script src="../assets/fast-img.js"></script>
 <script>
+var SHEET_W = 420, THUMB_W = 180; // 画面の写真サイズ(初回描画より前に決めておく)
 /* =====================================================================
    ロジック — 機能は現行版と同一(9コマ×候補15枚/初期01/ランダム/保存)。
    変更点: html2canvasを撤去しCanvas直描きに(iOSでのscale:5無音失敗を根絶)、
@@ -269,7 +270,6 @@ function setImg(img, url, w, eager) {
   };
   img.src = fastSrc(url, w);
 }
-var SHEET_W = 420, THUMB_W = 180;
 function srcFor(index) { return srcForChoice(cells[index].member, selection[index]); }
 function formatDate(d) {
   return d.getFullYear() + "." + String(d.getMonth() + 1).padStart(2, "0") + "." + String(d.getDate()).padStart(2, "0");

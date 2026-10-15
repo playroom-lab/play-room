@@ -172,6 +172,7 @@
 
 <script src="../assets/fast-img.js"></script>
 <script>
+var SHEET_W = 420, THUMB_W = 180; // 画面の写真サイズ(初回描画より前に決めておく)
 /* =====================================================================
    ロジック — 機能は現行版と同一(9コマ×候補15枚/初期01/ランダム/保存)。
    変更点: html2canvasを撤去しCanvas直描きに(iOSでのscale:5無音失敗を根絶)、
@@ -181,7 +182,7 @@
 (function () {
 "use strict";
 
-/* ---------- データ：パフォーマンス衣装編も https://raw.githubusercontent.com/rikomuze/mazzel-best-visual-performance/main/images/メンバー/01〜11・13〜18.png（集合は group/01〜09.png）を読む ---------- */
+/* ---------- データ：パフォーマンス衣装編も https://raw.githubusercontent.com/rikomuze/mazzel-best-visual-performance/main/images/メンバー/01〜11・13〜19.png（集合は group/01〜09.png）を読む ---------- */
 var cells = [
   { member: "kairyu", name: "KAIRYU" },
   { member: "naoya",  name: "NAOYA" },
@@ -201,7 +202,7 @@ var imageCounts = {
 
 /* ---------- 状態 ---------- */
 /* 選べる写真。メンバーは 13〜18（新しい衣装・高画質）を先頭に、01〜11 が続く。12 は使わない。集合は 01〜09。 */
-var MEMBER_PHOTOS = [13, 14, 15, 16, 17, 18, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+var MEMBER_PHOTOS = [19, 13, 14, 15, 16, 17, 18, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 var GROUP_PHOTOS = [9, 1, 2, 3, 4, 5, 6, 7, 8];
 var selection = cells.map(function(cell){ return choicesFor(cell.member)[0]; }); // 初期表示は先頭の写真
 var currentCellIndex = null;
@@ -271,7 +272,6 @@ function setImg(img, url, w, eager) {
   };
   img.src = fastSrc(url, w);
 }
-var SHEET_W = 420, THUMB_W = 180;
 function srcFor(index) { return srcForChoice(cells[index].member, selection[index]); }
 function formatDate(d) {
   return d.getFullYear() + "." + String(d.getMonth() + 1).padStart(2, "0") + "." + String(d.getDate()).padStart(2, "0");
