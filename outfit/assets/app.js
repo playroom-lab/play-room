@@ -21,7 +21,7 @@ const pad2 = n => String(n).padStart(2, '0');
 // 写真の候補（メンバー共通の番号）。'a..' はアー写編、'p..' はパフォ衣装編
 const POOL = [
   ...range(15).map(n => 'a' + pad2(n)), 'n1', 'n2', 'n3',
-  ...[13, 14, 15, 16, 17, 18, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(n => 'p' + pad2(n))
+  ...[19, 13, 14, 15, 16, 17, 18, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(n => 'p' + pad2(n))
 ];
 const rawSrc = s => {
   const BV = 'https://raw.githubusercontent.com/rikomuze/mazzel-best-visual/main/images/';
