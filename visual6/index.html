@@ -233,7 +233,7 @@ footer .credit{margin-top:4px;font-size:.75rem;letter-spacing:.07em}
 <div class="dock">
   <div class="dock-inner">
     <span class="progress" id="progress">あと6枠</span>
-    <button type="button" class="btn save" id="saveBtn">画像を保存する</button>
+    <button type="button" class="btn save" id="saveBtn">画像で保存・シェア</button>
   </div>
 </div>
 
@@ -266,6 +266,7 @@ footer .credit{margin-top:4px;font-size:.75rem;letter-spacing:.07em}
 window.addEventListener("error",function(e){var d=document.getElementById("status");if(d){d.textContent="エラー: "+(e.message||"不明")+(e.lineno?" ("+e.lineno+")":"");d.style.pointerEvents="auto";}});
 </script>
 <script src="../assets/fast-img.js"></script>
-<script src="assets/js/app.js?v=20261009"></script>
+<script src="../assets/share.js"></script>
+<script src="assets/js/app.js?v=20261017"></script>
 </body>
 </html>

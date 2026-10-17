@@ -365,7 +365,7 @@ function end(kind){
     <div class="pcard"><p class="lbl">きろく</p><dl class="kv">${(SCN.diffs?[["難易度",SCN.diffs[S.diff].name]]:[]).concat(R.kv).map(r=>`<dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd>`).join("")}</dl></div>
     <div class="pcard violet"><p class="lbl">見たエンディング ${got} / ${keys.length}</p><div class="endmap">${keys.map(k=>`<span class="${seen[k]?"got":""}${k===kind?" clear":""}">${seen[k]?esc(SCN.endings[k].name):"？？？"}</span>`).join("")}</div></div>
     <div class="pcard sky"><p class="lbl">集めた称号 ${tGot} / ${SCN.titles.length}</p><div class="endmap titles">${SCN.titles.map(t=>`<span class="${titlesGot[t.id]?"got":""}${t.id===S.titleObj.id?" clear":""}">${titlesGot[t.id]?esc(t.name):"？？？"}</span>`).join("")}</div><p class="thint">「？？？」のヒント：${esc((pick(SCN.titles.filter(t=>!titlesGot[t.id]))||{hint:"ぜんぶ集めました！"}).hint)}</p></div>
-    <button class="go" type="button" id="saveImg">結果を画像で保存</button>
+    <button class="go" type="button" id="saveImg">結果を画像で保存・シェア</button>
     <button class="go sub" type="button" id="again">もう一度遊ぶ</button>
     <p class="handnote">${esc(clear?(SCN.clearNote||"次は、ちがう夜で。"):"次は、ちがう夜で。")}</p>
     ${SCN.links?`<div class="pcard"><p class="lbl">ほかの夜</p><div class="endmap">${SCN.links.map(l=>`<a class="lnk" href="${esc(l[1])}">${esc(l[0])}</a>`).join("")}</div></div>`:""}
@@ -373,7 +373,7 @@ function end(kind){
     $("again").onclick=showIntro;
     const img={kind,no,got,total:keys.length,ending:E.name,clear,text:fill(E.text),time:fmt(S.t),where:SCN.where(S),ticket:R.ticket,checks:R.checks,big:R.big,title:S.titleObj.name,name:S.name,nameLabel:SCN.intro.field?SCN.intro.field.short:"",stats:R.stats};
     const blobP=makeImage(img).catch(()=>null);
-    $("saveImg").onclick=()=>saveResult(blobP);
+    $("saveImg").onclick=()=>saveResult(blobP,img);
   };
   if(SCN.endings[kind].black){const el=$("osd");el.hidden=false;el.className="ov dead";el.innerHTML="";setTimeout(()=>{el.hidden=true;el.className="ov osd";go()},1600)}else go();
 }
@@ -407,7 +407,13 @@ async function makeImage(R){
   x.fillStyle=MUTED;x.font="500 26px "+G;x.textAlign="center";x.fillText("フィクションです",W/2,Math.max(H-40,cy+ch+60));x.textAlign="left";
   return await new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(new Error("toBlob")),"image/png"));
 }
-async function saveResult(blobP){
+async function saveResult(blobP,img){
+  if(window.PRshare){
+    PRshare.open({make:()=>blobP,name:SCN.id+"-result.png",title:SCN.title,
+      text:`【${SCN.title}】${img?img.ending:""}で帰りました。 #ライブ帰りシミュレーター #PLAYROOM`,
+      url:location.origin+location.pathname});
+    return;
+  }
   const btn=$("saveImg");const blob=await blobP;
   if(!blob){btn.textContent="画像を作れませんでした";return}
   const file=new File([blob],SCN.id+"-result.png",{type:"image/png"});

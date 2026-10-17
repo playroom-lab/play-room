@@ -368,7 +368,8 @@ function renderStage() {
       <div class="verdict ${view.hit ? 'hit' : ''}">${esc(view.verdict)}</div>
       <div class="note">${esc(view.note)}</div>
       <div class="actions">${q > 0 ? `<button class="btn" data-act="next">次の袋へ（残り${q}）</button>` :
-        `<p class="note">手持ちの袋をすべて開封しました</p><button class="btn" data-act="restock">新しい袋をもらう</button>`}</div>`;
+        `<p class="note">手持ちの袋をすべて開封しました</p><button class="btn" data-act="restock">新しい袋をもらう</button>`}</div>
+      <button class="linkbtn" data-act="sharecard">このカードを画像で保存・シェア</button>`;
   } else if (q > 0) {
     html += `<div class="queue">未開封 ${q}袋</div><div class="slot">${packHTML(false)}</div>
       <div class="note" style="margin-top:0">切り取り線を指で右へなぞると開きます</div>
@@ -434,6 +435,54 @@ function confetti(host) {
   }
   host.appendChild(box); setTimeout(() => box.remove(), 3400);
 }
+/* ---------- 引いたカードを画像に(../assets/share.js) ---------- */
+function shareCard() {
+  const m = view.last; if (!m || !window.PRshare) return;
+  const src = m.shots[view.shot], hit = view.hit, no = `No.${String(m.order + 1 > 90 ? 0 : m.order + 1).padStart(2, '0')}-${String(view.shot + 1).padStart(2, '0')}`;
+  const p = mine();
+  PRshare.open({
+    make: () => drawCardImage(m, src ? PRfull(src) : null, hit, no),
+    name: `oshi-gacha-${m.name.toLowerCase()}.png`,
+    title: '推しガチャ開封所',
+    text: hit ? `推しガチャで${m.name}を自引きしました！ #推しガチャ開封所 #PLAYROOM` : `推しガチャで${m.name}が出ました（${p ? p.pulls : 1}袋目） #推しガチャ開封所 #PLAYROOM`,
+    url: 'https://playroom-lab.github.io/play-room/gacha/'
+  });
+}
+async function drawCardImage(m, src, hit, no) {
+  const G = '"Zen Kaku Gothic New","Hiragino Sans",sans-serif', H = '"Klee One","Hiragino Sans",sans-serif';
+  try { await Promise.all([document.fonts.load(`900 40px "Zen Kaku Gothic New"`), document.fonts.load(`700 40px "Zen Kaku Gothic New"`), document.fonts.load(`600 40px "Klee One"`)]); } catch (e) {}
+  const img = src ? await new Promise(res => { const i = new Image(); i.crossOrigin = 'anonymous'; i.onload = () => res(i); i.onerror = () => { const o = PRorig(src); if (o !== src && i.src !== o) i.src = o; else res(null); }; i.src = src; }) : null;
+  const W = 1080, Hh = 1350, c = document.createElement('canvas'); c.width = W; c.height = Hh;
+  const x = c.getContext('2d');
+  x.fillStyle = hit ? '#ffd5df' : '#f7f5ed'; x.fillRect(0, 0, W, Hh);
+  x.fillStyle = 'rgba(40,37,54,.07)';
+  for (let yy = 12; yy < Hh; yy += 30) for (let xx = 12; xx < W; xx += 30) { x.beginPath(); x.arc(xx, yy, 1.6, 0, 7); x.fill(); }
+  // 見出し
+  x.fillStyle = '#282536'; x.textAlign = 'center';
+  x.font = `600 46px ${H}`; x.fillText(hit ? `自引き成功！ ${m.name}が来た` : `${m.name}が出ました`, W / 2, 120);
+  // カード
+  const cw = 640, ch = 900, cx = (W - cw) / 2, cy = 190;
+  x.save(); x.translate(W / 2, cy + ch / 2); x.rotate(-0.025); x.translate(-W / 2, -(cy + ch / 2));
+  x.fillStyle = '#282536'; x.fillRect(cx + 10, cy + 14, cw, ch);
+  x.fillStyle = '#fff'; x.fillRect(cx, cy, cw, ch); x.strokeStyle = '#282536'; x.lineWidth = 3; x.strokeRect(cx, cy, cw, ch);
+  const px = cx + 28, py = cy + 28, pw = cw - 56, ph = ch - 160;
+  x.fillStyle = '#ece8df'; x.fillRect(px, py, pw, ph);
+  if (img) {
+    const r = Math.max(pw / img.width, ph / img.height), sw = pw / r, sh = ph / r;
+    x.drawImage(img, (img.width - sw) / 2, (img.height - sh) * .3, sw, sh, px, py, pw, ph);
+  }
+  if (hit) { const g = x.createLinearGradient(px, py, px + pw, py + ph); g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(.45, 'rgba(255,240,250,.28)'); g.addColorStop(.55, 'rgba(220,240,255,.28)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(px, py, pw, ph); }
+  x.fillStyle = 'rgba(255,255,255,.92)'; x.font = `700 24px ${G}`; const nw = x.measureText(no).width + 28;
+  x.fillRect(px + 16, py + 16, nw, 40); x.fillStyle = '#282536'; x.textAlign = 'left'; x.fillText(no, px + 30, py + 45);
+  x.font = `900 64px ${G}`; x.fillText(m.name, px, cy + ch - 52);
+  x.textAlign = 'right'; x.fillStyle = '#625f6d'; x.font = `700 28px ${G}`; x.fillText('MAZZEL', px + pw, cy + ch - 58);
+  x.restore();
+  // フッター
+  x.textAlign = 'left'; x.fillStyle = '#282536'; x.font = `700 30px ${G}`; x.fillText('推しガチャ開封所 ・ PLAY ROOM', 70, Hh - 70);
+  const d = new Date(); x.textAlign = 'right'; x.font = `500 28px ${G}`;
+  x.fillText(`${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`, W - 70, Hh - 70);
+  return new Promise(r => c.toBlob(r, 'image/png'));
+}
 function doAct(act) {
   const p = mine(); if (!p) return;
   switch (act) {
@@ -443,6 +492,7 @@ function doAct(act) {
     case 'restock': view.stage = 'pack'; break;
     case 'start': view.inviting = false; window.scrollTo(0, 0); break;
     case 'tear': tear(true); return;
+    case 'sharecard': shareCard(); return;
     default: return;
   }
   renderAll();

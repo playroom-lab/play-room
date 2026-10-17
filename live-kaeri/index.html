@@ -349,6 +349,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #8051bd;outline-offset:2p
   <div class="ov result" id="result" hidden></div>
 </div>
 
+<script src="../assets/share.js"></script>
 <script>
 (function(){
 const START=21*60+34, LAST=23*60+12, SPEED=10000, DIST=2400, PLAZA=380, SWAP_DL=22*60+35;
@@ -1244,7 +1245,7 @@ function end(kind){
     <dt>追撃された回数</dt><dd>${S.m.chased}</dd><dt>規制退場を無視した回数</dt><dd>${S.sneaks}</dd></dl></div>
     <div class="pcard violet"><p class="lbl">見たエンディング ${got} / ${ENDKEYS.length}</p><div class="endmap">${ENDKEYS.map(k=>`<span class="${seen[k]?"got":""}${k==="clear"&&seen[k]?" clear":""}">${seen[k]?ENDNAME[k]:"？？？"}</span>`).join("")}</div></div>
     <div class="pcard sky"><p class="lbl">集めた称号 ${TITLES.filter(t=>titlesGot[t.id]).length} / ${TITLES.length}</p><div class="endmap titles">${TITLES.map(t=>`<span class="${titlesGot[t.id]?"got":""}${t.id===S.titleObj.id?" clear":""}" title="${esc(t.hint)}">${titlesGot[t.id]?esc(t.name):"？？？"}</span>`).join("")}</div><p class="thint">「？？？」のヒント：${esc((pick(TITLES.filter(t=>!titlesGot[t.id]))||{hint:"ぜんぶ集めました！"}).hint)}</p></div>
-    <button class="go" type="button" id="saveImg">結果を画像で保存</button>
+    <button class="go" type="button" id="saveImg">結果を画像で保存・シェア</button>
     <button class="go sub" type="button" id="again">もう一度帰る</button>
     <p class="handnote">${kind==="clear"?(S.cards<3?"次は、トレカ3枚に挑戦してみて。":"トレカ3枚、完璧な帰り道。"):"次は、ちがう帰り道で。"}</p>
     <div class="pcard"><p class="lbl">ほかの夜</p><div class="endmap"><a class="lnk" href="haruya/">はるや版：彼女の帰りを待つ</a><a class="lnk" href="suzu/">すずさん版：東口で交換</a></div></div>
@@ -1252,7 +1253,8 @@ function end(kind){
     $("again").onclick=showIntro;
     const R={kind,no,got,ending:ENDNAME[kind],text:fill(ENDS[kind]),time:fmt(Math.min(S.t,LAST)),where:where(),yoin:S.yoin,okSwap,okTrain,okBat,cards:S.cards,title:title(),oshi:S.oshi,talk:S.m.talk,photo:S.m.photo,chased:S.m.chased,bat:S.bat};
     let blobP=makeResultImage(R).catch(()=>null);
-    $("saveImg").onclick=()=>saveResult(blobP);
+    $("saveImg").onclick=()=>window.PRshare?PRshare.open({make:()=>blobP,name:"live-kaeri-result.png",title:"ライブ帰りシミュレーター",
+      text:`【ライブ帰りシミュレーター】${R.ending}で帰りました。 #ライブ帰りシミュレーター #PLAYROOM`,url:"https://playroom-lab.github.io/play-room/live-kaeri/"}):saveResult(blobP);
   };
   if(kind==="dead"){const el=$("osd");el.hidden=false;el.className="ov dead";el.innerHTML="";setTimeout(()=>{el.hidden=true;el.className="ov osd";go()},1600)}
   else go();
