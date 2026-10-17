@@ -368,7 +368,7 @@ function renderStage() {
       <div class="verdict ${view.hit ? 'hit' : ''}">${esc(view.verdict)}</div>
       <div class="note">${esc(view.note)}</div>
       <div class="actions">${q > 0 ? `<button class="btn" data-act="next">次の袋へ（残り${q}）</button>` :
-        `<p class="note">手持ちの袋をすべて開封しました</p><button class="btn" data-act="restock">新しい袋をもらう</button>`}</div>
+        `<p class="note">手持ちの袋をすべて開封しました</p><button class="btn" data-act="restock">新しい袋をもらう</button><span class="break" aria-hidden="true"></span><a class="btn ghost oddslink" href="../odds/">ランダムの確率を調べてみる</a>`}</div>
       <button class="linkbtn" data-act="sharecard">このカードを画像で保存・シェア</button>`;
   } else if (q > 0) {
     html += `<div class="queue">未開封 ${q}袋</div><div class="slot">${packHTML(false)}</div>
