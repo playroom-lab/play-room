@@ -222,7 +222,7 @@ h1{font-size:clamp(2.25rem,8.6vw,3.5rem);font-weight:900;letter-spacing:.01em;li
         <label class="btn" for="photoInput">選ぶ</label>
         <input type="file" id="photoInput" accept="image/*">
       </div>
-      <button class="btn primary big" id="saveBtn" type="button">結果カードを画像にする</button>
+      <button class="btn primary big" id="saveBtn" type="button">結果カードを画像で保存・シェア</button>
       <div class="row">
         <button class="btn" id="copyBtn" type="button">テキストをコピー</button>
         <button class="btn" id="retryBtn" type="button">もう一回やる</button>
@@ -240,16 +240,8 @@ h1{font-size:clamp(2.25rem,8.6vw,3.5rem);font-weight:900;letter-spacing:.01em;li
   <p class="disclaimer">MAZZEL・BMSG公式とは関係のない、非公式ファンメイドの遊びです。<br>どの沼も、楽しい沼。</p>
 </main>
 
-<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-label="結果画像">
-  <div class="sheet">
-    <img id="modalImg" alt="診断結果カードの画像">
-    <p class="hint">画像を長押しすると保存できます。</p>
-    <button class="btn primary" id="shareImgBtn" type="button" hidden>画像を共有する</button>
-    <button class="btn" id="dlBtn" type="button">画像をダウンロード</button>
-    <button class="btn" id="closeBtn" type="button">閉じる</button>
-  </div>
-</div>
 
+<script src="../assets/share.js"></script>
 <script>
 /* =========================================================
    2軸で判定する
@@ -726,38 +718,25 @@ function drawCard(g){
 var lastBlob = null;
 $('saveBtn').onclick = function(){
   if(!R) return;
-  var btn = this; btn.disabled = true; btn.textContent = '画像を作っています…';
   var wk = R.what[0].k, hk = R.how[0].k, h = HOW[hk], w = WHAT[wk];
   var txt = w.name + h.name + COMBO[wk][hk] + h.c + h.line + h.habits.join('') + w.hunt +
     WHAT_ORDER.map(function(k){return WHAT[k].name;}).join('') + HOW_ORDER.map(function(k){return HOW[k].name;}).join('') +
     'のYOURNUMATYPE口癖「」生態あるある沼成分何に沸く？どう沼る？狩られがちな推しMy推し#オタク沼診断0123456789%abcdefghijklmnopqrstuvwxyz./-';
-  loadFonts(txt).then(function(){
-    var c, gs = [1, .8, .6, .4];
-    for(var i=0; i<gs.length; i++){ c = drawCard(gs[i]); if(!c._overflow) break; }
-    c.toBlob(function(b){
-      btn.disabled = false; btn.textContent = '結果カードを画像にする';
-      if(!b){ toast('画像を作れませんでした'); return; }
-      lastBlob = b;
-      $('modalImg').src = URL.createObjectURL(b);
-      var f = new File([b], 'otaku-numa.png', {type:'image/png'});
-      $('shareImgBtn').hidden = !(navigator.canShare && navigator.canShare({files:[f]}));
-      $('modal').hidden = false;
-    }, 'image/png');
+  var t = shareText(), u = PAGE_URL;
+  PRshare.open({
+    make: function(){
+      return loadFonts(txt).then(function(){
+        var c, gs = [1, .8, .6, .4];
+        for(var i=0; i<gs.length; i++){ c = drawCard(gs[i]); if(!c._overflow) break; }
+        return new Promise(function(res){ c.toBlob(res, 'image/png'); });
+      });
+    },
+    name: 'otaku-numa.png',
+    title: 'オタク沼診断',
+    text: t.slice(0, t.lastIndexOf(u)).replace(/\n+$/, ''),
+    url: u
   });
 };
-$('shareImgBtn').onclick = function(){
-  if(!lastBlob) return;
-  navigator.share({ files:[new File([lastBlob], 'otaku-numa.png', {type:'image/png'})], text: shareText() }).catch(function(){});
-};
-$('dlBtn').onclick = function(){
-  if(!lastBlob) return;
-  var a = document.createElement('a'); a.href = $('modalImg').src; a.download = 'otaku-numa.png';
-  document.body.appendChild(a); a.click(); a.remove();
-  toast('うまく保存できないときは、画像を長押ししてください');
-};
-$('closeBtn').onclick = function(){ $('modal').hidden = true; };
-$('modal').addEventListener('click', function(e){ if(e.target === this) this.hidden = true; });
-document.addEventListener('keydown', function(e){ if(e.key === 'Escape') $('modal').hidden = true; });
 
 /* ============ 一覧・トースト ============ */
 function buildLists(){

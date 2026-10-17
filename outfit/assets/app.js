@@ -212,26 +212,20 @@ function renderResult() {
     <div class="rest">${r.slice(1).map((s, i) => `<div><img src="${src(s)}" alt="${i + 2}位の衣装"><p><b>${i + 2}位</b>${S.mode === 'box' ? `<small>${esc(M(s.m).name)}</small>` : ''}</p></div>`).join('')}</div>
     <div class="foot"><span>PLAY ROOM ・ Outfit選手権</span><span>${today()}</span></div>
   </div>
-  <p class="hint">「画像で保存」で、この結果を1枚の画像にできます</p>
+  <p class="hint">この結果を1枚の画像にして、保存・シェアできます</p>
   <div class="btns">
-    <button class="btn" id="save">画像で保存</button>
-    <button class="btn" id="share">Xでシェア</button>
+    <button class="btn" id="save">画像で保存・シェア</button>
     <button class="btn ghost" id="again">もう一回</button>
     <button class="btn ghost" id="home">${S.mode === 'box' ? '推しメンで選ぶ' : 'ほかのメンバーで'}</button>
   </div>`;
   $('save').onclick = saveImage;
-  $('share').onclick = shareX;
   $('again').onclick = () => S.mode === 'box' ? startBox() : startMember(S.member);
   $('home').onclick = () => go({ screen: 'home' }, false);
 }
 function today() { const d = new Date(); return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`; }
 
 /* ---------- share ---------- */
-function shareX() {
-  const text = `【Outfit選手権】${resultTitle()}の好きな衣装TOP5が決まりました！ #Outfit選手権 #PLAYROOM`;
-  const url = 'https://playroom-lab.github.io/play-room/outfit/';
-  window.open(`https://x.com/intent/post?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank', 'noopener');
-}
+function shareText() { return `【Outfit選手権】${resultTitle()}の好きな衣装TOP5が決まりました！ #Outfit選手権 #PLAYROOM`; }
 function loadImg(u) {
   return loadImg1(PRfast(u, 1080)).catch(() => loadImg1(u));
 }
@@ -279,22 +273,14 @@ async function drawResult() {
   x.textAlign = 'right'; x.fillText(today(), sx + sw - 40, sy + sh - 34);
   return new Promise(r => c.toBlob(r, 'image/png'));
 }
-async function saveImage() {
-  const btn = $('save'); btn.disabled = true; btn.textContent = '画像をつくっています…';
-  try {
-    const blob = await drawResult();
-    const name = `outfit-top5-${S.mode === 'box' ? 'mazzel' : S.member}.png`;
-    const file = new File([blob], name, { type: 'image/png' });
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      try { await navigator.share({ files: [file], title: 'Outfit選手権' }); }
-      catch (e) { if (e.name !== 'AbortError') throw e; }
-    } else {
-      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
-      document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-      toast('画像を保存しました');
-    }
-  } catch (e) { console.error(e); toast('画像を作れませんでした。もう一度試してください'); }
-  btn.disabled = false; btn.textContent = '画像で保存';
+function saveImage() {
+  PRshare.open({
+    make: drawResult,
+    name: `outfit-top5-${S.mode === 'box' ? 'mazzel' : S.member}.png`,
+    title: 'Outfit選手権',
+    text: shareText(),
+    url: 'https://playroom-lab.github.io/play-room/outfit/'
+  });
 }
 let tt;
 function toast(t) {

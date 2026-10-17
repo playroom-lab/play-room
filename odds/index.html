@@ -198,7 +198,7 @@ footer a{color:inherit}
   </a>
 
   <div class="share">
-    <button type="button" class="btn" id="shareBtn">結果をXでシェア</button>
+    <button type="button" class="btn" id="shareBtn">結果を画像で保存・シェア</button>
     <button type="button" class="btn" id="copyBtn">この条件のURLをコピー</button>
   </div>
 
@@ -215,6 +215,7 @@ footer a{color:inherit}
   <p>MAZZEL・BMSG公式とは関係のない非公式ファンメイドサイトです。<br><a href="../">PLAY ROOM トップへ</a></p>
 </footer>
 
+<script src="../assets/share.js"></script>
 <script>
 (function () {
   "use strict";
@@ -364,7 +365,7 @@ footer a{color:inherit}
     return "ここは沼の入り口。交換や譲渡で集める方が近道かも。";
   }
 
-  var last = null;
+  var last = null, lastR = null;
   function render() {
     var c = readCfg(); last = c;
     $("totalKinds").textContent = c.N;
@@ -376,7 +377,7 @@ footer a{color:inherit}
 
     $("tooMany").hidden = c.k <= MAX_COMP;
     if (c.k > MAX_COMP) { $("resNum").textContent = "—"; $("resMeter").style.width = "0"; $("verdict").textContent = ""; $("needBody").innerHTML = ""; return; }
-    var r = compute(c);
+    var r = compute(c); lastR = r;
     var p = r.pBuy;
     $("resNum").textContent = pct(p);
     $("resMeter").style.width = (p * 100).toFixed(1) + "%";
@@ -455,11 +456,60 @@ footer a{color:inherit}
     $("buy").value = b.dataset.n; render();
   });
   $("shareBtn").addEventListener("click", function () {
-    var c = last; if (!c) return;
-    var r = $("resNum").textContent;
-    var text = "【ランダム期待値チェッカー】全" + c.N + "種のランダムを" + c.n + "枚買って、推し" + c.k + "種がそろう確率は " + r + "% #PLAYROOM";
-    window.open("https://x.com/intent/post?text=" + encodeURIComponent(text) + "&url=" + encodeURIComponent(location.href), "_blank", "noopener");
+    var c = last, r = lastR; if (!c || !r) return;
+    var text = "【ランダム期待値チェッカー】全" + c.N + "種のランダムを" + c.n + "枚買って、推し" + c.k + "種がそろう確率は " + pct(r.pBuy) + "% #PLAYROOM";
+    PRshare.open({ make: function () { return drawImage(c, r); }, name: "random-odds.png", title: "ランダム期待値チェッカー", text: text, url: location.href });
   });
+  /* 結果の画像 */
+  function drawImage(c, r) {
+    var G = '"Zen Kaku Gothic New","Hiragino Sans",sans-serif', HD = '"Klee One","Hiragino Sans",sans-serif';
+    var fl = [];
+    try { ["900 40px \"Zen Kaku Gothic New\"", "700 40px \"Zen Kaku Gothic New\"", "500 40px \"Zen Kaku Gothic New\"", "600 40px \"Klee One\""].forEach(function (f) { fl.push(document.fonts.load(f)); }); } catch (e) {}
+    return Promise.all(fl).catch(function () {}).then(function () {
+      var W = 1080, H = 1350, cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+      var x = cv.getContext("2d"), INK = "#282536", MUT = "#625f6d";
+      x.fillStyle = "#ded7ff"; x.fillRect(0, 0, W, H);
+      function card(cx, cy, cw, ch, fill) { x.fillStyle = INK; x.fillRect(cx + 8, cy + 10, cw, ch); x.fillStyle = fill; x.fillRect(cx, cy, cw, ch); x.strokeStyle = INK; x.lineWidth = 3; x.strokeRect(cx, cy, cw, ch); }
+      var L = 70, CW = W - 140;
+      /* タイトル */
+      x.save(); x.translate(L, 92); x.rotate(-0.05); x.fillStyle = INK; x.fillRect(0, -34, 262, 46); x.fillStyle = "#f7f5ed"; x.font = "700 24px " + G; x.textAlign = "left"; x.fillText("08 / ODDS CHECK", 16, -2); x.restore();
+      x.fillStyle = INK; x.font = "900 60px " + G; x.textAlign = "left"; x.fillText("ランダム期待値チェッカー", L, 190);
+      /* 結果カード */
+      card(L, 240, CW, 560, "#ffd5df");
+      x.fillStyle = INK; x.font = "700 34px " + G;
+      var q = c.n + "枚買って、" + (c.oshi > 1 ? "推し" + c.oshi + "人" : "推し") + "の" + c.k + "種類がそろう確率";
+      x.fillText(q, L + 40, 310);
+      x.fillStyle = MUT; x.font = "500 28px " + G;
+      x.fillText("全" + c.N + "種（" + c.members + "人×" + c.patterns + "絵柄" + (c.extra ? "＋" + c.extra + "種" : "") + "）・1枚ずつランダム", L + 40, 356);
+      var big = pct(r.pBuy);
+      x.fillStyle = INK; x.font = "900 200px " + G; x.fillText(big, L + 34, 560);
+      var bw = x.measureText(big).width; x.font = "900 72px " + G; x.fillText("%", L + 34 + bw + 10, 560);
+      /* メーター */
+      var my = 600, mw = CW - 80;
+      x.fillStyle = "#fff"; x.fillRect(L + 40, my, mw, 30); x.fillStyle = INK; x.fillRect(L + 40, my, mw * Math.min(1, r.pBuy), 30); x.strokeStyle = INK; x.lineWidth = 3; x.strokeRect(L + 40, my, mw, 30);
+      x.fillStyle = INK; x.font = "600 38px " + HD; x.fillText(verdictOf(r.pBuy), L + 40, 700);
+      var avg = c.n * c.k / c.N;
+      x.fillStyle = MUT; x.font = "500 28px " + G;
+      x.fillText("推しが出る枚数の平均 " + num1(avg) + "枚 ／ 推し以外 " + num1(c.n - avg) + "枚", L + 40, 760);
+      /* 必要な枚数 */
+      card(L, 850, CW, 340, "#fff");
+      x.fillStyle = INK; x.font = "900 36px " + G; x.fillText("そろうまでに必要な枚数", L + 40, 910);
+      var rows = [["平均", r.mean], ["50%の確率でそろう", r.need[0]], ["80%の確率でそろう", r.need[1]], ["90%の確率でそろう", r.need[2]]];
+      rows.forEach(function (row, i) {
+        var y = 980 + i * 62;
+        if (i === 0) { x.fillStyle = "#fff0c9"; x.fillRect(L + 24, y - 44, CW - 48, 60); }
+        x.fillStyle = INK; x.textAlign = "left"; x.font = "700 32px " + G; x.fillText(row[0], L + 40, y);
+        x.textAlign = "right"; x.font = "900 38px " + G;
+        var v = row[1] == null ? "—" : (i === 0 ? num1(row[1]) : row[1].toLocaleString("ja-JP")) + "枚";
+        if (c.price && row[1] != null) v += "（" + yen(row[1] * c.price) + "）";
+        x.fillText(v, L + CW - 40, y);
+        if (i < rows.length - 1) { x.strokeStyle = "#d5d1d9"; x.lineWidth = 2; x.setLineDash([8, 8]); x.beginPath(); x.moveTo(L + 40, y + 18); x.lineTo(L + CW - 40, y + 18); x.stroke(); x.setLineDash([]); }
+      });
+      x.textAlign = "left"; x.fillStyle = MUT; x.font = "500 24px " + G; x.fillText("※すべての絵柄が同じ確率で出るとして計算しています", L, 1268);
+      x.fillStyle = INK; x.font = "700 28px " + G; x.fillText("PLAY ROOM ・ ランダム期待値チェッカー", L, H - 36);
+      return new Promise(function (res) { cv.toBlob(res, "image/png"); });
+    });
+  }
   $("copyBtn").addEventListener("click", function () {
     var b = $("copyBtn"), done = function () { b.textContent = "コピーしました"; setTimeout(function () { b.textContent = "この条件のURLをコピー"; }, 1800); };
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, function () { prompt("URLをコピーしてください", location.href); });

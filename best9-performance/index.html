@@ -155,7 +155,7 @@
 <div class="dock" role="region" aria-label="操作">
   <div class="dock-inner">
     <button id="randomBtn" class="chip-btn" type="button">ランダム</button>
-    <button id="saveBtn" class="save-btn" type="button">画像保存</button>
+    <button id="saveBtn" class="save-btn" type="button">画像で保存・シェア</button>
   </div>
   </div>
 <div id="status" class="status" aria-live="polite"></div>
@@ -171,6 +171,7 @@
 </div>
 
 <script src="../assets/fast-img.js"></script>
+<script src="../assets/share.js"></script>
 <script>
 var SHEET_W = 420, THUMB_W = 180; // 画面の写真サイズ(初回描画より前に決めておく)
 /* =====================================================================
@@ -548,51 +549,15 @@ async function createSheetCanvas() {
   return canvas;
 }
 
-/* ---------- 保存(共有シート→ダウンロード→スクショ案内) ---------- */
-async function saveImage() {
-  var originalText = saveBtn.textContent;
-  saveBtn.disabled = true;
-  saveBtn.textContent = "画像を作成中…";
-  setStatus("画像を作成中…", true);
-
-  try {
-    var canvas = await createSheetCanvas();
-    var blob = await canvasToBlob(canvas);
-    var file = new File([blob], "mazzel-best-visual-9-performance.png", { type: "image/png" });
-
-    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-      try {
-        await navigator.share({
-          files: [file],
-          title: "MAZZEL Best Visual 9 - Performance Costume",
-          text: "MAZZEL Best Visual 9 パフォ衣装編を作ったよ"
-        });
-        setStatus("共有シートを開きました。", true);
-        return;
-      } catch (shareError) {
-        if (shareError && shareError.name === "AbortError") {
-          setStatus("共有をキャンセルしました。", true);
-          return;
-        }
-      }
-    }
-
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement("a");
-    a.href = url;
-    a.download = "mazzel-best-visual-9-performance.png";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    window.setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
-    setStatus("画像を保存しました。", true);
-  } catch (error) {
-    console.error(error);
-    setStatus("画像の保存に失敗しました。うまくいかない場合はシートをスクリーンショットしてください。");
-  } finally {
-    saveBtn.disabled = false;
-    saveBtn.textContent = originalText;
-  }
+/* ---------- 保存・シェア(共通の画像シート ../assets/share.js) ---------- */
+function saveImage() {
+  PRshare.open({
+    make: function () { return createSheetCanvas().then(canvasToBlob); },
+    name: "mazzel-best-visual-9-performance.png",
+    title: "最強9マス パフォ衣装",
+    text: "MAZZELの最強9マス（パフォ衣装編）を作ったよ #最強9マス #PLAYROOM",
+    url: "https://playroom-lab.github.io/play-room/best9-performance/"
+  });
 }
 
 function setStatus(message, ok) {

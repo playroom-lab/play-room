@@ -1284,69 +1284,22 @@ function canvasToBlob(canvas) {
   });
 }
 
-async function saveResultImage() {
-  var originalText = saveBtn.textContent;
-  var fileName = "oshi-visual-6-" + currentDesignId + ".png";
-
-  saveBtn.disabled = true;
-  saveBtn.textContent = "画像を作成中…";
-  setStatus("画像を作成中…", true);
-
-  try {
-    var canvas = await createResultCanvas();
-    var blob = await canvasToBlob(canvas);
-    var file = new File([blob], fileName, { type: "image/png" });
-
-    // 1) 共有シート(iPhone Safariで「画像を保存」できる)
-    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-      try {
-        await navigator.share({ title: "推しビジュ6選", text: "推しビジュ6選を作ったよ", files: [file] });
-        setStatus("共有シートを開きました。", true);
-        stampTape();
-        return;
-      } catch (shareError) {
-        if (shareError && shareError.name === "AbortError") {
-          setStatus("共有をキャンセルしました。", true);
-          return;
-        }
-        // 共有自体の失敗は次の手段へ
-      }
-    }
-
-    // 2) アプリ内ブラウザ(Xなど)はダウンロード不可のことが多い
-    //    → 画像を表示して長押し保存してもらう
-    if (isInAppBrowser()) {
-      showFallbackImage(canvas);
-      setStatus("画像を長押しして保存してください。", true);
-      stampTape();
-      return;
-    }
-
-    // 3) 通常ダウンロード
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement("a");
-    a.href = url;
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    window.setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
-    setStatus("画像を保存しました。", true);
-    stampTape();
-  } catch (error) {
-    console.error(error);
-    // 失敗時も長押し保存の道を残す
-    try {
-      var c2 = await createResultCanvas();
-      showFallbackImage(c2);
-      setStatus("自動保存できなかったので、画像を長押しして保存してください。");
-    } catch (e2) {
-      setStatus("画像の保存に失敗しました。プレビューをスクリーンショットしてください。");
-    }
-  } finally {
-    saveBtn.disabled = false;
-    saveBtn.textContent = originalText;
-  }
+function saveResultImage() {
+  if (!window.PRshare) return;
+  var name = getCurrentMember().name;
+  PRshare.open({
+    make: function () {
+      return createResultCanvas().then(function (canvas) {
+        return new Promise(function (resolve, reject) {
+          canvas.toBlob(function (blob) { if (blob) resolve(blob); else reject(new Error("Blob creation failed")); }, "image/png");
+        });
+      });
+    },
+    name: "oshi-visual-6-" + currentDesignId + ".png",
+    title: "推しビジュ6選",
+    text: name + "の推しビジュ6選を作ったよ #推しビジュ6選 #PLAYROOM",
+    url: "https://playroom-lab.github.io/play-room/visual6/"
+  });
 }
 
 function showFallbackImage(canvas) {
