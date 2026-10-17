@@ -65,12 +65,6 @@ h1{font-size:clamp(2rem,8vw,3.1rem);font-weight:900;line-height:1.25;margin:0;le
 .total{margin:12px 0 0;padding:10px 12px;background:var(--bg);border-radius:4px;font-size:.9375rem}
 .total b{font-size:1.25rem;font-weight:900}
 
-.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 6px}
-.seg label{position:relative;display:block;cursor:pointer}
-.seg input{position:absolute;opacity:0;pointer-events:none}
-.seg span{display:block;height:100%;padding:10px 12px;border:1.5px solid var(--ink);border-radius:5px;background:#fff;font-weight:700;font-size:.9375rem;line-height:1.4}
-.seg span small{display:block;font-weight:500;font-size:.75rem;color:var(--muted);margin-top:3px}
-.seg input:checked + span{background:var(--violet);box-shadow:2px 3px 0 var(--ink)}
 .quick{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
 .quick button{padding:5px 12px;border:1px solid var(--ink);border-radius:999px;background:#fff;font-size:.8125rem;font-weight:700}
 .quick button[aria-pressed="true"]{background:var(--ink);color:#fff}
@@ -102,21 +96,17 @@ h1{font-size:clamp(2rem,8vw,3.1rem);font-weight:900;line-height:1.25;margin:0;le
 .bars li{display:grid;grid-template-columns:4.6em minmax(0,1fr) 3.6em;align-items:center;gap:8px;font-size:.875rem}
 .bars .bar{height:18px;background:var(--bg);border-radius:3px;overflow:hidden}
 .bars .bar i{display:block;height:100%;background:var(--violet);border-right:1.5px solid var(--ink)}
-.bars li.goal .bar i{background:var(--pink)}
 .bars .p{text-align:right;font-weight:700}
 
-.sim-btn,.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 20px;border:1.5px solid var(--ink);border-radius:999px;background:var(--lime);font-weight:900;box-shadow:3px 4px 0 var(--ink)}
-.sim-btn:active,.btn:active{transform:translate(2px,2px);box-shadow:1px 2px 0 var(--ink)}
-.packs{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:16px 0 0}
-.pk{aspect-ratio:3/4;border:1.5px solid var(--ink);border-radius:4px;background:#fff;display:grid;place-items:center;font-size:.6875rem;font-weight:700;line-height:1.2;text-align:center;color:var(--muted);animation:pop .25s ease both}
-.pk.hit{background:var(--pink);color:var(--ink)}
-.pk.hit::before{content:'★';display:block;font-size:.875rem}
-.pk.dup{background:#ffeef2}
-@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
-.sim-msg{font-family:var(--hand);font-weight:600;font-size:1.0625rem;margin:14px 0 0}
-.sim-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
-.sim-count{font-size:.875rem;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 20px;border:1.5px solid var(--ink);border-radius:999px;background:var(--lime);font-weight:900;box-shadow:3px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 2px 0 var(--ink)}
 
+.gacha-link{display:flex;align-items:center;gap:12px;background:var(--lime);color:inherit;text-decoration:none}
+.gacha-link:active{transform:translate(2px,2px);box-shadow:2px 3px 0 var(--ink)}
+.gl-copy{flex:1;display:flex;flex-direction:column;line-height:1.5}
+.gl-copy b{font-size:1.0625rem;font-weight:900}
+.gl-copy small{font-size:.8125rem;color:var(--muted)}
+.gl-go{flex:none;display:grid;place-items:center;width:40px;height:40px;border:1.5px solid var(--ink);border-radius:50%;background:#fff;font-weight:900}
 details{font-size:.875rem;color:var(--muted)}
 details summary{cursor:pointer;font-weight:700;color:var(--ink)}
 details p{margin:8px 0 0}
@@ -128,7 +118,7 @@ details p{margin:8px 0 0}
 .dock.off{opacity:0;pointer-events:none;transform:translate(-50%,12px)}
 footer{max-width:640px;margin:36px auto 0;padding:18px 0 0;border-top:1px dashed var(--line);text-align:center;color:var(--muted);font-size:.8125rem}
 footer a{color:inherit}
-@media(prefers-reduced-motion:reduce){.pk{animation:none}.meter i{transition:none}}
+@media(prefers-reduced-motion:reduce){.meter i{transition:none}}
 </style>
 </head>
 <body>
@@ -158,40 +148,20 @@ footer a{color:inherit}
       <span class="lbl" id="l-extra">そのほかの絵柄<small>集合・ユニットなど。なければ0</small></span>
       <div class="stepper" data-for="extra"><button type="button" data-d="-1" aria-label="そのほかを減らす">−</button><input id="extra" type="number" inputmode="numeric" min="0" max="99" value="0" aria-labelledby="l-extra"><span class="unit">種</span><button type="button" data-d="1" aria-label="そのほかを増やす">＋</button></div>
     </div>
-    <p class="total">ぜんぶで <b id="totalKinds">16</b> 種類</p>
-  </section>
-
-  <section class="card" aria-labelledby="h-goal">
-    <h2 id="h-goal"><span class="step">2</span>ねらい</h2>
     <div class="row">
       <span class="lbl" id="l-oshi">推しの人数<small>2人推しなら2</small></span>
       <div class="stepper" data-for="oshi"><button type="button" data-d="-1" aria-label="推しの人数を減らす">−</button><input id="oshi" type="number" inputmode="numeric" min="1" max="99" value="1" aria-labelledby="l-oshi"><span class="unit">人</span><button type="button" data-d="1" aria-label="推しの人数を増やす">＋</button></div>
     </div>
-    <div class="seg" role="radiogroup" aria-label="ねらい" style="margin-top:8px">
-      <label><input type="radio" name="goal" value="comp" checked><span>推しを全絵柄そろえる<small id="compSub">推しの2種類を1枚ずつ</small></span></label>
-      <label><input type="radio" name="goal" value="count"><span>推しを○枚ひく<small>絵柄は問わず。かぶりもOK</small></span></label>
-    </div>
-    <div class="row" id="countRow" hidden>
-      <span class="lbl" id="l-want">ほしい枚数<small>自分用＋保存用なら2</small></span>
-      <div class="stepper" data-for="want"><button type="button" data-d="-1" aria-label="枚数を減らす">−</button><input id="want" type="number" inputmode="numeric" min="1" max="99" value="2" aria-labelledby="l-want"><span class="unit">枚</span><button type="button" data-d="1" aria-label="枚数を増やす">＋</button></div>
-    </div>
+    <p class="total">ぜんぶで <b id="totalKinds">16</b> 種類 ／ 推しは <b id="oshiKinds">2</b> 種類</p>
   </section>
 
   <section class="card" aria-labelledby="h-buy">
-    <h2 id="h-buy"><span class="step">3</span>買い方</h2>
+    <h2 id="h-buy"><span class="step">2</span>買う枚数</h2>
     <div class="row">
-      <span class="lbl" id="l-buy">買う枚数</span>
+      <span class="lbl" id="l-buy">買う枚数<small>1枚ずつ完全ランダム</small></span>
       <div class="stepper" data-for="buy"><button type="button" data-d="-1" aria-label="買う枚数を減らす">−</button><input id="buy" type="number" inputmode="numeric" min="1" max="999" value="10" aria-labelledby="l-buy"><span class="unit">枚</span><button type="button" data-d="1" aria-label="買う枚数を増やす">＋</button></div>
     </div>
     <div class="quick" id="quick" aria-label="よく使う枚数"></div>
-    <div class="seg" role="radiogroup" aria-label="買い方" style="margin-top:16px">
-      <label><input type="radio" name="mode" value="single" checked><span>バラで買う<small>1枚ずつ完全ランダム</small></span></label>
-      <label><input type="radio" name="mode" value="box"><span>BOXで買う<small>1箱の中はかぶらない</small></span></label>
-    </div>
-    <div class="row" id="boxRow" hidden>
-      <span class="lbl" id="l-box">1箱に入っている数<small>全種1枚ずつなら種類数と同じ</small></span>
-      <div class="stepper" data-for="box"><button type="button" data-d="-1" aria-label="1箱の数を減らす">−</button><input id="box" type="number" inputmode="numeric" min="1" max="999" value="16" aria-labelledby="l-box"><span class="unit">個</span><button type="button" data-d="1" aria-label="1箱の数を増やす">＋</button></div>
-    </div>
     <div class="row">
       <span class="lbl" id="l-price">1枚の値段<small>入れると金額も出ます（任意）</small></span>
       <div class="stepper" data-for="price"><button type="button" data-d="-100" aria-label="値段を下げる">−</button><input id="price" type="number" inputmode="numeric" min="0" max="99999" value="" placeholder="—" aria-labelledby="l-price" style="width:4.6em"><span class="unit">円</span><button type="button" data-d="100" aria-label="値段を上げる">＋</button></div>
@@ -203,7 +173,7 @@ footer a{color:inherit}
     <p class="big"><span class="num" id="resNum">0</span><span class="pc">%</span></p>
     <div class="meter" aria-hidden="true"><i id="resMeter"></i></div>
     <p class="verdict" id="verdict"></p>
-    <p class="note" id="tooMany" hidden>推しの絵柄が多すぎて計算できません（全絵柄そろえるのは36種類まで）。「推しを○枚ひく」なら計算できます。</p>
+    <p class="note" id="tooMany" hidden>推しの絵柄が多すぎて計算できません（推しの絵柄は36種類まで）。</p>
     <div class="stats">
       <div class="stat"><b id="sAvg">0</b><span>推しが出る<br>枚数の平均</span></div>
       <div class="stat"><b id="sZero">0%</b><span>推しが1枚も<br>出ない確率</span></div>
@@ -222,15 +192,10 @@ footer a{color:inherit}
     <ul class="bars" id="bars"></ul>
   </section>
 
-  <section class="card" aria-labelledby="h-sim">
-    <h2 id="h-sim"><span class="step">★</span>ためしに開けてみる</h2>
-    <div class="sim-row">
-      <button type="button" class="sim-btn" id="simBtn">開ける</button>
-      <span class="sim-count" id="simCount"></span>
-    </div>
-    <div class="packs" id="packs" aria-live="polite"></div>
-    <p class="sim-msg" id="simMsg" hidden></p>
-  </section>
+  <a class="card gacha-link" href="../gacha/">
+    <span class="gl-copy"><b>ためしに引いてみる</b><small>推しガチャ開封所で、銀袋を開けて自引きに挑戦</small></span>
+    <span class="gl-go" aria-hidden="true">→</span>
+  </a>
 
   <div class="share">
     <button type="button" class="btn" id="shareBtn">結果をXでシェア</button>
@@ -239,7 +204,7 @@ footer a{color:inherit}
 
   <details>
     <summary>計算のしくみ</summary>
-    <p>すべての絵柄が同じ確率で出るとして、ぴったりの確率を計算しています（シミュレーションではありません）。BOXは「1箱の中は同じ絵柄が入らない」として計算し、箱の数に満たない分はもう1箱から開けた分として扱います。</p>
+    <p>すべての絵柄が同じ確率で出て、1枚ずつ完全にランダムに入っているとして、ぴったりの確率を計算しています（シミュレーションではありません）。</p>
     <p>実際の封入率が公表されている場合や、絵柄ごとに出やすさがちがう場合は、結果が変わります。あくまで目安として使ってください。</p>
   </details>
 </main>
@@ -254,8 +219,8 @@ footer a{color:inherit}
 (function () {
   "use strict";
   var $ = function (id) { return document.getElementById(id); };
-  var fields = ["members", "patterns", "extra", "oshi", "want", "buy", "box", "price"];
-  var LIMITS = { members: [1, 50], patterns: [1, 12], extra: [0, 60], oshi: [1, 50], want: [1, 30], buy: [1, 999], box: [1, 999], price: [0, 99999] };
+  var fields = ["members", "patterns", "extra", "oshi", "buy", "price"];
+  var LIMITS = { members: [1, 50], patterns: [1, 12], extra: [0, 60], oshi: [1, 50], buy: [1, 999], price: [0, 99999] };
   var MAX_COMP = 36; /* 全絵柄そろえる計算は、推しの絵柄36種まで(それ以上は重すぎる) */
 
   /* ---------- 確率の道具 ---------- */
@@ -371,14 +336,13 @@ footer a{color:inherit}
     if (isNaN(v)) v = lim[0];
     return Math.max(lim[0], Math.min(lim[1], v));
   }
-  function radio(name) { return document.querySelector('input[name="' + name + '"]:checked').value; }
 
   function readCfg() {
     var members = val("members"), patterns = val("patterns"), extra = val("extra");
     var oshi = Math.min(val("oshi"), members);
     var N = members * patterns + extra, k = oshi * patterns;
     return { members: members, patterns: patterns, extra: extra, oshi: oshi, N: N, k: k,
-      goal: radio("goal"), want: val("want"), n: val("buy"), mode: radio("mode"), box: val("box"), price: val("price") };
+      goal: "comp", want: 1, n: val("buy"), mode: "single", box: 1, price: val("price") }; /* 推しを全絵柄そろえる・バラ買い */
   }
 
   function pct(p) {
@@ -404,23 +368,20 @@ footer a{color:inherit}
   function render() {
     var c = readCfg(); last = c;
     $("totalKinds").textContent = c.N;
-    $("compSub").textContent = c.k === 1 ? "推しの1種類を1枚" : "推しの" + c.k + "種類を1枚ずつ";
-    $("countRow").hidden = c.goal !== "count";
-    $("boxRow").hidden = c.mode !== "box";
+    $("oshiKinds").textContent = c.k;
     renderQuick(c);
 
     var label = c.oshi > 1 ? "推し" + c.oshi + "人" : "推し";
-    var goalText = c.goal === "comp" ? label + "の" + c.k + "種類がそろう" : label + "が" + c.want + "枚以上出る";
-    $("resQ").textContent = (c.mode === "box" ? "BOXで" : "") + c.n + "枚買って、" + goalText + "確率";
+    $("resQ").textContent = c.n + "枚買って、" + label + "の" + c.k + "種類がそろう確率";
 
-    $("tooMany").hidden = !(c.goal === "comp" && c.k > MAX_COMP);
-    if (c.goal === "comp" && c.k > MAX_COMP) { $("resNum").textContent = "—"; $("resMeter").style.width = "0"; $("verdict").textContent = ""; $("needBody").innerHTML = ""; return; }
+    $("tooMany").hidden = c.k <= MAX_COMP;
+    if (c.k > MAX_COMP) { $("resNum").textContent = "—"; $("resMeter").style.width = "0"; $("verdict").textContent = ""; $("needBody").innerHTML = ""; return; }
     var r = compute(c);
     var p = r.pBuy;
     $("resNum").textContent = pct(p);
     $("resMeter").style.width = (p * 100).toFixed(1) + "%";
     $("verdict").textContent = verdictOf(p);
-    $("dockText").textContent = c.n + "枚で" + (c.goal === "comp" ? "そろう" : c.want + "枚以上");
+    $("dockText").textContent = c.n + "枚でそろう";
     $("dockNum").textContent = pct(p) + "%";
 
     var avg = c.n * c.k / c.N;
@@ -430,16 +391,12 @@ footer a{color:inherit}
     $("sOther").textContent = num1(c.n - avg) + "枚";
 
     /* 必要な枚数 */
-    $("needTitle").textContent = c.goal === "comp" ? "そろうまでに必要な枚数" : c.want + "枚出るまでに必要な枚数";
     var rows = [];
     function cell(n) { return n == null ? "—" : n.toLocaleString("ja-JP") + "枚" + (c.price ? "<small>" + yen(n * c.price) + "</small>" : ""); }
     if (r.mean != null) rows.push('<tr class="avg"><th>平均</th><td>' + num1(r.mean) + "枚" + (c.price ? "<small>" + yen(r.mean * c.price) + "</small>" : "") + "</td></tr>");
     var names = ["半分の人がそろう（50%）", "80%の確率でそろう", "90%の確率でそろう", "ほぼ確実（99%）"];
-    if (c.goal === "count") names = ["半分の人が届く（50%）", "80%の確率で届く", "90%の確率で届く", "ほぼ確実（99%）"];
     for (var i = 0; i < 4; i++) rows.push("<tr><th>" + names[i] + "</th><td>" + cell(r.need[i]) + "</td></tr>");
     $("needBody").innerHTML = rows.join("");
-    $("needNote").textContent = (c.mode === "box" ? "BOXは1箱" + Math.min(c.box, c.N) + "個として、途中の箱は開けた分だけで数えています。" : "") +
-      (c.mode === "box" && c.box > c.N ? "（1箱の数が種類数より多いので、" + c.N + "個として計算）" : "");
 
     /* 分布 */
     $("distTitle").textContent = c.n + "枚で、推しは何枚出る？";
@@ -450,76 +407,31 @@ footer a{color:inherit}
     peak = Math.max(peak, tail);
     for (x = 0; x <= maxShow; x++) {
       var px = dist[x] || 0, lbl = (x === maxShow && tail > 1e-6) ? x + "枚" : x + "枚";
-      var isGoal = c.goal === "count" && x >= c.want;
-      items.push('<li class="' + (isGoal ? "goal" : "") + '"><span>' + lbl + '</span><span class="bar"><i style="width:' + (peak ? px / peak * 100 : 0).toFixed(1) + '%"></i></span><span class="p">' + pct(px) + "%</span></li>");
+      items.push('<li><span>' + lbl + '</span><span class="bar"><i style="width:' + (peak ? px / peak * 100 : 0).toFixed(1) + '%"></i></span><span class="p">' + pct(px) + "%</span></li>");
     }
-    if (tail > 1e-6) items.push('<li class="' + (c.goal === "count" ? "goal" : "") + '"><span>' + (maxShow + 1) + '枚以上</span><span class="bar"><i style="width:' + (tail / peak * 100).toFixed(1) + '%"></i></span><span class="p">' + pct(tail) + "%</span></li>");
+    if (tail > 1e-6) items.push('<li><span>' + (maxShow + 1) + '枚以上</span><span class="bar"><i style="width:' + (tail / peak * 100).toFixed(1) + '%"></i></span><span class="p">' + pct(tail) + "%</span></li>");
     $("bars").innerHTML = items.join("");
 
-    $("simCount").textContent = c.n + "枚" + (c.mode === "box" ? "（BOX）" : "") + "を開けます";
     saveUrl(c);
   }
 
   function renderQuick(c) {
     var opts = [5, 10, 20, 30];
     var html = opts.map(function (n) { return '<button type="button" data-n="' + n + '" aria-pressed="' + (c.n === n) + '">' + n + "枚</button>"; });
-    var b = Math.min(c.box, c.N);
-    if (c.mode === "box") [1, 2, 3].forEach(function (m) { html.push('<button type="button" data-n="' + b * m + '" aria-pressed="' + (c.n === b * m) + '">' + m + "箱（" + b * m + "枚）</button>"); });
     $("quick").innerHTML = html.join("");
-  }
-
-  /* ---------- ためしに開ける ---------- */
-  function simulate() {
-    var c = last || readCfg(), N = c.N, B = c.mode === "box" ? Math.min(c.box, N) : 1;
-    var draws = [];
-    if (B === 1) { for (var i = 0; i < c.n; i++) draws.push(Math.floor(Math.random() * N)); }
-    else {
-      var left = c.n;
-      while (left > 0) {
-        var pool = []; for (var a = 0; a < N; a++) pool.push(a);
-        for (a = N - 1; a > 0; a--) { var b = Math.floor(Math.random() * (a + 1)), t = pool[a]; pool[a] = pool[b]; pool[b] = t; }
-        var take = Math.min(B, left); draws = draws.concat(pool.slice(0, take)); left -= take;
-      }
-    }
-    /* 0..k-1 が推し。表示用の名前 */
-    function nameOf(id) {
-      if (id < c.members * c.patterns) {
-        var m = Math.floor(id / c.patterns), pt = id % c.patterns;
-        var who = m < c.oshi ? (c.oshi > 1 ? "推し" + (m + 1) : "推し") : (m + 1 - c.oshi) + "番";
-        return who + (c.patterns > 1 ? "<br>" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[pt % 26] : "");
-      }
-      return "その他<br>" + (id - c.members * c.patterns + 1);
-    }
-    var seen = {}, got = {}, hits = 0;
-    var html = draws.map(function (id, i) {
-      var hit = id < c.k, dup = seen[id]; seen[id] = 1;
-      if (hit) { hits++; got[id] = 1; }
-      return '<span class="pk' + (hit ? " hit" : "") + (dup && !hit ? " dup" : "") + '" style="animation-delay:' + Math.min(i * 30, 900) + 'ms">' + (hit ? "" : "") + nameOf(id) + "</span>";
-    });
-    $("packs").innerHTML = html.join("");
-    var gotKinds = Object.keys(got).length, msg;
-    if (c.goal === "comp") msg = gotKinds >= c.k ? "そろった！ 推し" + c.k + "種類コンプ。" : (hits === 0 ? "推しは0枚…。" : "推しは" + hits + "枚。あと" + (c.k - gotKinds) + "種類。");
-    else msg = hits >= c.want ? "推しが" + hits + "枚！ 目標達成。" : (hits === 0 ? "推しは0枚…。" : "推しは" + hits + "枚。あと" + (c.want - hits) + "枚。");
-    var dupCount = draws.length - Object.keys(seen).length;
-    $("simMsg").textContent = msg + "（かぶり" + dupCount + "枚）";
-    $("simMsg").hidden = false;
-    $("simBtn").textContent = "もう一回開ける";
   }
 
   /* ---------- URL・シェア ---------- */
   function saveUrl(c) {
     var q = new URLSearchParams();
     q.set("m", c.members); q.set("p", c.patterns); if (c.extra) q.set("x", c.extra);
-    q.set("o", c.oshi); q.set("g", c.goal); if (c.goal === "count") q.set("w", c.want);
-    q.set("n", c.n); q.set("mode", c.mode); if (c.mode === "box") q.set("b", c.box);
+    q.set("o", c.oshi); q.set("n", c.n);
     if (c.price) q.set("y", c.price);
     try { history.replaceState(null, "", "?" + q.toString()); } catch (e) {}
   }
   function loadUrl() {
-    var q = new URLSearchParams(location.search), map = { m: "members", p: "patterns", x: "extra", o: "oshi", w: "want", n: "buy", b: "box", y: "price" };
+    var q = new URLSearchParams(location.search), map = { m: "members", p: "patterns", x: "extra", o: "oshi", n: "buy", y: "price" };
     Object.keys(map).forEach(function (k) { if (q.has(k)) $(map[k]).value = q.get(k); });
-    if (q.get("g") === "count") document.querySelector('input[name="goal"][value="count"]').checked = true;
-    if (q.get("mode") === "box") document.querySelector('input[name="mode"][value="box"]').checked = true;
   }
 
   /* ---------- イベント ---------- */
@@ -530,37 +442,22 @@ footer a{color:inherit}
       var cur = val(id); if (cur === null) cur = 0;
       var lim = LIMITS[id];
       input.value = Math.max(lim[0], Math.min(lim[1], cur + Number(b.dataset.d)));
-      if (id === "members" || id === "patterns" || id === "extra") syncBox(true);
       render();
     });
     input.addEventListener("input", function () { if (input.value !== "") render(); });
     input.addEventListener("change", function () {
       var v = val(id); input.value = v === null ? "" : v;
-      if (id === "members" || id === "patterns" || id === "extra") syncBox(true);
       render();
     });
-  });
-  /* 1箱の数は、種類数に合わせて自動で追従(自分で変えたら追従しない) */
-  var boxTouched = false;
-  $("box").addEventListener("input", function () { boxTouched = true; });
-  document.querySelector('[data-for="box"]').addEventListener("click", function () { boxTouched = true; }, true);
-  function syncBox(fromKinds) {
-    if (boxTouched) return;
-    $("box").value = val("members") * val("patterns") + val("extra");
-  }
-  document.querySelectorAll('input[name="goal"],input[name="mode"]').forEach(function (r) {
-    r.addEventListener("change", function () { if (r.name === "mode") syncBox(); render(); });
   });
   $("quick").addEventListener("click", function (e) {
     var b = e.target.closest("button"); if (!b) return;
     $("buy").value = b.dataset.n; render();
   });
-  $("simBtn").addEventListener("click", simulate);
   $("shareBtn").addEventListener("click", function () {
     var c = last; if (!c) return;
     var r = $("resNum").textContent;
-    var goal = c.goal === "comp" ? "推し" + c.k + "種がそろう" : "推しが" + c.want + "枚以上出る";
-    var text = "【ランダム期待値チェッカー】全" + c.N + "種のランダムを" + (c.mode === "box" ? "BOXで" : "") + c.n + "枚買って、" + goal + "確率は " + r + "% #PLAYROOM";
+    var text = "【ランダム期待値チェッカー】全" + c.N + "種のランダムを" + c.n + "枚買って、推し" + c.k + "種がそろう確率は " + r + "% #PLAYROOM";
     window.open("https://x.com/intent/post?text=" + encodeURIComponent(text) + "&url=" + encodeURIComponent(location.href), "_blank", "noopener");
   });
   $("copyBtn").addEventListener("click", function () {
@@ -578,7 +475,6 @@ footer a{color:inherit}
     }).observe($("result"));
   }
   loadUrl();
-  if (new URLSearchParams(location.search).has("b")) boxTouched = true; else syncBox();
   render();
 })();
 </script>
