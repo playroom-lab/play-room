@@ -55,6 +55,7 @@
     .best9 .preview{background:#dfeaff}
     .best9-performance .preview{background:#ece5ff}
     .diagnosis .preview{background:#fff0c9}
+    .odds .preview{background:var(--violet)}
     .photo{display:block;width:100%;height:100%;object-fit:cover;object-position:center;border:6px solid #fff;box-shadow:0 3px 7px #28253626}
     .gacha .photo{transform:rotate(-5deg);max-width:250px;object-position:center 34%}
     .outfit .photo{transform:rotate(4deg);width:128px;object-position:center 30%}
@@ -75,6 +76,7 @@
     .best9 .open{background:#dfeaff}
     .best9-performance .open{background:#ece5ff}
     .diagnosis .open{background:#fff0c9}
+    .odds .open{background:var(--violet)}
     .chat-preview{display:flex;flex-direction:column;gap:7px;width:100%;max-width:220px;transform:rotate(-3deg)}
     .chat-preview span{display:block;max-width:82%;padding:6px 11px;border-radius:14px;font-size:0.8125rem;font-weight:700;line-height:1.4;background:#fff;box-shadow:0 2px 5px #28253620}
     .chat-preview span.me{align-self:flex-end;background:#8de055}
@@ -139,7 +141,7 @@
         <h1>推し活の<span>あそび場。</span></h1>
         <p class="hero-note">ちょっと寄り道、推しと遊ぼう。</p>
       </div>
-      <p class="room-number">TOOLS<strong>07</strong></p>
+      <p class="room-number">TOOLS<strong>08</strong></p>
     </header>
     <main>
       <div class="tools" aria-label="遊びツール一覧">
@@ -231,6 +233,19 @@
             <h2 id="diagnosis-title">オタク沼診断</h2>
             <p class="tool-desc" id="diagnosis-desc">何に沸いて、どう沼ってる？ 12問で20通りのタイプを診断。</p>
             <span class="open">診断する</span>
+          </div>
+        </a>
+
+        <a class="tool odds" href="./odds/" aria-labelledby="odds-title" aria-describedby="odds-desc">
+          <div class="preview" aria-hidden="true">
+            <img class="shot" src="./assets/thumbs/odds.jpg" alt="" width="565" height="560" loading="lazy" decoding="async">
+            <span class="preview-label">何枚でそろう？</span>
+          </div>
+          <div class="tool-copy">
+            <p class="eyebrow"><span class="number">08</span> ODDS CHECK</p>
+            <h2 id="odds-title">ランダム期待値チェッカー</h2>
+            <p class="tool-desc" id="odds-desc">ランダムグッズを何枚買えば推しがそろう？ そろう確率と必要な枚数を計算。</p>
+            <span class="open">計算する</span>
           </div>
         </a>
       </div>
