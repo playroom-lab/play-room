@@ -285,6 +285,39 @@ $('#saveImage').onclick=()=>busy($('#saveImage'),'画像を保存しています
  $('#saveStatus').textContent='画像を保存しました。保存できない場合は下から長押し保存できます。';
  let manual=$('#manualSave');if(!manual){manual=document.createElement('button');manual.id='manualSave';manual.className='ghost';manual.textContent='長押しで保存する';manual.onclick=showFallback;$('#saveStatus').after(manual);}
 });
+// Native share can hand the finished PNG to X on compatible mobile devices.
+// X intent URLs cannot attach local images; use a manual image fallback instead.
+const X_SHARE_TEXT='私のBIAS MAPを作ってみた！ #BIASMAP';
+const X_SHARE_URL='https://playroom-lab.github.io/play-room/bias-map/';
+const X_INTENT='https://twitter.com/intent/tweet?'+new URLSearchParams({text:X_SHARE_TEXT,url:X_SHARE_URL}).toString();
+function showXManualShare(){
+ const statusEl=$('#saveStatus');
+ statusEl.textContent='画像を保存したら、Xの投稿画面で画像を添付してください。';
+ let link=$('#openXPost');
+ if(!link){
+  link=document.createElement('a');link.id='openXPost';link.className='secondary';
+  link.href=X_INTENT;link.target='_blank';link.rel='noopener noreferrer';
+  link.textContent='Xの投稿画面を開く';
+  link.style.cssText='display:block;text-align:center;text-decoration:none;margin:12px auto;padding:12px 18px;border:2px solid currentColor;border-radius:8px;max-width:320px;';
+  statusEl.after(link);
+ }
+ link.hidden=false;
+}
+$('#shareX').onclick=()=>busy($('#shareX'),'シェアを準備しています…',async()=>{
+ await drawResult();
+ const blob=await canvasBlob(),file=new File([blob],'member-bias-map.png',{type:'image/png'});
+ if(navigator.canShare&&navigator.canShare({files:[file]})){
+  try{
+   await navigator.share({files:[file],text:X_SHARE_TEXT+' '+X_SHARE_URL,title:'BIAS MAP'});
+   $('#saveStatus').textContent='共有メニューからXを選んで投稿できます。';
+   return;
+  }catch(e){if(e.name==='AbortError')return;}
+ }
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download=file.name;document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),10000);
+ showXManualShare();
+});
 function openDB(){return new Promise((resolve,reject)=>{
  // Open the current version first, so another tool's newer DB version cannot block this one.
  const request=indexedDB.open('muze-tool-box');
