@@ -1,0 +1,2085 @@
+[
+  {
+    "id": "oya-museum",
+    "name": "大谷資料館（大谷石地下採掘場跡）",
+    "prefecture": "栃木県",
+    "city": "宇都宮市",
+    "category": "event",
+    "relatedWorks": [
+      "MISSION（関連・MISSIONx2最終）",
+      "MISSIONx2 最終審査",
+      "The Voice（Dance Performance Video）"
+    ],
+    "members": [],
+    "addressOrArea": "栃木県宇都宮市大谷町909（大谷資料館）",
+    "lat": 36.6007,
+    "lng": 139.8238,
+    "sourceUrls": [
+      "https://www.oricon.co.jp/news/2451148/full/",
+      "https://www.universal-music.co.jp/mazzel/news/2026-04-24/",
+      "https://news.yahoo.co.jp/articles/fe0b5809e7598c403fcf6d04656e35567d2437c5",
+      "https://hanahappyblog.com/saishushinsa/"
+    ],
+    "notes": "MISSIONx2最終審査の舞台＝グループ誕生の原点。2026年には同地で「The Voice」DPVを撮影（オリコン・公式UMJ報）。Daya指摘（2026-10-26）：MISSION関連の聖地として大谷資料館。公式撮影実績・報道で確認できるのは「MISSIONx2最終審査」と「The Voice」DPV。MISSION本編MVのLocation表記は未確認。",
+    "visitTips": "見学は資料館の入口から。地下は年間を通して気温が低いので羽織るものを／ステージ跡など見学ルート外は立入禁止",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "9:00〜17:00（受付16:30まで）",
+      "fee": "大人800円",
+      "closed": "12〜3月は火曜休、12/26〜1/1休",
+      "notes": [
+        "見学は資料館の入口から。地下は年間を通して気温が低いので羽織るものを",
+        "ステージ跡など見学ルート外は立入禁止"
+      ]
+    },
+    "photoPath": "photos/oya-museum/01.jpg",
+    "photoCredit": "The Voice Dance Performance Video 切り抜き（大谷資料館）",
+    "photoSourceUrl": "https://www.youtube.com/watch?v=IrGzenqeMxo",
+    "photoThumb": "photos/oya-museum/thumb.jpg"
+  },
+  {
+    "id": "kenchoji",
+    "name": "建長寺",
+    "prefecture": "神奈川県",
+    "city": "鎌倉市",
+    "category": "mv",
+    "relatedWorks": [
+      "DANGER"
+    ],
+    "members": [],
+    "addressOrArea": "神奈川県鎌倉市山ノ内8",
+    "lat": 35.3348,
+    "lng": 139.5544,
+    "sourceUrls": [
+      "https://www.oricon.co.jp/news/2401779/full/",
+      "https://oshitabi.net/spots/WyFiIxmfGb2WXQXxm7gr",
+      "https://hayamimi-chan.com/bmsg-mazzel-danger/"
+    ],
+    "notes": "「DANGER」MV撮影地。建長寺史上初の大型撮影と報じられた。法堂・唐門・龍王殿（方丈）などが映像に。",
+    "visitTips": "現役の禅寺。堂内の撮影は掲示に従う／北鎌倉駅から徒歩約15分",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "8:30〜16:30（受付終了）",
+      "fee": "大人500円",
+      "notes": [
+        "現役の禅寺。堂内の撮影は掲示に従う",
+        "北鎌倉駅から徒歩約15分"
+      ]
+    },
+    "photoPath": "photos/kenchoji/01.jpg",
+    "photoCredit": "Wikimedia Commons（建長寺外観）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/Category:Kench%C5%8D-ji",
+    "photoThumb": "photos/kenchoji/thumb.jpg"
+  },
+  {
+    "id": "yokohama-osanbashi",
+    "name": "横浜・大さん橋（大さん橋国際客船ターミナル）",
+    "prefecture": "神奈川県",
+    "city": "横浜市中区",
+    "category": "mv",
+    "relatedWorks": [
+      "Touch"
+    ],
+    "members": [],
+    "addressOrArea": "神奈川県横浜市中区海岸通1-1-4",
+    "lat": 35.4518,
+    "lng": 139.6474,
+    "sourceUrls": [
+      "https://musicentamelabo.com/mazzel-touch-mv-location/"
+    ],
+    "notes": "「Touch」公式MVロケーションクレジットに記載。港・夜景ロケとしてファン巡礼しやすい場所。",
+    "visitTips": "ターミナル館内は9:00〜21:30／客船の出入港時は一部規制あり",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "屋上「くじらのせなか」は24時間",
+      "fee": "無料",
+      "notes": [
+        "ターミナル館内は9:00〜21:30",
+        "客船の出入港時は一部規制あり"
+      ]
+    },
+    "photoPath": "photos/yokohama-osanbashi/01.jpg",
+    "photoCredit": "Wikimedia Commons（大さん橋／Touchロケ。公式BTSは人物寄り）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Osanbashi_Yokohama",
+    "photoThumb": "photos/yokohama-osanbashi/thumb.jpg"
+  },
+  {
+    "id": "pacifico-yokohama",
+    "name": "パシフィコ横浜 国立大ホール",
+    "prefecture": "神奈川県",
+    "city": "横浜市西区",
+    "category": "live",
+    "relatedWorks": [
+      "2nd Fan Meeting -Play at the MUZEUM Vol.2-"
+    ],
+    "members": [],
+    "addressOrArea": "神奈川県横浜市西区みなとみらい1-1-1",
+    "lat": 35.4586,
+    "lng": 139.6367,
+    "sourceUrls": [
+      "https://raw.githubusercontent.com/rikomuze/mazzel-nenpyo/main/data/events.json"
+    ],
+    "notes": "ファンミVol.2会場（年表データ）。大規模会場としての関連スポット。",
+    "visitTips": "ホール内に入れるのは公演の日だけ。それ以外は外観のみ／みなとみらい駅から徒歩約5分",
+    "confidence": "high",
+    "access": "limited",
+    "visit": {
+      "status": "limited",
+      "notes": [
+        "ホール内に入れるのは公演の日だけ。それ以外は外観のみ",
+        "みなとみらい駅から徒歩約5分"
+      ]
+    },
+    "photoPath": "photos/pacifico-yokohama/01.jpg",
+    "photoCredit": "Wikimedia Commons（パシフィコ横浜外観。MUZEUM Vol.2は未開催のため会場公式写真なし）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Pacifico_Yokohama.jpg",
+    "photoThumb": "photos/pacifico-yokohama/thumb.jpg"
+  },
+  {
+    "id": "restaurant-luke",
+    "name": "RESTAURANT LUKE with SKY LOUNGE",
+    "prefecture": "東京都",
+    "city": "中央区",
+    "category": "mv",
+    "relatedWorks": [
+      "Touch"
+    ],
+    "members": [],
+    "addressOrArea": "東京都中央区明石町8-1 聖路加ガーデン47階",
+    "lat": 35.668,
+    "lng": 139.779,
+    "sourceUrls": [
+      "https://musicentamelabo.com/mazzel-touch-mv-location/"
+    ],
+    "notes": "「Touch」MVクレジット掲載。高層階レストランでの食事・夜景シーン。",
+    "visitTips": "予約して来店する。窓際の席は予約時に相談を／他のお客さんが写らないように撮影する",
+    "confidence": "high",
+    "access": "limited",
+    "visit": {
+      "status": "limited",
+      "hours": "ランチ11:30〜／ディナー17:30〜（曜日で終了時間が変わる）",
+      "fee": "コース・メニューによる",
+      "closed": "無休（掲載時点）",
+      "notes": [
+        "予約して来店する。窓際の席は予約時に相談を",
+        "他のお客さんが写らないように撮影する"
+      ]
+    },
+    "photoPath": "photos/restaurant-luke/01.jpg",
+    "photoCredit": "Wikimedia Commons（聖路加ガーデン／LUKE周辺。公式BTSは人物寄り）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Saint_Luke%27s_Garden_buildings_(14039650391).jpg",
+    "photoThumb": "photos/restaurant-luke/thumb.jpg"
+  },
+  {
+    "id": "topic-plaza",
+    "name": "トピレックプラザ",
+    "prefecture": "東京都",
+    "city": "江東区",
+    "category": "mv",
+    "relatedWorks": [
+      "Touch"
+    ],
+    "members": [],
+    "addressOrArea": "東京都江東区南砂6-7-15",
+    "lat": 35.6688,
+    "lng": 139.8297,
+    "sourceUrls": [
+      "https://musicentamelabo.com/mazzel-touch-mv-location/"
+    ],
+    "notes": "「Touch」MVクレジット掲載。屋上駐車場風シーンとの対応はファン調査段階。",
+    "visitTips": "ふつうのショッピングセンター。買い物客として利用を／駐車場での撮影やダンスは禁止。車の通行に注意",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "店舗により異なる",
+      "fee": "無料",
+      "notes": [
+        "ふつうのショッピングセンター。買い物客として利用を",
+        "駐車場での撮影やダンスは禁止。車の通行に注意"
+      ]
+    },
+    "photoPath": "photos/topic-plaza/01.jpg",
+    "photoCredit": "公式X Touch 350万再生 BTS（#RYUKI・ヘリ／トピレック）",
+    "photoSourceUrl": "https://x.com/i/status/2114702754086330529",
+    "photoThumb": "photos/topic-plaza/thumb.jpg"
+  },
+  {
+    "id": "yodobashi-church",
+    "name": "淀橋教会（エクレシアホール／インマヌエル礼拝堂）",
+    "prefecture": "東京都",
+    "city": "新宿区",
+    "category": "mv",
+    "relatedWorks": [
+      "Only You"
+    ],
+    "members": [],
+    "addressOrArea": "東京都新宿区百人町1-17-8",
+    "lat": 35.701,
+    "lng": 139.699,
+    "sourceUrls": [
+      "https://ks-spice.net/entame/21202/",
+      "https://yodobashi-church.com/"
+    ],
+    "notes": "「Only You」の教会シーン候補としてファン調査で挙がる礼拝空間。複数アーティストMVでも使用例あり。",
+    "visitTips": "中に入れるのは礼拝や公開行事のときだけ。日時は教会の公式サイトで確認を／祈りの場なので、礼拝中の撮影はしない",
+    "confidence": "medium",
+    "access": "limited",
+    "visit": {
+      "status": "limited",
+      "fee": "無料",
+      "notes": [
+        "中に入れるのは礼拝や公開行事のときだけ。日時は教会の公式サイトで確認を",
+        "祈りの場なので、礼拝中の撮影はしない"
+      ]
+    },
+    "photoPath": "photos/yodobashi-church/01.jpg",
+    "photoCredit": "Only You MV YouTubeサムネ（教会外観の一次写真が弱いため）",
+    "photoSourceUrl": "https://www.youtube.com/watch?v=pVLkSsnde9U",
+    "photoThumb": "photos/yodobashi-church/thumb.jpg"
+  },
+  {
+    "id": "line-cube-shibuya",
+    "name": "LINE CUBE SHIBUYA",
+    "prefecture": "東京都",
+    "city": "渋谷区",
+    "category": "live",
+    "relatedWorks": [
+      "DEBUT SHOWCASE “Vivid”",
+      "2nd Fan Meeting -Play at the MUZEUM Vol.2-"
+    ],
+    "members": [],
+    "addressOrArea": "東京都渋谷区宇田川町1-1",
+    "lat": 35.664,
+    "lng": 139.6985,
+    "sourceUrls": [
+      "https://raw.githubusercontent.com/rikomuze/mazzel-nenpyo/main/data/events.json",
+      "https://lp.p.pia.jp/article/series/202961/275855/index.html"
+    ],
+    "notes": "デビューショーケース会場。後年のファンミでも使用。",
+    "visitTips": "ホール内に入れるのは公演の日だけ。それ以外は外観のみ／入口前で立ち止まって通行をふさがない",
+    "confidence": "high",
+    "access": "limited",
+    "visit": {
+      "status": "limited",
+      "notes": [
+        "ホール内に入れるのは公演の日だけ。それ以外は外観のみ",
+        "入口前で立ち止まって通行をふさがない"
+      ]
+    },
+    "photoPath": "photos/line-cube-shibuya/01.jpg",
+    "photoCredit": "@mazzel_official 2nd Fan Meeting LINE CUBE SHIBUYA 御礼写真",
+    "photoSourceUrl": "https://x.com/i/status/2113251375123669166",
+    "photoThumb": "photos/line-cube-shibuya/thumb.jpg"
+  },
+  {
+    "id": "toyosu-pit",
+    "name": "豊洲PIT",
+    "prefecture": "東京都",
+    "city": "江東区",
+    "category": "live",
+    "relatedWorks": [
+      "SHOWCASE “Carnival”",
+      "THE SHOWCASE",
+      "SHOWCASE “Parade”"
+    ],
+    "members": [],
+    "addressOrArea": "東京都江東区豊洲2-3-24",
+    "lat": 35.6513,
+    "lng": 139.79,
+    "sourceUrls": [
+      "https://raw.githubusercontent.com/rikomuze/mazzel-nenpyo/main/data/events.json"
+    ],
+    "notes": "初期〜Parade期のショーケースを複数回開催した会場。",
+    "visitTips": "館内に入れるのは公演の日だけ。それ以外は外観のみ",
+    "confidence": "high",
+    "access": "limited",
+    "visit": {
+      "status": "limited",
+      "notes": [
+        "館内に入れるのは公演の日だけ。それ以外は外観のみ"
+      ]
+    },
+    "photoPath": "photos/toyosu-pit/01.jpg",
+    "photoCredit": "@mazzel_official（豊洲PIT／Carnival系公演写真）",
+    "photoSourceUrl": "https://x.com/mazzel_official",
+    "photoThumb": "photos/toyosu-pit/thumb.jpg"
+  },
+  {
+    "id": "ariake-arena",
+    "name": "有明アリーナ",
+    "prefecture": "東京都",
+    "city": "江東区",
+    "category": "live",
+    "relatedWorks": [
+      "2nd One Man Tour 2025 “Royal Straight Flush” ファイナル"
+    ],
+    "members": [],
+    "addressOrArea": "東京都江東区有明1-2-50",
+    "lat": 35.6375,
+    "lng": 139.7925,
+    "sourceUrls": [
+      "https://www.universal-music.co.jp/mazzel/news/2025-01-24-mz2ndtour/",
+      "https://realsound.jp/2025/08/post-2136936.html",
+      "https://raw.githubusercontent.com/rikomuze/mazzel-nenpyo/main/data/events.json"
+    ],
+    "notes": "2nd全国ツアーの東京ファイナル会場（DAY1/DAY2）。グループのマイルストーン会場。",
+    "visitTips": "館内に入れるのは公演・イベントの日だけ。それ以外は外観のみ",
+    "confidence": "high",
+    "access": "limited",
+    "visit": {
+      "status": "limited",
+      "notes": [
+        "館内に入れるのは公演・イベントの日だけ。それ以外は外観のみ"
+      ]
+    },
+    "photoPath": "photos/ariake-arena/01.jpg",
+    "photoCredit": "@mazzel_official（有明アリーナ／Royal Straight Flush）",
+    "photoSourceUrl": "https://x.com/mazzel_official",
+    "photoThumb": "photos/ariake-arena/thumb.jpg"
+  },
+  {
+    "id": "zepp-haneda",
+    "name": "Zepp Haneda",
+    "prefecture": "東京都",
+    "city": "大田区",
+    "category": "live",
+    "relatedWorks": [
+      "1st Fan Meeting -Play at the MUZEUM-"
+    ],
+    "members": [],
+    "addressOrArea": "東京都大田区羽田空港2-7-1 HANEDA INNOVATION CITY ZONE J",
+    "lat": 35.5465,
+    "lng": 139.757,
+    "sourceUrls": [
+      "https://raw.githubusercontent.com/rikomuze/mazzel-nenpyo/main/data/events.json"
+    ],
+    "notes": "初ファンミーティング会場。",
+    "visitTips": "館内に入れるのは公演の日だけ。羽田イノベーションシティの共用部は通常利用できる",
+    "confidence": "high",
+    "access": "limited",
+    "visit": {
+      "status": "limited",
+      "notes": [
+        "館内に入れるのは公演の日だけ。羽田イノベーションシティの共用部は通常利用できる"
+      ]
+    },
+    "photoPath": "photos/zepp-haneda/01.jpg",
+    "photoCredit": "Wikimedia Commons（Zepp Haneda外観）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Zepp_Haneda.jpg",
+    "photoThumb": "photos/zepp-haneda/thumb.jpg"
+  },
+  {
+    "id": "lockheart-castle",
+    "name": "ロックハート城",
+    "prefecture": "群馬県",
+    "city": "吾妻郡高山村",
+    "category": "mv",
+    "relatedWorks": [
+      "MAZQUERADE"
+    ],
+    "members": [],
+    "addressOrArea": "群馬県吾妻郡高山村中山5583-1",
+    "lat": 36.607,
+    "lng": 138.95,
+    "sourceUrls": [
+      "https://mqa.jp/mazzel-mazquerade-mv-filminglocation-where/",
+      "https://lockheart.info/"
+    ],
+    "notes": "「MAZQUERADE」MVのお城・室内がロックハート城と視覚照合。施設公式もロケ利用を案内するテーマパーク。MAZZEL公式の地名発表は未確認。",
+    "visitTips": "城内・庭園とも見学できる。ドレス体験などは別料金",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "9:00〜17:00（入場16:30まで）",
+      "fee": "大人1,300円",
+      "closed": "無休",
+      "notes": [
+        "城内・庭園とも見学できる。ドレス体験などは別料金"
+      ]
+    },
+    "photoPath": "photos/lockheart-castle/01.jpg",
+    "photoCredit": "Wikimedia Commons（ロックハート城／MAZQUERADE）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Lockheart_Castle.jpg",
+    "photoThumb": "photos/lockheart-castle/thumb.jpg"
+  },
+  {
+    "id": "heian-jingu",
+    "name": "平安神宮",
+    "prefecture": "京都府",
+    "city": "京都市",
+    "category": "live",
+    "relatedWorks": [
+      "平安神宮御鎮座百三十年記念 MAZZEL奉納Special Live"
+    ],
+    "members": [],
+    "addressOrArea": "京都府京都市左京区岡崎西天王町",
+    "lat": 35.016,
+    "lng": 135.7824,
+    "sourceUrls": [
+      "https://raw.githubusercontent.com/rikomuze/mazzel-nenpyo/main/data/events.json"
+    ],
+    "notes": "2026年3月の奉納スペシャルライブ会場。神社での特別公演としての聖地性。",
+    "visitTips": "奉納ライブの舞台は境内。参拝の方の邪魔にならないように／10/22は時代祭のため12:00まで",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "6:00から（閉門は季節により17:00〜18:00）",
+      "fee": "境内は無料／神苑 大人600円",
+      "notes": [
+        "奉納ライブの舞台は境内。参拝の方の邪魔にならないように",
+        "10/22は時代祭のため12:00まで"
+      ]
+    },
+    "photoPath": "photos/heian-jingu/01.jpg",
+    "photoCredit": "@mazzel_official（平安神宮奉納Special Live）",
+    "photoSourceUrl": "https://x.com/mazzel_official",
+    "photoThumb": "photos/heian-jingu/thumb.jpg"
+  },
+  {
+    "id": "ice-walkerhill",
+    "name": "シェラトン・ウォーカーヒル・ソウル（アストンハウス等）",
+    "prefecture": "海外・韓国",
+    "city": "ソウル特別市広津区",
+    "category": "mv",
+    "relatedWorks": [
+      "ICE feat. REIKO"
+    ],
+    "members": [],
+    "addressOrArea": "韓国ソウル特別市広津区ウォーカーヒル路177付近・シェラトンウォーカーヒル（アストンハウス等）。公式地名発表は薄い。",
+    "lat": null,
+    "lng": null,
+    "sourceUrls": [
+      "https://mqa.jp/mazzel-icemv-filminglocation-where/"
+    ],
+    "notes": "「ICE feat. REIKO」全員ダンス空間がウォーカーヒル系アストンハウスとファン照合（mqa.jp・ドラマ『ホテリアー』同系ロケ言及）。公衆電話はセット。公式クレジットの施設名なし。",
+    "visitTips": "MVの空間に近いアストンハウスは宴会・婚礼用で、一般の見学はできない／ホテルのロビーやレストランを利用者として楽しむ",
+    "confidence": "medium",
+    "access": "limited",
+    "visit": {
+      "status": "limited",
+      "hours": "ホテル共用部は終日",
+      "fee": "宿泊・飲食代",
+      "notes": [
+        "MVの空間に近いアストンハウスは宴会・婚礼用で、一般の見学はできない",
+        "ホテルのロビーやレストランを利用者として楽しむ"
+      ]
+    },
+    "photoPath": "photos/ice-walkerhill/01.jpg",
+    "photoCredit": "@mazzel_official／ICE関連（ウォーカーヒル撮影）",
+    "photoSourceUrl": "https://x.com/mazzel_official",
+    "photoThumb": "photos/ice-walkerhill/thumb.jpg"
+  },
+  {
+    "id": "tobu-zoo-park",
+    "name": "東武動物公園",
+    "prefecture": "埼玉県",
+    "city": "南埼玉郡宮代町",
+    "category": "drama",
+    "relatedWorks": [
+      "ドラマ『セラピーゲーム』"
+    ],
+    "members": [
+      "NAOYA"
+    ],
+    "addressOrArea": "埼玉県南埼玉郡宮代町須賀110",
+    "lat": 36.0255,
+    "lng": 139.723,
+    "sourceUrls": [
+      "https://mzlocationblog.com/therapygame/"
+    ],
+    "notes": "『セラピーゲーム』第2〜3話の遊園地デート主要ロケ。ゴーカート・カワセミ等アトラクションが登場とファンまとめ。",
+    "visitTips": "休園日がわかりにくいので公式カレンダーを確認／ドラマで出たゴーカートなどは乗り物券が必要",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "9:30〜17:00（季節・イベントで変わる）",
+      "fee": "大人2,300円（乗り物は別）",
+      "closed": "1・2月の火水、6月の水曜など",
+      "notes": [
+        "休園日がわかりにくいので公式カレンダーを確認",
+        "ドラマで出たゴーカートなどは乗り物券が必要"
+      ]
+    },
+    "photoPath": "photos/tobu-zoo-park/01.jpg",
+    "photoCredit": "ドラマ『セラピーゲーム』予告切り抜き（東武動物公園）",
+    "photoSourceUrl": "https://www.youtube.com/watch?v=oyY3ljHtx5c",
+    "photoThumb": "photos/tobu-zoo-park/thumb.jpg"
+  },
+  {
+    "id": "jogashima-area",
+    "name": "城ヶ島（桟橋・漁協直売所周辺）",
+    "prefecture": "神奈川県",
+    "city": "三浦市",
+    "category": "drama",
+    "relatedWorks": [
+      "ドラマ『セラピーゲーム』"
+    ],
+    "members": [
+      "NAOYA"
+    ],
+    "addressOrArea": "神奈川県三浦市三崎町城ヶ島（桟橋・漁協直売所付近）",
+    "lat": 35.1362,
+    "lng": 139.616,
+    "sourceUrls": [
+      "https://mzlocationblog.com/therapygame/"
+    ],
+    "notes": "『セラピーゲーム』第8話の海辺ロケ。桟橋・漁協直売所前・ジャンボリー浜などがファンまとめに列挙。",
+    "visitTips": "漁協の作業場や桟橋の先は立入禁止の場所あり／直売所は営業時間内に。駐車は有料駐車場へ",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "散策自由",
+      "notes": [
+        "漁協の作業場や桟橋の先は立入禁止の場所あり",
+        "直売所は営業時間内に。駐車は有料駐車場へ"
+      ]
+    },
+    "photoPath": "photos/jogashima-area/01.jpg",
+    "photoCredit": "Wikimedia Commons（城ヶ島）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Jogashima.jpg",
+    "photoThumb": "photos/jogashima-area/thumb.jpg"
+  },
+  {
+    "id": "hattori-bokujo",
+    "name": "服部牧場",
+    "prefecture": "神奈川県",
+    "city": "愛甲郡愛川町",
+    "category": "drama",
+    "relatedWorks": [
+      "ドラマ『セラピーゲーム』"
+    ],
+    "members": [
+      "NAOYA"
+    ],
+    "addressOrArea": "神奈川県愛甲郡愛川町半原6087",
+    "lat": 35.53,
+    "lng": 139.27,
+    "sourceUrls": [
+      "https://mzlocationblog.com/therapygame/"
+    ],
+    "notes": "第6話・静真の実習先牧場ロケとしてファンまとめが特定。",
+    "visitTips": "冬は営業時間が変わることがあるので公式で確認／動物にさわる前後は手洗いを",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "10:00〜17:00",
+      "fee": "入場・駐車場無料",
+      "closed": "金曜（祝日は営業）",
+      "notes": [
+        "冬は営業時間が変わることがあるので公式で確認",
+        "動物にさわる前後は手洗いを"
+      ]
+    },
+    "photoPath": "photos/hattori-bokujo/01.jpg",
+    "photoCredit": "服部牧場公式サイト（遊牧／施設写真・ドラマ明確カット未発見）",
+    "photoSourceUrl": "https://kanagawa-hattoribokujou.com/facility-information",
+    "photoThumb": "photos/hattori-bokujo/thumb.jpg"
+  },
+  {
+    "id": "toyomon-park",
+    "name": "豊門公園",
+    "prefecture": "静岡県",
+    "city": "駿東郡小山町",
+    "category": "drama",
+    "relatedWorks": [
+      "ドラマ『セラピーゲーム』"
+    ],
+    "members": [
+      "NAOYA",
+      "HAYATO"
+    ],
+    "addressOrArea": "静岡県駿東郡小山町藤曲142-7",
+    "lat": 35.356,
+    "lng": 138.987,
+    "sourceUrls": [
+      "https://mzlocationblog.com/therapygame/"
+    ],
+    "notes": "第5話で樹と生嶋翔平（HAYATO）が兄弟を連れてきた公園。豊門会館西洋館周辺など。",
+    "visitTips": "西洋館の「豊門カフェ」は10:00〜17:00・火水休／カフェを利用すると豊門会館の入館料が無料に",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "公園は散策自由",
+      "fee": "公園無料／豊門会館 300円",
+      "notes": [
+        "西洋館の「豊門カフェ」は10:00〜17:00・火水休",
+        "カフェを利用すると豊門会館の入館料が無料に"
+      ]
+    },
+    "photoPath": "photos/toyomon-park/01.jpg",
+    "photoCredit": "施設外観（豊門公園西洋館周辺・ドラマ明確カット未発見）",
+    "photoSourceUrl": "",
+    "photoThumb": "photos/toyomon-park/thumb.jpg"
+  },
+  {
+    "id": "shiokaze-park",
+    "name": "潮風公園 噴水広場",
+    "prefecture": "東京都",
+    "city": "品川区",
+    "category": "drama",
+    "relatedWorks": [
+      "ドラマ『君がトクベツ』"
+    ],
+    "members": [
+      "NAOYA"
+    ],
+    "addressOrArea": "東京都品川区東八潮1（潮風公園 噴水広場）",
+    "lat": 35.6275,
+    "lng": 139.77,
+    "sourceUrls": [
+      "https://mzlocationblog.com/kimibetsu/",
+      "https://mazzel.tokyo/news/4469/"
+    ],
+    "notes": "劇中アイドルユニット「LiKE LEGEND」（NAOYA所属設定）のサプライズライブ会場として第2話に登場（ファンまとめ・公式メモリー投稿あり）。",
+    "visitTips": "噴水は季節・時間で止まっていることがある／お台場海浜公園駅から徒歩約10分",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "散策自由",
+      "fee": "無料（駐車場は有料）",
+      "closed": "無休",
+      "notes": [
+        "噴水は季節・時間で止まっていることがある",
+        "お台場海浜公園駅から徒歩約10分"
+      ]
+    },
+    "photoPath": "photos/shiokaze-park/01.jpg",
+    "photoCredit": "Wikimedia Commons（潮風公園・ドラマ明確カット未発見）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Shiokaze_Park_Japan.jpg",
+    "photoThumb": "photos/shiokaze-park/thumb.jpg"
+  },
+  {
+    "id": "aoyama-spiral-garden",
+    "name": "スパイラル（スパイラルガーデン／青山）",
+    "prefecture": "東京都",
+    "city": "港区",
+    "category": "mv",
+    "relatedWorks": [
+      "J.O.K.E.R."
+    ],
+    "members": [],
+    "addressOrArea": "東京都港区南青山5-6-23 Spiral 1F（スパイラルガーデン）",
+    "lat": 35.6623,
+    "lng": 139.7152,
+    "sourceUrls": [
+      "https://www.spiral.co.jp/shoplist/spiral_garden"
+    ],
+    "notes": "ユーザー確定（2026-10-26）：J.O.K.E.R. MV ロケは青山スパイラルガーデン。施設は南青山5-6-23 Spiral 1F Spiral Garden。",
+    "visitTips": "展示の内容によっては撮影禁止。会場の案内に従う／表参道駅B1出口すぐ",
+    "confidence": "high",
+    "confirmed_by": "user",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "11:00〜19:00（展示により変わる）",
+      "fee": "1Fスパイラルガーデンは基本無料",
+      "closed": "不定休",
+      "notes": [
+        "展示の内容によっては撮影禁止。会場の案内に従う",
+        "表参道駅B1出口すぐ"
+      ]
+    },
+    "photoPath": "photos/aoyama-spiral-garden/01.jpg",
+    "photoCredit": "J.O.K.E.R. MV関連スチル／スパイラル",
+    "photoSourceUrl": "https://www.youtube.com/watch?v=HLTMBZ6bZTA",
+    "photoThumb": "photos/aoyama-spiral-garden/thumb.jpg"
+  },
+  {
+    "id": "hifi-disco-bar-chaos",
+    "name": "Hi-Fi Disco Bar Chaos",
+    "prefecture": "東京都",
+    "city": "渋谷区",
+    "category": "mv",
+    "relatedWorks": [
+      "So Strawberry"
+    ],
+    "members": [],
+    "addressOrArea": "東京都渋谷区円山町9-3 NEXUS MARUYAMA 2階",
+    "lat": 35.6575,
+    "lng": 139.6955,
+    "sourceUrls": [
+      "https://baby-blue-eyes56.com/mv-mazzel-so-strawberry/",
+      "https://ks-spice.net/bmsg/28602/"
+    ],
+    "notes": "「So Strawberry」MV冒頭のバーシーン。ファンまとめが店内外観・内装の視覚照合で特定。公式Location行は未確認のためmedium。",
+    "visitTips": "お酒を出すバーで夜だけの営業／音楽を聴く店なので、大声や長時間の撮影は控える",
+    "confidence": "medium",
+    "access": "limited",
+    "visit": {
+      "status": "limited",
+      "hours": "20:00〜翌3:00",
+      "closed": "月・火曜",
+      "notes": [
+        "お酒を出すバーで夜だけの営業",
+        "音楽を聴く店なので、大声や長時間の撮影は控える"
+      ]
+    },
+    "photoPath": "photos/hifi-disco-bar-chaos/01.jpg",
+    "photoCredit": "So Strawberry MV 切り抜き（Hi-Fi Disco Bar Chaos）",
+    "photoSourceUrl": "https://www.youtube.com/watch?v=76lNhpUKrEc",
+    "photoThumb": "photos/hifi-disco-bar-chaos/thumb.jpg"
+  },
+  {
+    "id": "osteria-azzurro",
+    "name": "オステリア アズーロ",
+    "prefecture": "東京都",
+    "city": "中央区",
+    "category": "tv",
+    "relatedWorks": [
+      "MAZZEL ROOM（まぜべや）Ep.30 メンバーだけで初めての飲み会"
+    ],
+    "members": [
+      "KAIRYU",
+      "SEITO",
+      "RAN",
+      "RYUKI",
+      "TAKUTO",
+      "HAYATO",
+      "NAOYA",
+      "EIKI"
+    ],
+    "addressOrArea": "東京都中央区銀座1-20-9",
+    "lat": 35.674,
+    "lng": 139.77,
+    "sourceUrls": [
+      "https://gourmet.oshikatsu-guide.com/shops/mazzel-6f7c69e8-20250208/",
+      "https://www.all-about-befirst.online/mazebeya_azzuro/"
+    ],
+    "notes": "まぜべや飲み会回のロケ店。推しグルメ巡礼MAP・ファン記事が住所と登場メニューを記載。KAIRYUが聖地化を言及した回としてファン巡礼が多い。",
+    "visitTips": "予約は電話のみ。席数が少ないので早めに／宝町駅・銀座一丁目駅から徒歩圏",
+    "confidence": "medium",
+    "access": "limited",
+    "visit": {
+      "status": "limited",
+      "hours": "店に確認",
+      "fee": "ランチ1,000円台〜／ディナー6,000円台〜（目安）",
+      "notes": [
+        "予約は電話のみ。席数が少ないので早めに",
+        "宝町駅・銀座一丁目駅から徒歩圏"
+      ]
+    },
+    "photoPath": "photos/osteria-azzurro/01.jpg",
+    "photoCredit": "まぜべや関連／店舗外看板写真（オステリア アズーロ）",
+    "photoSourceUrl": "https://x.com/search?q=%E3%82%AA%E3%82%B9%E3%83%86%E3%83%AA%E3%82%A2%20%E3%82%A2%E3%82%BA%E3%83%BC%E3%83%AD%20MAZZEL&src=typed_query",
+    "photoThumb": "photos/osteria-azzurro/thumb.jpg"
+  },
+  {
+    "id": "kozushima",
+    "name": "神津島（島内ロケ）",
+    "prefecture": "東京都",
+    "city": "神津島村",
+    "category": "movie",
+    "relatedWorks": [
+      "映画『アオショー！』"
+    ],
+    "members": [
+      "RAN"
+    ],
+    "addressOrArea": "東京都神津島村（島内各地）",
+    "lat": 34.216,
+    "lng": 139.135,
+    "sourceUrls": [
+      "https://locationjapan.net/newss/aosho/",
+      "https://komugi-blog.net/aosyo-rokechi-2/",
+      "https://mazzel.tokyo/news/3827/"
+    ],
+    "notes": "RAN主演映画『アオショー！』の離島ロケ。LOCATION JAPAN・東京愛らんど公式X等が神津島での撮影を言及。具体スポット名は複数あるが島全体をmediumで収録。",
+    "visitTips": "竹芝桟橋から高速ジェット船で約3時間、調布飛行場から飛行機で約45分／天候で欠航しやすい。帰りの便に余裕を",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "島内散策自由",
+      "fee": "往復の船・飛行機代",
+      "notes": [
+        "竹芝桟橋から高速ジェット船で約3時間、調布飛行場から飛行機で約45分",
+        "天候で欠航しやすい。帰りの便に余裕を"
+      ]
+    },
+    "photoPath": "photos/kozushima/01.jpg",
+    "photoCredit": "映画『アオショー！』予告切り抜き（神津島・島遠景）",
+    "photoSourceUrl": "https://www.youtube.com/watch?v=qGhmdK6frz8",
+    "photoThumb": "photos/kozushima/thumb.jpg"
+  },
+  {
+    "id": "moriso-port",
+    "name": "諸磯港周辺",
+    "prefecture": "神奈川県",
+    "city": "三浦市",
+    "category": "movie",
+    "relatedWorks": [
+      "映画『アオショー！』"
+    ],
+    "members": [
+      "RAN"
+    ],
+    "addressOrArea": "神奈川県三浦市三崎町諸磯周辺",
+    "lat": 35.153,
+    "lng": 139.606,
+    "sourceUrls": [
+      "https://locationjapan.net/newss/aosho/"
+    ],
+    "notes": "LOCATION JAPANが『アオショー！』ロケ地として諸磯港を明記。",
+    "visitTips": "地元の漁港。作業の邪魔にならないように／路上駐車はしない",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "散策自由",
+      "notes": [
+        "地元の漁港。作業の邪魔にならないように",
+        "路上駐車はしない"
+      ]
+    },
+    "photoPath": "photos/moriso-port/01.jpg",
+    "photoCredit": "映画『アオショー！』予告切り抜き（諸磯港／連絡船乗り場シーン）",
+    "photoSourceUrl": "https://www.youtube.com/watch?v=qGhmdK6frz8",
+    "photoThumb": "photos/moriso-port/thumb.jpg"
+  },
+  {
+    "id": "tsurugisaki-lighthouse",
+    "name": "剱埼灯台",
+    "prefecture": "神奈川県",
+    "city": "三浦市",
+    "category": "movie",
+    "relatedWorks": [
+      "映画『アオショー！』"
+    ],
+    "members": [
+      "RAN"
+    ],
+    "addressOrArea": "神奈川県三浦市南下浦町松輪47",
+    "lat": 35.1408,
+    "lng": 139.6767,
+    "sourceUrls": [
+      "https://locationjapan.net/newss/aosho/",
+      "https://www.pref.kanagawa.jp/osirase/0602/feelshonan/sightseeing/4510/index.html"
+    ],
+    "notes": "LOCATION JAPANが『アオショー！』ロケとして劔崎灯台を明記（表記ゆれ：剱埼／劔崎）。",
+    "visitTips": "灯台の中には入れない。外観と周辺の海岸のみ／三浦海岸駅から剱崎行きバスで約20分、終点から徒歩約25分。本数が少ない",
+    "confidence": "medium",
+    "access": "outside",
+    "visit": {
+      "status": "outside",
+      "fee": "無料",
+      "notes": [
+        "灯台の中には入れない。外観と周辺の海岸のみ",
+        "三浦海岸駅から剱崎行きバスで約20分、終点から徒歩約25分。本数が少ない"
+      ]
+    },
+    "photoPath": "photos/tsurugisaki-lighthouse/01.jpg",
+    "photoCredit": "Wikimedia Commons（剱埼灯台・アオショー予告に灯台明確カットなし）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:250429_Tsurugisaki_Lighthouse_12.jpg",
+    "photoThumb": "photos/tsurugisaki-lighthouse/thumb.jpg"
+  },
+  {
+    "id": "shimizu-dream-plaza",
+    "name": "エスパルスドリームプラザ／清水マリンパーク周辺",
+    "prefecture": "静岡県",
+    "city": "静岡市清水区",
+    "category": "movie",
+    "relatedWorks": [
+      "映画『アオショー！』",
+      "Magurock & Pop 2026（会場が同エリア）"
+    ],
+    "members": [
+      "RAN"
+    ],
+    "addressOrArea": "静岡県静岡市清水区入船町／港町（エスパルスドリームプラザ周辺）",
+    "lat": 35.009,
+    "lng": 138.493,
+    "sourceUrls": [
+      "https://locationjapan.net/newss/aosho/",
+      "https://x.com/news__masu__/status/2105553476298350879",
+      "https://x.com/mazzel_lovemuze/status/2106535553361666273",
+      "https://www.dream-plaza.co.jp/access/"
+    ],
+    "notes": "LOCATION JAPANが清水港ロケを明記。Xではマグロック会場（ドリームプラザ／マリンパーク周辺）＝アオショー撮影地としてファン巡礼報告が複数。",
+    "visitTips": "時間はエリア・店舗で違う。マリンパークは散策自由／イベント日はとても混む",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "11:00〜20:00（夏は21:00まで）",
+      "fee": "無料",
+      "closed": "無休",
+      "notes": [
+        "時間はエリア・店舗で違う。マリンパークは散策自由",
+        "イベント日はとても混む"
+      ]
+    },
+    "photoPath": "photos/shimizu-dream-plaza/01.jpg",
+    "photoCredit": "映画『アオショー！』予告切り抜き（清水港／エスパルス周辺）",
+    "photoSourceUrl": "https://www.youtube.com/watch?v=LVSrZ3JIor0",
+    "photoThumb": "photos/shimizu-dream-plaza/thumb.jpg"
+  },
+  {
+    "id": "hatsuhara-bocchi-school",
+    "name": "初原ぼっちの学校（旧初原小学校）",
+    "prefecture": "茨城県",
+    "city": "久慈郡大子町",
+    "category": "movie",
+    "relatedWorks": [
+      "映画『アオショー！』"
+    ],
+    "members": [
+      "RAN"
+    ],
+    "addressOrArea": "茨城県久慈郡大子町大字初原960",
+    "lat": 36.74,
+    "lng": 140.38,
+    "sourceUrls": [
+      "https://locationjapan.net/newss/aosho/",
+      "https://satsuei-navi.com/MALL/src/FM514/id=00758/"
+    ],
+    "notes": "LOCATION JAPAN：折後島高校（折高）は茨城・初原ぼっちの学校で撮影。旧初原小学校一号棟は登録有形文化財の人気ロケ地。",
+    "visitTips": "キャンプなどの活動に使われている施設で、決まった公開日はない／道路から外観を見るだけにして、敷地に入る前に施設へ問い合わせを",
+    "confidence": "medium",
+    "access": "outside",
+    "visit": {
+      "status": "outside",
+      "notes": [
+        "キャンプなどの活動に使われている施設で、決まった公開日はない",
+        "道路から外観を見るだけにして、敷地に入る前に施設へ問い合わせを"
+      ]
+    },
+    "photoPath": "photos/hatsuhara-bocchi-school/01.jpg",
+    "photoCredit": "映画『アオショー！』予告切り抜き（初原ぼっちの学校＝折高）",
+    "photoSourceUrl": "https://www.youtube.com/watch?v=LVSrZ3JIor0",
+    "photoThumb": "photos/hatsuhara-bocchi-school/thumb.jpg"
+  },
+  {
+    "id": "konosu-motearakawa-sakura",
+    "name": "元荒川の桜並木（洲崎橋付近）",
+    "prefecture": "埼玉県",
+    "city": "鴻巣市",
+    "category": "movie",
+    "relatedWorks": [
+      "映画『アオショー！』"
+    ],
+    "members": [
+      "RAN"
+    ],
+    "addressOrArea": "埼玉県鴻巣市（元荒川・洲崎橋付近の桜並木）",
+    "lat": 36.064,
+    "lng": 139.528,
+    "sourceUrls": [
+      "https://www.city.kounosu.saitama.jp/page/1395.html",
+      "https://locationjapan.net/newss/aosho/"
+    ],
+    "notes": "鴻巣市公式フィルムコミッション実績に映画『アオショー！』＝元荒川の桜並木（洲崎橋付近）と記載。",
+    "visitTips": "桜は例年3月下旬〜4月上旬／川沿いの畑や私有地に入らない",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "散策自由",
+      "fee": "無料",
+      "notes": [
+        "桜は例年3月下旬〜4月上旬",
+        "川沿いの畑や私有地に入らない"
+      ]
+    },
+    "photoPath": "photos/konosu-motearakawa-sakura/01.jpg",
+    "photoCredit": "Wikimedia Commons（鴻巣・元荒川の桜並木）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Konosu_Motoara_River_Cherry_Trees_1.JPG",
+    "photoThumb": "photos/konosu-motearakawa-sakura/thumb.jpg"
+  },
+  {
+    "id": "horaiya-ueno",
+    "name": "蓬莱屋（上野）",
+    "prefecture": "東京都",
+    "city": "台東区",
+    "category": "tv",
+    "relatedWorks": [
+      "ヒルナンデス！（2026-10-20放送・上野ロケ）"
+    ],
+    "members": [
+      "NAOYA",
+      "RAN"
+    ],
+    "addressOrArea": "東京都台東区上野3-28-5",
+    "lat": 35.7085,
+    "lng": 139.7735,
+    "sourceUrls": [
+      "https://www.oricon.co.jp/news/2487389/full/",
+      "https://www.ntv.co.jp/topics/articles/19szyrmemyrqcuo4e1.html",
+      "http://ueno-horaiya.com/"
+    ],
+    "notes": "ヒルナンデス街ブラでNAOYA＆RANが訪れたヒレかつ店。公式・ORICONが店名を明記。",
+    "visitTips": "老舗のとんかつ店。売り切れで早く閉まることあり／店内の撮影は店の方に確認を",
+    "confidence": "high",
+    "access": "limited",
+    "visit": {
+      "status": "limited",
+      "hours": "11:30〜（土日祝は夜も営業）",
+      "fee": "ヒレかつ定食など",
+      "closed": "水曜",
+      "notes": [
+        "老舗のとんかつ店。売り切れで早く閉まることあり",
+        "店内の撮影は店の方に確認を"
+      ]
+    },
+    "photoPath": "photos/horaiya-ueno/01.jpg",
+    "photoCredit": "ヒルナンデス！公式告知動画切り抜き（蓬莱屋・ヒレカツ）",
+    "photoSourceUrl": "https://x.com/i/status/2112136689686872572",
+    "photoThumb": "photos/horaiya-ueno/thumb.jpg"
+  },
+  {
+    "id": "kokkogo-ueno",
+    "name": "黒工号 上野2号店",
+    "prefecture": "東京都",
+    "city": "台東区",
+    "category": "tv",
+    "relatedWorks": [
+      "ヒルナンデス！（2026-10-20放送・上野ロケ）"
+    ],
+    "members": [
+      "NAOYA",
+      "RAN"
+    ],
+    "addressOrArea": "東京都台東区上野6-10-7 アメ横プラザ商店街B棟84号",
+    "lat": 35.7095,
+    "lng": 139.7745,
+    "sourceUrls": [
+      "https://www.oricon.co.jp/news/2487389/full/",
+      "https://www.ntv.co.jp/topics/articles/19szyrmemyrqcuo4e1.html",
+      "https://ameyoko-plaza.com/shop/contents.html?id=58&l=1"
+    ],
+    "notes": "同ヒルナンデス上野ロケでNAOYAが台湾スイーツを食リポした店舗。ORICON／日テレTOPICSが言及。",
+    "visitTips": "アメ横の中の小さな店。通路をふさがないように並ぶ",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "店に確認",
+      "notes": [
+        "アメ横の中の小さな店。通路をふさがないように並ぶ"
+      ]
+    },
+    "photoPath": "photos/kokkogo-ueno/01.jpg",
+    "photoCredit": "ヒルナンデス！公式告知動画切り抜き（黒工号・仙草ゼリー）",
+    "photoSourceUrl": "https://x.com/i/status/2112136689686872572",
+    "photoThumb": "photos/kokkogo-ueno/thumb.jpg"
+  },
+  {
+    "id": "inokashira-park-zoo",
+    "name": "井の頭自然文化園",
+    "prefecture": "東京都",
+    "city": "武蔵野市",
+    "category": "tv",
+    "relatedWorks": [
+      "カイセイさんぽ③ 吉祥寺編"
+    ],
+    "members": [
+      "KAIRYU",
+      "SEITO",
+      "RYUKI"
+    ],
+    "addressOrArea": "東京都武蔵野市御殿山1-17-6",
+    "lat": 35.703,
+    "lng": 139.5745,
+    "sourceUrls": [
+      "https://note.com/quirky_badger898/n/n2746522b7cd7",
+      "https://ameblo.jp/sugi-natsuaki/entry-12938802205.html",
+      "https://x.com/stgl_gr/status/2113871485475721703"
+    ],
+    "notes": "カイセイさんぽ吉祥寺編でゾウのはな子などと触れ合うシーン。ファン巡礼ノート・X報告あり。",
+    "visitTips": "動物へのフラッシュ撮影は禁止／吉祥寺駅から徒歩約12分",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "9:30〜17:00（入園16:00まで）",
+      "fee": "一般400円",
+      "closed": "月曜（祝日のときは翌日）",
+      "notes": [
+        "動物へのフラッシュ撮影は禁止",
+        "吉祥寺駅から徒歩約12分"
+      ]
+    },
+    "photoPath": "photos/inokashira-park-zoo/01.jpg",
+    "photoCredit": "カイセイさんぽ／現地（井の頭自然文化園）",
+    "photoSourceUrl": "https://x.com/search?q=%E3%82%AB%E3%82%A4%E3%82%BB%E3%82%A4%E3%81%95%E3%82%93%E3%81%BD%20%E4%BA%95%E3%81%AE%E9%A0%AD&src=typed_query",
+    "photoThumb": "photos/inokashira-park-zoo/thumb.jpg"
+  },
+  {
+    "id": "yaogin-kichijoji",
+    "name": "八百銀商店",
+    "prefecture": "東京都",
+    "city": "武蔵野市",
+    "category": "tv",
+    "relatedWorks": [
+      "カイセイさんぽ③ 吉祥寺編"
+    ],
+    "members": [
+      "KAIRYU",
+      "SEITO",
+      "RYUKI"
+    ],
+    "addressOrArea": "東京都武蔵野市吉祥寺本町2-11-11",
+    "lat": 35.7055,
+    "lng": 139.5775,
+    "sourceUrls": [
+      "https://note.com/quirky_badger898/n/n2746522b7cd7",
+      "https://kj-weekly.jp/2025/08/28/yaogin-shouten/",
+      "https://x.com/mjna232227/status/2110314261268623568"
+    ],
+    "notes": "カイセイさんぽで果物購入。店頭にカイセイさんぽステッカーありとのファン報告。",
+    "visitTips": "地元の八百屋さん。買い物のお客さん優先で／店頭のステッカーを撮るときはひと声かけて",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "店に確認",
+      "notes": [
+        "地元の八百屋さん。買い物のお客さん優先で",
+        "店頭のステッカーを撮るときはひと声かけて"
+      ]
+    },
+    "photoPath": "photos/yaogin-kichijoji/01.jpg",
+    "photoCredit": "カイセイさんぽ／店舗外観（八百銀商店）",
+    "photoSourceUrl": "https://x.com/search?q=%E5%85%AB%E7%99%BE%E9%8A%80%20%E3%82%AB%E3%82%A4%E3%82%BB%E3%82%A4&src=typed_query",
+    "photoThumb": "photos/yaogin-kichijoji/thumb.jpg"
+  },
+  {
+    "id": "inokashira-park-boat",
+    "name": "井の頭恩賜公園（ボート乗り場売店周辺）",
+    "prefecture": "東京都",
+    "city": "武蔵野市",
+    "category": "tv",
+    "relatedWorks": [
+      "カイセイさんぽ③ 吉祥寺編"
+    ],
+    "members": [
+      "KAIRYU",
+      "SEITO",
+      "RYUKI"
+    ],
+    "addressOrArea": "東京都武蔵野市御殿山1丁目（井の頭公園ボート乗り場周辺）",
+    "lat": 35.6995,
+    "lng": 139.5745,
+    "sourceUrls": [
+      "https://note.com/quirky_badger898/n/n2746522b7cd7",
+      "https://ameblo.jp/sugi-natsuaki/entry-12938802205.html"
+    ],
+    "notes": "カイセイさんぽ終盤の食べ歩き・井の頭弁財天話題のエリア。公園全体ではなくボート乗り場売店周辺を収録。",
+    "visitTips": "ボートの営業時間・料金は公園の公式サイトで確認／売店前は混むので列をふさがない",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "公園は散策自由",
+      "fee": "公園無料（ボートは有料）",
+      "closed": "無休",
+      "notes": [
+        "ボートの営業時間・料金は公園の公式サイトで確認",
+        "売店前は混むので列をふさがない"
+      ]
+    },
+    "photoPath": "photos/inokashira-park-boat/01.jpg",
+    "photoCredit": "カイセイさんぽ／井の頭公園ボート周辺",
+    "photoSourceUrl": "https://x.com/search?q=%E4%BA%95%E3%81%AE%E9%A0%AD%E5%85%AC%E5%9C%92%20%E3%83%9C%E3%83%BC%E3%83%88%20%E3%82%AB%E3%82%A4%E3%82%BB%E3%82%A4&src=typed_query",
+    "photoThumb": "photos/inokashira-park-boat/thumb.jpg"
+  },
+  {
+    "id": "pattaya-thailand",
+    "name": "パタヤ（タイ）市街・海辺一帯",
+    "prefecture": "海外・タイ",
+    "city": "パタヤ",
+    "category": "event",
+    "relatedWorks": [
+      "MAZZEL 1st photobook with ZEAL"
+    ],
+    "members": [],
+    "addressOrArea": "タイ・パタヤ（旧市街・路地裏・ビーチなど広域）",
+    "lat": null,
+    "lng": null,
+    "sourceUrls": [
+      "https://www.oricon.co.jp/news/2472584/full/",
+      "https://www.thefirsttimes.jp/news/0000831021/",
+      "https://mazzel.tokyo/news/5336/"
+    ],
+    "notes": "初写真集の全編撮影地。公式・ORICONがパタヤの夜道／旧市街／海を明記。ホテル・店の固有名は未公表のためエリア単位。",
+    "visitTips": "写真集の撮影地は旧市街・路地・ビーチなど広い範囲で、店名は非公表／夜の路地は治安に気をつけて",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "散策自由",
+      "notes": [
+        "写真集の撮影地は旧市街・路地・ビーチなど広い範囲で、店名は非公表",
+        "夜の路地は治安に気をつけて"
+      ]
+    },
+    "photoPath": "photos/pattaya-thailand/01.jpg",
+    "photoCredit": "Wikimedia Commons（パタヤ海岸／写真集ロケ一帯）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Pattaya_Beach,_Beach_Road,_Thailand.jpg",
+    "photoThumb": "photos/pattaya-thailand/thumb.jpg"
+  },
+  {
+    "id": "kashiwo-shokudo",
+    "name": "かしを食堂（劇中「ホヤぼーや」）",
+    "prefecture": "東京都",
+    "city": "板橋区",
+    "category": "drama",
+    "relatedWorks": [
+      "ドラマ『君がトクベツ』"
+    ],
+    "members": [
+      "NAOYA"
+    ],
+    "addressOrArea": "東京都板橋区三園2丁目付近（かしを食堂）",
+    "lat": 35.79,
+    "lng": 139.64,
+    "sourceUrls": [
+      "https://mzlocationblog.com/kimibetsu/",
+      "https://filminglocation-star.com/kimibetsu/"
+    ],
+    "notes": "君ベツのさほ子の定食屋ロケ。NAOYA（成瀬）メインシーンではないが同作品の主要聖地。ファンまとめが店名を特定。住所は西高島平駅徒歩圏としてmedium。",
+    "visitTips": "地元の食堂。営業日を確かめてから／長い撮影や混む時間の長居は控える",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "店に確認",
+      "notes": [
+        "地元の食堂。営業日を確かめてから",
+        "長い撮影や混む時間の長居は控える"
+      ]
+    },
+    "photoPath": "photos/kashiwo-shokudo/01.jpg",
+    "photoCredit": "ドラマ『君がトクベツ』予告切り抜き（かしを食堂）",
+    "photoSourceUrl": "https://www.youtube.com/watch?v=GfZbAnhAq_E",
+    "photoThumb": "photos/kashiwo-shokudo/thumb.jpg"
+  },
+  {
+    "id": "cafe-giang-chinatown",
+    "name": "カフェジャン CAFE GIANG 横浜中華街店",
+    "prefecture": "神奈川県",
+    "city": "横浜市中区",
+    "category": "tv",
+    "relatedWorks": [
+      "めざましテレビ「リポーターやってください」横浜中華街 かけ算グルメ（2025-10-21放送）"
+    ],
+    "members": [
+      "EIKI",
+      "NAOYA"
+    ],
+    "addressOrArea": "神奈川県横浜市中区山下町78-3",
+    "lat": 35.444,
+    "lng": 139.6478,
+    "sourceUrls": [
+      "https://bihada101.net/mezamashi/22006/",
+      "https://x.com/cx_mezamashi/status/1983821185730093491",
+      "https://www.youtube.com/watch?v=gY5unuRi__c",
+      "https://co-trip.jp/article/249433/"
+    ],
+    "notes": "EIKIとNAOYAが中華風バインミーとエッグコーヒーを食リポ。店の公式Xも「MAZZEL聖地巡礼」として紹介。",
+    "visitTips": "エッグコーヒーと中華風バインミーが番組の2品",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "10:00〜23:00",
+      "closed": "無休（掲載時点）",
+      "notes": [
+        "エッグコーヒーと中華風バインミーが番組の2品"
+      ]
+    },
+    "photoPath": "photos/cafe-giang-chinatown/01.jpg",
+    "photoCredit": "めざましmedia「リポーターやってください」横浜中華街かけ算グルメ切り抜き（カフェジャン）",
+    "photoSourceUrl": "https://www.youtube.com/watch?v=gY5unuRi__c",
+    "photoThumb": "photos/cafe-giang-chinatown/thumb.jpg"
+  },
+  {
+    "id": "jukei-charo-chinatown",
+    "name": "重慶茶樓 横浜中華街本店",
+    "prefecture": "神奈川県",
+    "city": "横浜市中区",
+    "category": "tv",
+    "relatedWorks": [
+      "めざましテレビ「リポーターやってください」横浜中華街 かけ算グルメ（2025-10-21放送）"
+    ],
+    "members": [
+      "EIKI",
+      "NAOYA"
+    ],
+    "addressOrArea": "神奈川県横浜市中区山下町185",
+    "lat": 35.4431,
+    "lng": 139.6458,
+    "sourceUrls": [
+      "https://bihada101.net/mezamashi/22006/",
+      "https://x.com/cx_mezamashi/status/1983821185730093491",
+      "https://www.youtube.com/watch?v=gY5unuRi__c",
+      "https://www.welcome.city.yokohama.jp/gourmet/chinatown/page_06.php"
+    ],
+    "notes": "中華×イタリアンの「中華風トリッパ」「鴨のコンフィ」を紹介。",
+    "visitTips": "食事どきは混む。番組のメニューは時期で変わることあり",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "店に確認",
+      "notes": [
+        "食事どきは混む。番組のメニューは時期で変わることあり"
+      ]
+    },
+    "photoPath": "photos/jukei-charo-chinatown/01.jpg",
+    "photoCredit": "めざましmedia「リポーターやってください」横浜中華街かけ算グルメ切り抜き（重慶茶樓）",
+    "photoSourceUrl": "https://www.youtube.com/watch?v=gY5unuRi__c",
+    "photoThumb": "photos/jukei-charo-chinatown/thumb.jpg"
+  },
+  {
+    "id": "patissieres-jogenro",
+    "name": "パティシエール JOGENRO",
+    "prefecture": "神奈川県",
+    "city": "横浜市中区",
+    "category": "tv",
+    "relatedWorks": [
+      "めざましテレビ「リポーターやってください」横浜中華街 かけ算グルメ（2025-10-21放送）"
+    ],
+    "members": [
+      "EIKI",
+      "NAOYA"
+    ],
+    "addressOrArea": "神奈川県横浜市中区山下町164",
+    "lat": 35.4426,
+    "lng": 139.6469,
+    "sourceUrls": [
+      "https://bihada101.net/mezamashi/22006/",
+      "https://x.com/cx_mezamashi/status/1983821185730093491",
+      "https://www.youtube.com/watch?v=gY5unuRi__c",
+      "https://kanagawa-kankou.or.jp/spot/6914"
+    ],
+    "notes": "老舗「状元樓」の洋菓子ブランド。ネオ中華スイーツ「パティシエールアソート」を紹介。2階はカフェ。",
+    "visitTips": "1階が売場、2階がカフェ",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "11:00〜20:00（L.O.19:30）",
+      "closed": "水曜",
+      "notes": [
+        "1階が売場、2階がカフェ"
+      ]
+    },
+    "photoPath": "photos/patissieres-jogenro/01.jpg",
+    "photoCredit": "めざましmedia「リポーターやってください」横浜中華街かけ算グルメ切り抜き（パティシエール JOGENRO）",
+    "photoSourceUrl": "https://www.youtube.com/watch?v=gY5unuRi__c",
+    "photoThumb": "photos/patissieres-jogenro/thumb.jpg"
+  },
+  {
+    "id": "hosho-chinatown",
+    "name": "保昌",
+    "prefecture": "神奈川県",
+    "city": "横浜市中区",
+    "category": "tv",
+    "relatedWorks": [
+      "めざましテレビ「リポーターやってください」横浜中華街 かけ算グルメ（2025-10-21放送）"
+    ],
+    "members": [
+      "EIKI",
+      "NAOYA"
+    ],
+    "addressOrArea": "神奈川県横浜市中区山下町138（香港路）",
+    "lat": 35.4438,
+    "lng": 139.6466,
+    "sourceUrls": [
+      "https://bihada101.net/mezamashi/22006/",
+      "https://x.com/cx_mezamashi/status/1983821185730093491",
+      "https://www.youtube.com/watch?v=gY5unuRi__c",
+      "https://rurubu.jp/andmore/spot/80013025"
+    ],
+    "notes": "「中華風海鮮タコ焼き」と「牛バラ肉カレーご飯」を紹介。",
+    "visitTips": "香港路の小さな店。並ぶときは道をふさがない",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "店に確認",
+      "notes": [
+        "香港路の小さな店。並ぶときは道をふさがない"
+      ]
+    },
+    "photoPath": "photos/hosho-chinatown/01.jpg",
+    "photoCredit": "めざましmedia「リポーターやってください」横浜中華街かけ算グルメ切り抜き（保昌）",
+    "photoSourceUrl": "https://www.youtube.com/watch?v=gY5unuRi__c",
+    "photoThumb": "photos/hosho-chinatown/thumb.jpg"
+  },
+  {
+    "id": "sun-lives-here-sangenjaya",
+    "name": "cafe The SUN LIVES HERE",
+    "prefecture": "東京都",
+    "city": "世田谷区",
+    "category": "tv",
+    "relatedWorks": [
+      "ZIP!「買いドキッ!?」飲めちゃう!?スイーツ（2026-03-30放送）"
+    ],
+    "members": [
+      "NAOYA"
+    ],
+    "addressOrArea": "東京都世田谷区三軒茶屋1-27-33",
+    "lat": 35.6421,
+    "lng": 139.6745,
+    "sourceUrls": [
+      "https://datazoo.jp/tv/ZIP%EF%BC%81/1857451",
+      "https://www.oricon.co.jp/news/2445120/full/",
+      "https://tabelog.com/tokyo/A1317/A131706/13145455/"
+    ],
+    "notes": "NAOYAが「飲むティラミス」をリポート。期間限定で「飲む抹茶ティラミス」も。",
+    "visitTips": "三軒茶屋駅から少し歩く住宅街のカフェ。周りは静かに／「飲むティラミス」は番組のメニュー",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "店に確認",
+      "notes": [
+        "三軒茶屋駅から少し歩く住宅街のカフェ。周りは静かに",
+        "「飲むティラミス」は番組のメニュー"
+      ]
+    },
+    "photoPath": "photos/sun-lives-here-sangenjaya/01.jpg",
+    "photoCredit": "cafe The SUN LIVES HERE 公式ストア写真（三軒茶屋本店外観）",
+    "photoSourceUrl": "https://www.cafethesunliveshere.com/store",
+    "photoThumb": "photos/sun-lives-here-sangenjaya/thumb.jpg"
+  },
+  {
+    "id": "caldo-nishishinjuku",
+    "name": "Caldo（カルド）",
+    "prefecture": "東京都",
+    "city": "新宿区",
+    "category": "tv",
+    "relatedWorks": [
+      "ZIP!「買いドキッ!?」飲めちゃう!?スイーツ（2026-03-30放送）"
+    ],
+    "members": [
+      "NAOYA"
+    ],
+    "addressOrArea": "東京都新宿区西新宿7-8-6 ヴィンテージビル1F",
+    "lat": 35.6957,
+    "lng": 139.6973,
+    "sourceUrls": [
+      "https://datazoo.jp/tv/ZIP%EF%BC%81/1857451",
+      "https://www.oricon.co.jp/news/2445120/full/",
+      "https://hamoni.jp/shop/PJCL61qrrSfImYBAzeQp"
+    ],
+    "notes": "NAOYAが「カスタードブリュレパンケーキ」（メレンゲ通常の5倍）をリポート。",
+    "visitTips": "行列ができやすい。予約できるか店に確認を",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "店に確認",
+      "notes": [
+        "行列ができやすい。予約できるか店に確認を"
+      ]
+    },
+    "photoPath": "photos/caldo-nishishinjuku/01.jpg",
+    "photoCredit": "Caldo（カルド）公式サイト 店内写真",
+    "photoSourceUrl": "https://caldo-shinjuku.jp/",
+    "photoThumb": "photos/caldo-nishishinjuku/thumb.jpg"
+  },
+  {
+    "id": "hakuzan-daimaru-tokyo",
+    "name": "モンブランTHE珀山（大丸東京店）",
+    "prefecture": "東京都",
+    "city": "千代田区",
+    "category": "tv",
+    "relatedWorks": [
+      "ZIP!「買いドキッ!?」飲めちゃう!?スイーツ（2026-03-30放送）"
+    ],
+    "members": [
+      "NAOYA"
+    ],
+    "addressOrArea": "東京都千代田区丸の内1-9-1 大丸東京店1F 食品ほっぺタウン",
+    "lat": 35.68,
+    "lng": 139.7686,
+    "sourceUrls": [
+      "https://datazoo.jp/tv/ZIP%EF%BC%81/1857451",
+      "https://www.oricon.co.jp/news/2445120/full/",
+      "https://www.enjoytokyo.jp/news/204359/"
+    ],
+    "notes": "NAOYAが「THE珀山モンブラン」をリポート。テイクアウト専門の売場。",
+    "visitTips": "持ち帰り専門の売場で、店内で食べる席はない／人気商品は売り切れることあり",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "大丸東京店の営業時間",
+      "notes": [
+        "持ち帰り専門の売場で、店内で食べる席はない",
+        "人気商品は売り切れることあり"
+      ]
+    },
+    "photoPath": "photos/hakuzan-daimaru-tokyo/01.jpg",
+    "photoCredit": "公式X ZIP!「買いドキッ!?」出演御礼（モンブランTHE珀山パフェ）",
+    "photoSourceUrl": "https://x.com/i/status/2107824886647509411",
+    "photoThumb": "photos/hakuzan-daimaru-tokyo/thumb.jpg"
+  },
+  {
+    "id": "shumai-no-jo-shinjuku",
+    "name": "焼売のジョー 新宿東口店",
+    "prefecture": "東京都",
+    "city": "新宿区",
+    "category": "tv",
+    "relatedWorks": [
+      "有吉ゼミ 2時間SP チャレンジグルメ「3.2kgギガ盛りマーラータン」（2026-10-26放送）"
+    ],
+    "members": [
+      "RYUKI",
+      "TAKUTO"
+    ],
+    "addressOrArea": "東京都新宿区歌舞伎町1-6-3 東海苑ビルB1F",
+    "lat": 35.6931,
+    "lng": 139.7019,
+    "sourceUrls": [
+      "https://x.com/ariyoshiseminar/status/2114561430397809041",
+      "https://mazzel.tokyo/media/5712/",
+      "https://www.activitv.com/entry/arizemi_261019_sones-mara/",
+      "https://www.shumainojo.com/%E5%BA%97%E8%88%97%E6%83%85%E5%A0%B1"
+    ],
+    "notes": "有吉ゼミのチャレンジグルメ一戦目で、TAKUTOとRYUKIがME:IのMIUらと3.2kgのギガ盛りマーラータン（1万円）に挑戦。マーラータンに小籠包・焼売・水餃子・ジャンボ焼売などが付く。",
+    "visitTips": "夜だけ営業の居酒屋／チャレンジメニューを頼めるかは事前に店へ確認",
+    "confidence": "high",
+    "access": "limited",
+    "visit": {
+      "status": "limited",
+      "hours": "17:00〜翌4:00",
+      "fee": "飲食代（ギガ盛りマーラータンは1万円）",
+      "closed": "無休（掲載時点）",
+      "notes": [
+        "夜だけ営業の居酒屋",
+        "チャレンジメニューを頼めるかは事前に店へ確認"
+      ]
+    },
+    "photoPath": "photos/shumai-no-jo-shinjuku/01.jpg",
+    "photoCredit": "公式X 有吉ゼミ出演御礼（焼売のジョー店内ロゴ壁）",
+    "photoSourceUrl": "https://x.com/i/status/2114691679898964398",
+    "photoThumb": "photos/shumai-no-jo-shinjuku/thumb.jpg"
+  },
+  {
+    "id": "hotel-springs-makuhari",
+    "name": "ホテルスプリングス幕張（プレミア3階 エメラルド）",
+    "prefecture": "千葉県",
+    "city": "千葉市美浜区",
+    "category": "mv",
+    "relatedWorks": [
+      "BANQUET BANG"
+    ],
+    "members": [],
+    "addressOrArea": "千葉県千葉市美浜区ひび野1-11（プレミア棟3階「エメラルド」）",
+    "lat": 35.648,
+    "lng": 140.039,
+    "sourceUrls": [
+      "https://springs.co.jp/location/",
+      "https://ks-spice.net/bmsg/24088/",
+      "https://x.com/sunnychibaco/status/2104078647821054044"
+    ],
+    "notes": "ホテル公式ロケーション実績に『BANQUET BANG』MV撮影（プレミア3階エメラルド）と明記。Daya提供と一致。海浜幕張駅徒歩圏。",
+    "visitTips": "宴会場は一般観光の立入不可の場合あり。ホテル共用部の撮影ルール・マナーを確認。",
+    "confidence": "high",
+    "visit": {
+      "status": "limited",
+      "notes": [
+        "宴会場「エメラルド」に入れるのは、ブライダルフェアや一般公開のイベントがあるときだけ",
+        "ふだんはロビーなどホテルの共用部のみ。公開日はホテルの公式サイトで確認を"
+      ]
+    },
+    "access": "limited",
+    "photoPath": "photos/hotel-springs-makuhari/01.jpg",
+    "photoCredit": "公式 BANQUET BANG 1000万再生マイルストーン（宴会場カット・Daya提供）",
+    "photoSourceUrl": "",
+    "photoThumb": "photos/hotel-springs-makuhari/thumb.jpg"
+  },
+  {
+    "id": "yoyogi-national-gymnasium",
+    "name": "国立代々木競技場 第一体育館",
+    "prefecture": "東京都",
+    "city": "渋谷区",
+    "category": "live",
+    "relatedWorks": [
+      "1st Arena Tour 2026 “Shall we hit the Banquet?” 追加公演（2026-06-06・07）"
+    ],
+    "members": [],
+    "addressOrArea": "東京都渋谷区神南2-1-1",
+    "lat": 35.6676,
+    "lng": 139.7,
+    "sourceUrls": [],
+    "notes": "",
+    "visitTips": "館内に入れるのは公演の日だけ。それ以外は外観のみ／原宿駅・明治神宮前駅から徒歩約5分",
+    "confidence": "high",
+    "access": "limited",
+    "visit": {
+      "status": "limited",
+      "notes": [
+        "館内に入れるのは公演の日だけ。それ以外は外観のみ",
+        "原宿駅・明治神宮前駅から徒歩約5分"
+      ]
+    },
+    "photoPath": "photos/yoyogi-national-gymnasium/01.jpg",
+    "photoCredit": "Wikimedia Commons（国立代々木競技場 第一体育館外観）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Kokuritsu_Yoyogi_Ky%C5%8Dgij%C5%8D_1.jpg",
+    "photoThumb": "photos/yoyogi-national-gymnasium/thumb.jpg"
+  },
+  {
+    "id": "wanaka-sennichimae",
+    "name": "たこ焼道楽 わなか 千日前本店",
+    "prefecture": "大阪府",
+    "city": "大阪市中央区",
+    "category": "tv",
+    "relatedWorks": [
+      "MISSIONx2 EXTRA（たこ焼きの差し入れ）"
+    ],
+    "members": [],
+    "addressOrArea": "大阪府大阪市中央区千日前11-19",
+    "lat": 34.6643,
+    "lng": 135.504,
+    "sourceUrls": [],
+    "notes": "",
+    "visitTips": "差し入れされたのは「わなか」のたこ焼き。どの店舗かはわからないため本店を掲載／店頭は行列ができやすい。歩道をふさがないように並ぶ",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "平日10:00〜23:00／土日祝8:30〜23:00",
+      "closed": "無休",
+      "notes": [
+        "差し入れされたのは「わなか」のたこ焼き。どの店舗かはわからないため本店を掲載",
+        "店頭は行列ができやすい。歩道をふさがないように並ぶ"
+      ]
+    },
+    "photoPath": "photos/wanaka-sennichimae/01.jpg",
+    "photoCredit": "たこ焼道楽 わなか 公式店舗写真（千日前本店外観）",
+    "photoSourceUrl": "https://www.takoyaki-wanaka.com/kr/04_tenpo.html",
+    "photoThumb": "photos/wanaka-sennichimae/thumb.jpg"
+  },
+  {
+    "id": "nakamuraya-tenjinbashi",
+    "name": "中村屋（天神橋筋商店街）",
+    "prefecture": "大阪府",
+    "city": "大阪市北区",
+    "category": "tv",
+    "relatedWorks": [
+      "カイセイさんぽ #02 〜品川？編〜（大阪）"
+    ],
+    "members": [
+      "KAIRYU",
+      "SEITO"
+    ],
+    "addressOrArea": "大阪府大阪市北区天神橋2-3-21",
+    "lat": 34.6966,
+    "lng": 135.5118,
+    "sourceUrls": [],
+    "notes": "",
+    "visitTips": "2人がコロッケを買って店の前で食べた場所（ファンの巡礼報告より）／人気店で行列ができる。売り切れることもある",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "9:00〜18:00（土曜は16:00まで）",
+      "fee": "コロッケ100円",
+      "closed": "日曜・祝日",
+      "notes": [
+        "2人がコロッケを買って店の前で食べた場所（ファンの巡礼報告より）",
+        "人気店で行列ができる。売り切れることもある"
+      ]
+    },
+    "photoPath": "photos/nakamuraya-tenjinbashi/01.jpg",
+    "photoCredit": "中村屋（天神橋筋）店舗外観",
+    "photoSourceUrl": "https://onetabi.com/nakamuraya/",
+    "photoThumb": "photos/nakamuraya-tenjinbashi/thumb.jpg"
+  },
+  {
+    "id": "tenjinbashisuji-shotengai",
+    "name": "天神橋筋商店街",
+    "prefecture": "大阪府",
+    "city": "大阪市北区",
+    "category": "tv",
+    "relatedWorks": [
+      "カイセイさんぽ #02 〜品川？編〜（大阪）"
+    ],
+    "members": [
+      "KAIRYU",
+      "SEITO"
+    ],
+    "addressOrArea": "大阪府大阪市北区天神橋1〜7丁目（天神橋筋商店街）",
+    "lat": 34.701,
+    "lng": 135.5115,
+    "sourceUrls": [],
+    "notes": "",
+    "visitTips": "デビュー前の大阪合宿の思い出の地として2人が歩いた商店街。たこ焼きもここで／合宿所やダンススタジオは一般の建物なので外から見るだけに",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "散策自由（店舗ごとに営業時間が違う）",
+      "notes": [
+        "デビュー前の大阪合宿の思い出の地として2人が歩いた商店街。たこ焼きもここで",
+        "合宿所やダンススタジオは一般の建物なので外から見るだけに"
+      ]
+    },
+    "photoPath": "photos/tenjinbashisuji-shotengai/01.jpg",
+    "photoCredit": "Wikimedia Commons（天神橋筋商店街）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Tenjinbashisuji_shotengai_%E5%A4%A9%E7%A5%9E%E6%A9%8B%E7%AD%8B%E5%95%86%E5%BA%97%E8%A1%97_(52554982008).jpg",
+    "photoThumb": "photos/tenjinbashisuji-shotengai/thumb.jpg"
+  },
+  {
+    "id": "kantele-ogimachi-park",
+    "name": "関西テレビ前・扇町公園",
+    "prefecture": "大阪府",
+    "city": "大阪市北区",
+    "category": "tv",
+    "relatedWorks": [
+      "カイセイさんぽ #02 〜品川？編〜（大阪）"
+    ],
+    "members": [
+      "KAIRYU",
+      "SEITO"
+    ],
+    "addressOrArea": "大阪府大阪市北区扇町2-1-7（関西テレビ）／扇町公園",
+    "lat": 34.7044,
+    "lng": 135.5106,
+    "sourceUrls": [],
+    "notes": "",
+    "visitTips": "2人が走ったカンテレ前の広場と、となりの扇町公園／テレビ局の建物や敷地の奥には入らない",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "公園は散策自由",
+      "fee": "無料",
+      "notes": [
+        "2人が走ったカンテレ前の広場と、となりの扇町公園",
+        "テレビ局の建物や敷地の奥には入らない"
+      ]
+    },
+    "photoPath": "photos/kantele-ogimachi-park/01.jpg",
+    "photoCredit": "Wikimedia Commons（扇町公園から見える関西テレビ）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:%E6%89%87%E7%94%BA%E5%85%AC%E5%9C%92%E3%81%8B%E3%82%89%E8%A6%8B%E3%81%88%E3%82%8B%E9%96%A2%E8%A5%BF%E3%83%86%E3%83%AC%E3%83%93_Ougimachi_park_-_panoramio.jpg",
+    "photoThumb": "photos/kantele-ogimachi-park/thumb.jpg"
+  },
+  {
+    "id": "hokuhokutei-yamahana",
+    "name": "北々亭 山鼻店",
+    "prefecture": "北海道",
+    "city": "札幌市中央区",
+    "category": "tv",
+    "relatedWorks": [
+      "HTB「イチモニ！」取材（2025年4月）"
+    ],
+    "members": [
+      "RAN",
+      "TAKUTO"
+    ],
+    "addressOrArea": "北海道札幌市中央区南19条西11-1-18",
+    "lat": 43.0371,
+    "lng": 141.342,
+    "sourceUrls": [],
+    "notes": "",
+    "visitTips": "2人の名前が入った期間限定メニュー「春らんまん北々亭のたっく3盛り」は2025年5月で終了／回転寿司店。混む時間は順番待ちの列ができる",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "店に確認",
+      "notes": [
+        "2人の名前が入った期間限定メニュー「春らんまん北々亭のたっく3盛り」は2025年5月で終了",
+        "回転寿司店。混む時間は順番待ちの列ができる"
+      ]
+    },
+    "photoPath": "photos/hokuhokutei-yamahana/01.jpg",
+    "photoCredit": "北々亭 山鼻店 料理写真（Domingo記事掲載）",
+    "photoSourceUrl": "https://domingo.ne.jp/article/35197",
+    "photoThumb": "photos/hokuhokutei-yamahana/thumb.jpg"
+  },
+  {
+    "id": "sapporo-hitaru",
+    "name": "札幌文化芸術劇場 hitaru",
+    "prefecture": "北海道",
+    "city": "札幌市中央区",
+    "category": "live",
+    "relatedWorks": [
+      "2nd One Man Tour 2025 “Royal Straight Flush” 札幌公演（2025-05-12・13）"
+    ],
+    "members": [],
+    "addressOrArea": "北海道札幌市中央区北1条西1丁目 札幌市民交流プラザ",
+    "lat": 43.0626,
+    "lng": 141.3561,
+    "sourceUrls": [],
+    "notes": "",
+    "visitTips": "館内に入れるのは公演の日だけ。それ以外は外観のみ／建物の1階・2階の交流スペースは公演日以外も入れる",
+    "confidence": "high",
+    "access": "limited",
+    "visit": {
+      "status": "limited",
+      "notes": [
+        "館内に入れるのは公演の日だけ。それ以外は外観のみ",
+        "建物の1階・2階の交流スペースは公演日以外も入れる"
+      ]
+    },
+    "photoPath": "photos/sapporo-hitaru/01.jpg",
+    "photoCredit": "施設外観（札幌市民交流プラザ／hitaru）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/Category:Sapporo_Community_Plaza",
+    "photoThumb": "photos/sapporo-hitaru/thumb.jpg"
+  },
+  {
+    "id": "marine-messe-fukuoka",
+    "name": "マリンメッセ福岡 B館",
+    "prefecture": "福岡県",
+    "city": "福岡市博多区",
+    "category": "live",
+    "relatedWorks": [
+      "1st Arena Tour 2026 “Shall we hit the Banquet?” 福岡公演（2026-05-13・14）"
+    ],
+    "members": [],
+    "addressOrArea": "福岡県福岡市博多区沖浜町2-1",
+    "lat": 33.604,
+    "lng": 130.403,
+    "sourceUrls": [],
+    "notes": "",
+    "visitTips": "館内に入れるのは公演の日だけ。それ以外は外観のみ",
+    "confidence": "high",
+    "access": "limited",
+    "visit": {
+      "status": "limited",
+      "notes": [
+        "館内に入れるのは公演の日だけ。それ以外は外観のみ"
+      ]
+    },
+    "photoPath": "photos/marine-messe-fukuoka/01.jpg",
+    "photoCredit": "Wikimedia Commons（マリンメッセ福岡外観）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Marine_Messe_Fukuoka_20161006.jpg",
+    "photoThumb": "photos/marine-messe-fukuoka/thumb.jpg"
+  },
+  {
+    "id": "fukuoka-sunpalace",
+    "name": "福岡サンパレス ホテル&ホール",
+    "prefecture": "福岡県",
+    "city": "福岡市博多区",
+    "category": "live",
+    "relatedWorks": [
+      "2nd One Man Tour 2025 “Royal Straight Flush” 福岡公演（2025-05-28）"
+    ],
+    "members": [],
+    "addressOrArea": "福岡県福岡市博多区築港本町2-1",
+    "lat": 33.602,
+    "lng": 130.4062,
+    "sourceUrls": [],
+    "notes": "",
+    "visitTips": "館内に入れるのは公演の日だけ。それ以外は外観のみ／ホテル部分のレストランなどは公演日以外も利用できる",
+    "confidence": "high",
+    "access": "limited",
+    "visit": {
+      "status": "limited",
+      "notes": [
+        "館内に入れるのは公演の日だけ。それ以外は外観のみ",
+        "ホテル部分のレストランなどは公演日以外も利用できる"
+      ]
+    },
+    "photoPath": "photos/fukuoka-sunpalace/01.jpg",
+    "photoCredit": "Wikimedia Commons（福岡サンパレス外観）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Fukuoka_Sunpalace_20161006.jpg",
+    "photoThumb": "photos/fukuoka-sunpalace/thumb.jpg"
+  },
+  {
+    "id": "kitakyushu-soleil-hall",
+    "name": "北九州ソレイユホール",
+    "prefecture": "福岡県",
+    "city": "北九州市小倉北区",
+    "category": "event",
+    "relatedWorks": [
+      "めざましテレビ30周年フェス in 福岡（2024-02-24）"
+    ],
+    "members": [],
+    "addressOrArea": "福岡県北九州市小倉北区馬借3-6-42",
+    "lat": 33.8806,
+    "lng": 130.8812,
+    "sourceUrls": [],
+    "notes": "",
+    "visitTips": "館内に入れるのは公演の日だけ。それ以外は外観のみ",
+    "confidence": "high",
+    "access": "limited",
+    "visit": {
+      "status": "limited",
+      "notes": [
+        "館内に入れるのは公演の日だけ。それ以外は外観のみ"
+      ]
+    },
+    "photoPath": "photos/kitakyushu-soleil-hall/01.jpg",
+    "photoCredit": "Wikimedia Commons（北九州ソレイユホール＝旧九州厚生年金会館外観）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Kyushu_Koseinenkin_Kaikan.JPG",
+    "photoThumb": "photos/kitakyushu-soleil-hall/thumb.jpg"
+  },
+  {
+    "id": "sharepuku-harajuku",
+    "name": "しぇあぷく 原宿店",
+    "prefecture": "東京都",
+    "city": "渋谷区",
+    "category": "tv",
+    "relatedWorks": [
+      "よるのブランチ「Z世代ニュース」（2026-05-06放送）"
+    ],
+    "members": [
+      "NAOYA",
+      "EIKI",
+      "HAYATO"
+    ],
+    "addressOrArea": "東京都渋谷区神宮前3-23 神宮前2NSビル5F",
+    "lat": 35.6706,
+    "lng": 139.7066,
+    "sourceUrls": [],
+    "notes": "",
+    "visitTips": "女性限定のシール交換カフェ。小学生以上の男性は入れない／5階までは細い階段のみ。支払いはキャッシュレスのみ",
+    "confidence": "high",
+    "access": "limited",
+    "visit": {
+      "status": "limited",
+      "hours": "店に確認（土日祝は予約制）",
+      "fee": "平日 800円＋1ドリンク／予約コース 1,980円〜",
+      "notes": [
+        "女性限定のシール交換カフェ。小学生以上の男性は入れない",
+        "5階までは細い階段のみ。支払いはキャッシュレスのみ"
+      ]
+    }
+  },
+  {
+    "id": "genuine-burger-toranomon",
+    "name": "GENUINE BURGER TORANOMON",
+    "prefecture": "東京都",
+    "city": "港区",
+    "category": "tv",
+    "relatedWorks": [
+      "よるのブランチ「Z世代ニュース」（2026-05-06放送）"
+    ],
+    "members": [
+      "NAOYA",
+      "EIKI",
+      "HAYATO"
+    ],
+    "addressOrArea": "東京都港区西新橋1-22-2 木戸ビル1F",
+    "lat": 35.6683,
+    "lng": 139.7512,
+    "sourceUrls": [],
+    "notes": "",
+    "visitTips": "番組で食べたのはプルドポークのバーガー／虎ノ門駅から徒歩圏",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "店に確認",
+      "notes": [
+        "番組で食べたのはプルドポークのバーガー",
+        "虎ノ門駅から徒歩圏"
+      ]
+    }
+  },
+  {
+    "id": "budaejjigae-shinokubo",
+    "name": "新大久保ブデチゲ 駅前店",
+    "prefecture": "東京都",
+    "city": "新宿区",
+    "category": "tv",
+    "relatedWorks": [
+      "よるのブランチ「Z世代ニュース」（2026-05-06放送）"
+    ],
+    "members": [
+      "NAOYA",
+      "EIKI",
+      "HAYATO"
+    ],
+    "addressOrArea": "東京都新宿区百人町2-2-7 SeoulTown 2F",
+    "lat": 35.7012,
+    "lng": 139.7004,
+    "sourceUrls": [],
+    "notes": "",
+    "visitTips": "番組で紹介された「ドバイチョコ餅寿司」は期間限定の可能性あり／新大久保駅前のビル2階",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "店に確認",
+      "notes": [
+        "番組で紹介された「ドバイチョコ餅寿司」は期間限定の可能性あり",
+        "新大久保駅前のビル2階"
+      ]
+    }
+  },
+  {
+    "id": "umisakura-michimaro",
+    "name": "海さくらミチマロ&蝦夷海",
+    "prefecture": "北海道",
+    "city": "札幌市中央区",
+    "category": "tv",
+    "relatedWorks": [
+      "HBC「グッチーな！」特別な一皿ロケ（2026-05-02放送）"
+    ],
+    "members": [
+      "TAKUTO",
+      "EIKI"
+    ],
+    "addressOrArea": "北海道札幌市中央区北5条西5丁目 JR55ビル7F",
+    "lat": 43.0672,
+    "lng": 141.3478,
+    "sourceUrls": [],
+    "notes": "",
+    "visitTips": "札幌駅前の刺身居酒屋。ランチの海鮮丼が人気／夜は予約がおすすめ",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "ランチ11:30〜14:00／夜17:00〜23:00（掲載時点）",
+      "fee": "海鮮丼 2,398円〜",
+      "notes": [
+        "札幌駅前の刺身居酒屋。ランチの海鮮丼が人気",
+        "夜は予約がおすすめ"
+      ]
+    }
+  },
+  {
+    "id": "tokuichi-jogai",
+    "name": "とくいち Nouilles Japonaise",
+    "prefecture": "北海道",
+    "city": "札幌市中央区",
+    "category": "tv",
+    "relatedWorks": [
+      "HBC「グッチーな！」特別な一皿ロケ（2026-05-02放送）"
+    ],
+    "members": [
+      "TAKUTO",
+      "EIKI"
+    ],
+    "addressOrArea": "北海道札幌市中央区北11条西22丁目1-26 札幌場外市場 万歳市場1F",
+    "lat": 43.0655,
+    "lng": 141.3155,
+    "sourceUrls": [],
+    "notes": "",
+    "visitTips": "札幌場外市場の中のラーメン店。開店前から行列ができる／市場の通路をふさがないように並ぶ",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "9:00〜15:00（L.O.）",
+      "fee": "特上らぁ麺 1,600円",
+      "closed": "水曜",
+      "notes": [
+        "札幌場外市場の中のラーメン店。開店前から行列ができる",
+        "市場の通路をふさがないように並ぶ"
+      ]
+    }
+  }
+]
