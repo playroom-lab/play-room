@@ -68,7 +68,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .ph .ph-credit{display:none;position:absolute;left:0;right:0;bottom:0;z-index:1;padding:14px 10px 6px;font-family:var(--f-mono);font-size:10px;line-height:1.4;color:#fff;text-decoration:none;background:linear-gradient(transparent,rgba(0,0,0,.55));overflow-wrap:anywhere}
 .ph.has .ph-credit{display:block}
 a.ph-credit:hover{text-decoration:underline}
-.pick .ph .ph-credit{font-size:9px;padding:10px 6px 4px}
+.pick .ph .ph-credit{font-size:9px;padding:10px 6px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ============ COVER ============ */
 .cover{position:relative;color:var(--on-blue);background:var(--blue);overflow:hidden}
@@ -84,7 +84,7 @@ a.ph-credit:hover{text-decoration:underline}
 @media (max-width:640px){.masthead{grid-template-columns:minmax(0,1fr)}.masthead .ja{writing-mode:horizontal-tb;font-size:22px;letter-spacing:.3em;padding-top:10px}}
 .cover-foot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px}
 .coverlines{list-style:none;margin:0;padding:0;display:grid;gap:12px;max-width:440px}
-.coverlines button{all:unset;cursor:pointer;display:grid;grid-template-columns:2.2em minmax(0,1fr);gap:0 12px;align-items:baseline}
+.coverlines button{all:unset;cursor:pointer;display:grid;min-height:44px;grid-template-columns:2.2em minmax(0,1fr);gap:0 12px;align-items:baseline}
 .coverlines button:focus-visible{outline:2px solid var(--on-blue);outline-offset:4px}
 .coverlines .n{font-family:var(--f-latin);font-style:italic;font-weight:700;font-size:36px;line-height:1;font-variant-numeric:lining-nums;text-align:right}
 .coverlines .t{font-family:var(--f-min);font-weight:800;font-size:18px;line-height:1.4}
@@ -120,7 +120,7 @@ a.ph-credit:hover{text-decoration:underline}
 /* ============ MAP ============ */
 .mapgrid{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1fr);gap:24px 36px;align-items:start}
 @media (max-width:900px){.mapgrid{grid-template-columns:minmax(0,1fr)}}
-.mapbox{position:relative;border:2px solid var(--rule);height:min(74vh,720px);min-height:380px;touch-action:none;overflow:hidden;background:var(--paper)}
+.mapbox{position:relative;border:2px solid var(--rule);height:min(74vh,720px);min-height:380px;touch-action:pan-y;overflow:hidden;background:var(--paper)}
 @media (max-width:900px){.mapbox{height:60vh;max-height:540px}}
 #map{display:block;width:100%;height:100%;cursor:grab}
 #map:active{cursor:grabbing}
@@ -128,6 +128,8 @@ a.ph-credit:hover{text-decoration:underline}
 .pref.hot{fill:var(--land-hot)}
 .pin{cursor:pointer;outline:none}
 .pin .dot{fill:var(--pin);stroke:var(--paper)}
+.pin .hit{fill:transparent;stroke:none}
+.map-hint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(20,24,49,.78);color:#fff;font-size:13px;font-weight:700;padding:10px 16px;pointer-events:none;white-space:nowrap}
 .pin.done .dot{fill:var(--pink)}
 .pin text{fill:var(--pin-text);font-family:var(--f-mono);font-weight:500;text-anchor:middle;dominant-baseline:central;pointer-events:none}
 .pin.selected .dot{stroke:var(--ink)}
@@ -218,17 +220,31 @@ a.ph-credit:hover{text-decoration:underline}
 .empty{padding:72px 0;font-family:var(--f-min);font-weight:700;font-size:18px;text-align:center;color:var(--muted)}
 
 /* ============ ARTICLE SHEET ============ */
-dialog.sheet{border:0;padding:0;margin:0 0 0 auto;width:min(620px,100%);max-width:100%;height:100%;max-height:100%;background:var(--sheet);color:var(--ink);overflow-y:auto;overscroll-behavior:contain}
+dialog.sheet{overflow-x:hidden;border:0;padding:0;margin:0 0 0 auto;width:min(620px,100%);max-width:100%;height:100%;max-height:100%;background:var(--sheet);color:var(--ink);overflow-y:auto;overscroll-behavior:contain}
 dialog.sheet::backdrop{background:rgba(17,21,38,.55)}
 .sheet-bar{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--sheet);padding:calc(env(safe-area-inset-top,0px) + 10px) max(20px,env(safe-area-inset-right,0px)) 10px 20px;border-bottom:1px solid var(--tint)}
-.sheet-bar .pager{display:flex;gap:18px}
+.sheet-bar .pos{font-size:12px;color:var(--muted);letter-spacing:.08em}
+.sheet-bar .close{padding:10px 4px;margin:-10px -4px}
+.sheet-body{will-change:transform}
+.sheet-foot{position:sticky;bottom:0;z-index:2;display:grid;grid-template-columns:64px minmax(0,1fr) 64px;align-items:stretch;gap:8px;background:var(--sheet);border-top:1px solid var(--tint);padding:8px max(12px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px))}
+.sheet-foot button{all:unset;cursor:pointer;box-sizing:border-box;min-height:48px;display:flex;align-items:center;justify-content:center;gap:4px;font-weight:700;font-size:14px}
+.sheet-foot .nav{border:1.5px solid var(--tint)}
+.sheet-foot .nav .arr{font-size:26px;line-height:1;margin-top:-3px}
+.sheet-foot .nav .mono{font-size:11px;color:var(--muted)}
+.sheet-foot .nav:disabled{opacity:.25;cursor:default}
+.sheet-foot .quick{border:1.5px dashed var(--muted);color:var(--ink)}
+.sheet-foot .quick.on{border:1.5px solid var(--pink);color:var(--pink);background:color-mix(in srgb,var(--pink) 10%,transparent)}
+.sheet-foot button:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.swipe-hint{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);font-size:12px;font-weight:700;padding:8px 14px;white-space:nowrap;pointer-events:none;animation:hintfade 3.2s ease forwards;z-index:3}
+@keyframes hintfade{0%,75%{opacity:1}100%{opacity:0;visibility:hidden}}
+dialog.sheet .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 .sheet-bar button{all:unset;cursor:pointer;font-family:var(--f-mono);font-size:12px;letter-spacing:.06em}
 .sheet-bar button:hover{color:var(--pink)}
 .sheet-bar button:focus-visible{outline:2px solid var(--pink)}
 .sheet-bar button:disabled{opacity:.3;cursor:default}
 .sheet .ph{aspect-ratio:4/3}
 .sheet .credit{font-family:var(--f-mono);font-size:10px;color:var(--muted);padding:6px 20px 0;letter-spacing:.06em}
-.art{padding:22px max(20px,env(safe-area-inset-right,0px)) calc(48px + env(safe-area-inset-bottom,0px)) 20px;display:grid;gap:22px}
+.art{padding:22px max(20px,env(safe-area-inset-right,0px)) 32px 20px;display:grid;gap:22px}
 .art-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:start}
 .art .no{font-family:var(--f-latin);font-style:italic;font-weight:700;font-size:64px;line-height:.85;font-variant-numeric:lining-nums}
 .art .cat{display:flex;gap:8px;align-items:center;color:var(--muted);margin:10px 0 6px}
@@ -263,7 +279,7 @@ dialog.sheet::backdrop{background:rgba(17,21,38,.55)}
 .acts a:focus-visible,.acts button:focus-visible{outline:2px solid var(--pink);outline-offset:-2px}
 .block h4{margin:0 0 6px;font-family:var(--f-mono);font-size:10px;letter-spacing:.18em;color:var(--muted);font-weight:400}
 .block p{margin:0;font-size:14px}
-.block .copy{all:unset;cursor:pointer;font-size:12px;font-weight:700;color:var(--muted);text-decoration:underline;text-underline-offset:3px;margin-left:8px}
+.block .copy{all:unset;cursor:pointer;font-size:12px;font-weight:700;color:var(--muted);text-decoration:underline;text-underline-offset:3px;margin-left:4px;padding:10px 6px}
 .block ol{margin:0;padding-left:1.4em;font-family:var(--f-mono);font-size:11px;line-height:1.9}
 .block ol a{text-decoration-color:var(--muted);overflow-wrap:anywhere}
 
@@ -273,10 +289,12 @@ dialog.sheet::backdrop{background:rgba(17,21,38,.55)}
 .album-head h4{margin:0;font-family:var(--f-mono);font-size:10px;letter-spacing:.18em;color:var(--muted);font-weight:400}
 .album-head span{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
 .album-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-.thumb{all:unset;cursor:pointer;aspect-ratio:1;overflow:hidden;position:relative;background:var(--ph)}
+.thumb{all:unset;box-sizing:border-box;display:block;width:100%;height:0;padding-bottom:100%;cursor:pointer;overflow:hidden;position:relative;background:var(--ph)}
+.thumb img{position:absolute;inset:0}
 .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.thumb.add{border:1.5px dashed var(--muted);display:grid;place-content:center;justify-items:center;gap:2px;font-size:12px;font-weight:700;color:var(--muted);background:none;box-sizing:border-box}
-.thumb.add span{font-size:22px;line-height:1}
+.thumb.add{border:1.5px dashed var(--muted);font-size:12px;font-weight:700;color:var(--muted);background:none;box-sizing:border-box}
+.thumb.add .in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.thumb.add span.p{font-size:22px;line-height:1}
 .thumb.add:hover{border-color:var(--pink);color:var(--pink)}
 .thumb:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
 .album .vnote{margin:0;font-size:11px;color:var(--muted)}
@@ -328,7 +346,9 @@ dialog.pp::backdrop{background:rgba(17,21,38,.62)}
 .colophon .fine{margin-top:18px;font-family:var(--f-mono);font-size:11px;letter-spacing:.04em}
 
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 10px 10px 18px;font-size:13px;font-weight:700;display:flex;gap:12px;align-items:center;z-index:30;max-width:calc(100% - 32px)}
-.toast button{border:0;background:var(--pink);color:#fff;padding:4px 12px;font-weight:700;cursor:pointer;font-size:12px}
+.toast button{border:0;background:var(--pink);color:#fff;padding:8px 14px;font-weight:700;cursor:pointer;font-size:13px;white-space:nowrap}
+.toast{width:max-content}
+.toast #toast-t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .toast button:empty{display:none}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
@@ -367,6 +387,7 @@ dialog.pp::backdrop{background:rgba(17,21,38,.62)}
     <div class="mapgrid">
       <div class="mapbox">
         <svg id="map" role="img" aria-label="聖地の位置を示す日本地図"></svg>
+        <div class="map-hint" id="map-hint" hidden>2本の指で地図を動かせます</div>
         <div class="zoomer"><button type="button" id="zin" aria-label="拡大">+</button><button type="button" id="zout" aria-label="縮小">−</button></div>
       </div>
       <div class="map-side">
@@ -522,9 +543,12 @@ async function copy(text, label){
   catch(e){ toast("コピーできませんでした。長押しで選択してください"); }
 }
 let toastTimer;
+const TOAST_EL = document.getElementById("toast");
 function toast(msg, actionLabel, action){
-  const t = document.getElementById("toast"), b = document.getElementById("toast-b");
-  document.getElementById("toast-t").textContent = msg;
+  const t = TOAST_EL, b = document.getElementById("toast-b") || t.querySelector("button");
+  const host = [...document.querySelectorAll("dialog[open]")].pop() || document.body;
+  if (t.parentElement !== host) host.append(t);
+  t.querySelector("#toast-t").textContent = msg;
   b.textContent = actionLabel || ""; b.onclick = () => { t.hidden = true; action && action(); };
   t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(()=>{ t.hidden = true; }, actionLabel ? 6000 : 2600);
 }
@@ -685,10 +709,9 @@ function renderSheet(pop){
   sheet.textContent = "";
   const parts = [
     h("div",{class:"sheet-bar"},
-      h("div",{class:"pager"},
-        h("button",{type:"button",disabled:!prev,onclick:()=>prev&&openSheet(prev.id)},prev ? `← No.${pad(prev.no)}` : "←"),
-        h("button",{type:"button",disabled:!next,onclick:()=>next&&openSheet(next.id)},next ? `No.${pad(next.no)} →` : "→")),
-      h("button",{type:"button",onclick:closeSheet,"aria-label":"閉じる"},"閉じる ✕")),
+      h("span",{class:"pos mono"},`${i+1} / ${order.length}`),
+      h("button",{type:"button",class:"close",onclick:closeSheet,"aria-label":"閉じる"},"閉じる ✕")),
+    h("div",{class:"sheet-body"},
     myCover(s) ? photoFrame(myCover(s), "photo") : photoFrame(spotPhoto(s), "photo", creditTag(s)),
     h("article",{class:"art"},
       h("div",{class:"art-head"},
@@ -707,10 +730,75 @@ function renderSheet(pop){
       albumBlock(s),
       visitBlock(s),
       h("div",{class:"block"},h("h4",null,"ADDRESS"),h("p",null,s.addressOrArea,h("button",{type:"button",class:"copy",onclick:()=>copy(s.addressOrArea,"住所")},"コピー"))),
-      null)];
+      null)),
+    h("nav",{class:"sheet-foot","aria-label":"前後のスポット"},
+      h("button",{type:"button",class:"nav prev",disabled:!prev,"aria-label":prev?`前へ No.${prev.no} ${prev.name}`:"前へ",onclick:()=>prev&&turnPage(prev.id,1)},h("span",{class:"arr"},"‹"),h("span",{class:"mono"},prev?pad(prev.no):"")),
+      h("button",{type:"button",class:"quick"+(visited[s.id]?" on":""),"aria-pressed":String(!!visited[s.id]),onclick:()=>toggleVisit(s)},
+        visited[s.id] ? `巡礼済 ${dotted(visited[s.id]).slice(5)}` : "＋ 行ったを記録"),
+      h("button",{type:"button",class:"nav next",disabled:!next,"aria-label":next?`次へ No.${next.no} ${next.name}`:"次へ",onclick:()=>next&&turnPage(next.id,-1)},h("span",{class:"mono"},next?pad(next.no):""),h("span",{class:"arr"},"›"))),
+    swipeHint()];
   sheet.append(...parts.filter(Boolean));
+  if (!TOAST_EL.isConnected) sheet.append(TOAST_EL);  /* keep a visible toast when the page re-renders */
   if (pop) sheet.querySelector(".stamp").classList.add("pop");
 }
+/* ---------- swipe between spots ---------- */
+const HINT_KEY = "mazzel-seichi:swipehint";
+function swipeHint(){
+  let seen = false; try{ seen = localStorage.getItem(HINT_KEY) === "1"; }catch(e){}
+  if (seen || !matchMedia("(pointer: coarse)").matches) return null;
+  try{ localStorage.setItem(HINT_KEY,"1"); }catch(e){}
+  return h("div",{class:"swipe-hint","aria-hidden":"true"},"← 左右にスワイプで前後のスポットへ →");
+}
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function sheetNeighbors(){
+  const list = SPOTS.filter(matches); const order = list.some(x=>x.id===sheetId) ? list : SPOTS;
+  const i = order.findIndex(x=>x.id===sheetId); return {prev: order[i-1], next: order[i+1]};
+}
+/* dir: -1 = content leaves to the left (next), 1 = leaves to the right (prev) */
+function turnPage(id, dir){
+  const body = sheet.querySelector(".sheet-body");
+  if (!body || reduceMotion){ openSheet(id); return; }
+  body.style.transition = "transform .18s ease-in, opacity .18s";
+  body.style.transform = `translateX(${dir*100}%)`; body.style.opacity = "0";
+  setTimeout(() => {
+    openSheet(id);
+    const nb = sheet.querySelector(".sheet-body"); if (!nb) return;
+    nb.style.transition = "none"; nb.style.transform = `translateX(${-dir*30}%)`; nb.style.opacity = "0";
+    requestAnimationFrame(() => requestAnimationFrame(() => { nb.style.transition = "transform .22s ease-out, opacity .22s"; nb.style.transform = ""; nb.style.opacity = ""; }));
+  }, 170);
+}
+(function(){
+  let x0 = 0, y0 = 0, dx = 0, mode = null, body = null, t0 = 0;
+  sheet.addEventListener("touchstart", e => {
+    if (e.touches.length !== 1 || e.target.closest(".sheet-foot,.sheet-bar,input,textarea")) { mode = "none"; return; }
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; dx = 0; mode = null; t0 = Date.now();
+    body = sheet.querySelector(".sheet-body");
+  }, {passive:true});
+  sheet.addEventListener("touchmove", e => {
+    if (mode === "none" || !body) return;
+    const mx = e.touches[0].clientX - x0, my = e.touches[0].clientY - y0;
+    if (!mode){ if (Math.abs(mx) > 12 && Math.abs(mx) > Math.abs(my) * 1.3) mode = "x"; else if (Math.abs(my) > 12) mode = "none"; else return; }
+    if (mode !== "x") return;
+    e.preventDefault();
+    const {prev, next} = sheetNeighbors();
+    dx = mx; if ((dx > 0 && !prev) || (dx < 0 && !next)) dx = dx / 4;   /* rubber band at the ends */
+    body.style.transition = "none"; body.style.transform = `translateX(${dx}px)`;
+  }, {passive:false});
+  sheet.addEventListener("touchend", () => {
+    if (mode !== "x" || !body) { mode = null; return; }
+    const {prev, next} = sheetNeighbors(), fast = Math.abs(dx) / Math.max(1, Date.now() - t0) > .45;
+    if ((dx < -70 || (fast && dx < -30)) && next) turnPage(next.id, -1);
+    else if ((dx > 70 || (fast && dx > 30)) && prev) turnPage(prev.id, 1);
+    else { body.style.transition = "transform .2s ease-out"; body.style.transform = ""; }
+    mode = null;
+  });
+  sheet.addEventListener("keydown", e => {
+    if (e.target.closest("input,textarea")) return;
+    const {prev, next} = sheetNeighbors();
+    if (e.key === "ArrowRight" && next){ e.preventDefault(); turnPage(next.id,-1); }
+    if (e.key === "ArrowLeft" && prev){ e.preventDefault(); turnPage(prev.id,1); }
+  });
+})();
 function openSheet(id){
   if (!BY_ID[id]) return;
   sheetId = id; renderSheet();
@@ -746,7 +834,15 @@ const VIEWS = { japan:[[128.6,30.9],[146.0,45.6]], kanto:[[138.75,34.15],[140.65
 let W = 0, H = 0, k = 1, kNum = 1, currentView = "kanto";
 const hotPrefs = new Set(SPOTS.filter(s=>!abroad(s)).map(s=>s.prefecture));
 const mapSpots = SPOTS.filter(s=>s.lat!=null && s.lng!=null);
-const zoom = d3.zoom().scaleExtent([0.8, 600]).on("zoom", ev => { gRoot.attr("transform", ev.transform); k = ev.transform.k; scalePins(); });
+let mapHintT;
+function mapHint(){
+  const el = document.getElementById("map-hint"); if (!el) return;
+  el.hidden = false; clearTimeout(mapHintT); mapHintT = setTimeout(()=>{ el.hidden = true; }, 1400);
+}
+box.addEventListener("touchmove", e => { if (e.touches.length === 1) mapHint(); }, {passive:true});
+const zoom = d3.zoom().scaleExtent([0.8, 600])
+  .filter(ev => ev.type.startsWith("touch") ? ev.touches.length >= 2 : (!ev.ctrlKey || ev.type === "wheel") && !ev.button)
+  .on("zoom", ev => { gRoot.attr("transform", ev.transform); k = ev.transform.k; scalePins(); });
 svg.call(zoom).on("dblclick.zoom", null);
 svg.on("click", ev => { if (ev.target === svg.node() || ev.target.classList.contains("pref")) select(null); });
 document.getElementById("zin").onclick = () => svg.transition().duration(300).call(zoom.scaleBy, 1.8);
@@ -774,7 +870,7 @@ function drawPins(){
   const data = mapSpots.filter(matches).sort((a,b)=>(a.id===state.selected)-(b.id===state.selected));
   const sel = gPins.selectAll("g.pin").data(data, d=>d.id).join(enter=>{
     const g = enter.append("g").attr("class","pin").attr("tabindex",0).attr("role","button");
-    g.append("circle").attr("class","dot"); g.append("text"); g.append("title");
+    g.append("circle").attr("class","hit"); g.append("circle").attr("class","dot"); g.append("text"); g.append("title");
     g.on("click", (ev,d)=>{ ev.stopPropagation(); select(d.id); })
      .on("keydown", (ev,d)=>{ if (ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); select(d.id); } });
     return g;
@@ -790,6 +886,7 @@ function scalePins(){
   const numbered = k >= kNum;
   gPins.selectAll("g.pin").each(function(d){
     const g = d3.select(this), on = d.id===state.selected;
+    g.select(".hit").attr("r", 18 / k);
     g.select(".dot").attr("r", (numbered ? 10 : 4.5) * (on ? 1.3 : 1) / k).attr("stroke-width", (on ? 2.5 : 1.2)/k);
     g.select("text").attr("display", numbered ? null : "none").attr("font-size", (on?12:10)/k);
   });
@@ -1124,7 +1221,7 @@ function albumBlock(s){
     h("div",{class:"album-head"},h("h4",null,"MY PHOTOS"),h("span",null, list.length ? `${list.length}枚` : "")),
     h("div",{class:"album-grid"},
       list.map((p,i)=>h("button",{type:"button",class:"thumb","aria-label":`写真${i+1}を大きく見る`,onclick:()=>openViewer(s,p)},h("img",{src:p.url,alt:""}))),
-      list.length < MAX_PER_SPOT ? h("button",{type:"button",class:"thumb add",onclick:()=>input.click()},h("span",null,"＋"),"写真を追加") : null),
+      list.length < MAX_PER_SPOT ? h("button",{type:"button",class:"thumb add",onclick:()=>input.click()},h("span",{class:"in"},h("span",{class:"p"},"＋"),"写真を追加")) : null),
     input,
     h("p",{class:"vnote"},"写真はこの端末のブラウザにだけ保存されます。大事な写真はカメラロールにも残しておいてください。"));
 }
