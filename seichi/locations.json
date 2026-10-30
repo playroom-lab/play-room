@@ -2081,5 +2081,307 @@
         "市場の通路をふさがないように並ぶ"
       ]
     }
+  },
+  {
+    "id": "yonemoto-coffee-kiyosumi",
+    "name": "米本珈琲 清澄白河 FLAGSHIP店",
+    "prefecture": "東京都",
+    "city": "江東区",
+    "category": "tv",
+    "relatedWorks": [
+      "ヒルナンデス！（2026/10/28）清澄白河＆門前仲町 オープン1年未満の店探し"
+    ],
+    "members": [
+      "KAIRYU"
+    ],
+    "addressOrArea": "東京都江東区白河2-14-7",
+    "lat": 35.68245,
+    "lng": 139.80247,
+    "sourceUrls": [
+      "https://datazoo.jp/tv/%E3%83%92%E3%83%AB%E3%83%8A%E3%83%B3%E3%83%87%E3%82%B9%EF%BC%81/1902160",
+      "https://www.jpresentime.com/entry/yonemoto-flagship"
+    ],
+    "notes": "",
+    "visitTips": "清澄白河駅から徒歩すぐ／モーニングのベーコンエッグトーストも人気",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "10:00〜17:00",
+      "fee": "ドリンク600円台〜（目安）",
+      "closed": "不定休（公式で確認）",
+      "notes": [
+        "清澄白河駅から徒歩すぐ",
+        "モーニングのベーコンエッグトーストも人気"
+      ]
+    }
+  },
+  {
+    "id": "k-nuts-kiyosumi",
+    "name": "K-nuts 清澄白河店",
+    "prefecture": "東京都",
+    "city": "江東区",
+    "category": "tv",
+    "relatedWorks": [
+      "ヒルナンデス！（2026/10/28）清澄白河＆門前仲町 オープン1年未満の店探し"
+    ],
+    "members": [
+      "KAIRYU"
+    ],
+    "addressOrArea": "東京都江東区白河2-8-4",
+    "lat": 35.68215,
+    "lng": 139.80238,
+    "sourceUrls": [
+      "https://datazoo.jp/tv/%E3%83%92%E3%83%AB%E3%83%8A%E3%83%B3%E3%83%87%E3%82%B9%EF%BC%81/1902160",
+      "https://koto.goguynet.jp/2026/02/21/knuts_kiyosumisirakawa/"
+    ],
+    "notes": "",
+    "visitTips": "できたてナッツは数量限定・日替わり／ピーナッツバター生搾り体験あり",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "平日10:00〜20:00／土日祝10:00〜18:00",
+      "fee": "ナッツ・ジェラートは数百円〜",
+      "closed": "公式で確認",
+      "notes": [
+        "できたてナッツは数量限定・日替わり",
+        "ピーナッツバター生搾り体験あり"
+      ]
+    }
+  },
+  {
+    "id": "un-donut-kiyosumi",
+    "name": "UN DONUT",
+    "prefecture": "東京都",
+    "city": "江東区",
+    "category": "tv",
+    "relatedWorks": [
+      "ヒルナンデス！（2026/10/28）清澄白河＆門前仲町 オープン1年未満の店探し"
+    ],
+    "members": [
+      "KAIRYU"
+    ],
+    "addressOrArea": "東京都江東区白河2-6-11",
+    "lat": 35.68121,
+    "lng": 139.80356,
+    "sourceUrls": [
+      "https://datazoo.jp/tv/%E3%83%92%E3%83%AB%E3%83%8A%E3%83%B3%E3%83%87%E3%82%B9%EF%BC%81/1902160"
+    ],
+    "notes": "",
+    "visitTips": "深川資料館通り商店街の生ドーナツ専門店／売り切れ次第終了のことがあります",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "店のSNSで確認",
+      "fee": "生ドーナツ480円〜",
+      "closed": "店のSNSで確認",
+      "notes": [
+        "深川資料館通り商店街の生ドーナツ専門店",
+        "売り切れ次第終了のことがあります"
+      ]
+    }
+  },
+  {
+    "id": "yorimichi-stand",
+    "name": "よりみちスタンド",
+    "prefecture": "東京都",
+    "city": "江東区",
+    "category": "tv",
+    "relatedWorks": [
+      "ヒルナンデス！（2026/10/28）清澄白河＆門前仲町 オープン1年未満の店探し"
+    ],
+    "members": [
+      "KAIRYU"
+    ],
+    "addressOrArea": "東京都江東区平野1-7-3",
+    "lat": 35.67897,
+    "lng": 139.79875,
+    "sourceUrls": [
+      "https://datazoo.jp/tv/%E3%83%92%E3%83%AB%E3%83%8A%E3%83%B3%E3%83%87%E3%82%B9%EF%BC%81/1902160"
+    ],
+    "notes": "",
+    "visitTips": "清澄通り沿いの和カフェ／KAIRYUは抹茶ラテ ドーナツセットを注文",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "店のSNSで確認",
+      "fee": "抹茶ラテ ドーナツセット1,595円",
+      "closed": "店のSNSで確認",
+      "notes": [
+        "清澄通り沿いの和カフェ",
+        "KAIRYUは抹茶ラテ ドーナツセットを注文"
+      ]
+    }
+  },
+  {
+    "id": "udonya-damon",
+    "name": "うどん屋 だもん",
+    "prefecture": "東京都",
+    "city": "江東区",
+    "category": "tv",
+    "relatedWorks": [
+      "ヒルナンデス！（2026/10/28）清澄白河＆門前仲町 オープン1年未満の店探し"
+    ],
+    "members": [
+      "KAIRYU"
+    ],
+    "addressOrArea": "東京都江東区富岡1-2-4 101",
+    "lat": 35.6713,
+    "lng": 139.7961,
+    "sourceUrls": [
+      "https://datazoo.jp/tv/%E3%83%92%E3%83%AB%E3%83%8A%E3%83%B3%E3%83%87%E3%82%B9%EF%BC%81/1902160"
+    ],
+    "notes": "",
+    "visitTips": "門前仲町駅から徒歩すぐ／番組では「冷やしだもん」「バターコーヒーうどん」が登場",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "店のSNSで確認",
+      "fee": "うどん数百円〜（手頃な価格帯）",
+      "closed": "店のSNSで確認",
+      "notes": [
+        "門前仲町駅から徒歩すぐ",
+        "番組では「冷やしだもん」「バターコーヒーうどん」が登場"
+      ]
+    }
+  },
+  {
+    "id": "fukagawa-iseya-honten",
+    "name": "深川伊勢屋 門前仲町本店",
+    "prefecture": "東京都",
+    "city": "江東区",
+    "category": "tv",
+    "relatedWorks": [
+      "ヒルナンデス！（2026/10/28）清澄白河＆門前仲町 オープン1年未満の店探し"
+    ],
+    "members": [
+      "KAIRYU"
+    ],
+    "addressOrArea": "東京都江東区富岡1-9-9",
+    "lat": 35.67133,
+    "lng": 139.7977,
+    "sourceUrls": [
+      "https://datazoo.jp/tv/%E3%83%92%E3%83%AB%E3%83%8A%E3%83%B3%E3%83%87%E3%82%B9%EF%BC%81/1902160",
+      "https://www.iseya.ne.jp/"
+    ],
+    "notes": "",
+    "visitTips": "創業119年の和菓子・総菜店／深川不動堂・富岡八幡宮のすぐそば",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "公式サイトで確認",
+      "fee": "団子・おはぎは1個数百円以下",
+      "closed": "公式サイトで確認",
+      "notes": [
+        "創業119年の和菓子・総菜店",
+        "深川不動堂・富岡八幡宮のすぐそば"
+      ]
+    }
+  },
+  {
+    "id": "hanabana-monnaka",
+    "name": "花ナ々ナ 門前仲町",
+    "prefecture": "東京都",
+    "city": "江東区",
+    "category": "tv",
+    "relatedWorks": [
+      "ヒルナンデス！（2026/10/28）清澄白河＆門前仲町 オープン1年未満の店探し"
+    ],
+    "members": [
+      "KAIRYU"
+    ],
+    "addressOrArea": "東京都江東区富岡1-14-5",
+    "lat": 35.67232,
+    "lng": 139.79794,
+    "sourceUrls": [
+      "https://datazoo.jp/tv/%E3%83%92%E3%83%AB%E3%83%8A%E3%83%B3%E3%83%87%E3%82%B9%EF%BC%81/1902160",
+      "https://www.bread-espresso.jp/shop/hanabana-monnaka.html"
+    ],
+    "notes": "",
+    "visitTips": "深川不動堂の参道にあるフラワーカフェ／週末は混むので早い時間が狙い目",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "8:00〜18:00（L.O.17:00）",
+      "fee": "フレンチトーストセット1,000円台〜（目安）",
+      "closed": "不定休",
+      "notes": [
+        "深川不動堂の参道にあるフラワーカフェ",
+        "週末は混むので早い時間が狙い目"
+      ]
+    }
+  },
+  {
+    "id": "punikko-ikebukuro-parco",
+    "name": "PUNIKKO by TOKOTOYZ 池袋パルコ店",
+    "prefecture": "東京都",
+    "city": "豊島区",
+    "category": "tv",
+    "relatedWorks": [
+      "王様のブランチ（2026/7/4）トレンド部"
+    ],
+    "members": [
+      "NAOYA",
+      "RYUKI"
+    ],
+    "addressOrArea": "東京都豊島区南池袋1-28-2 池袋PARCO本館7F",
+    "lat": 35.72712,
+    "lng": 139.71034,
+    "sourceUrls": [
+      "https://x.com/mazzel_official"
+    ],
+    "notes": "",
+    "visitTips": "完全予約制のことがあるので公式で予約状況を確認",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "池袋PARCOの営業時間に準じる",
+      "fee": "体験・商品により異なる",
+      "closed": "池袋PARCOに準じる",
+      "notes": [
+        "完全予約制のことがあるので公式で予約状況を確認"
+      ]
+    }
+  },
+  {
+    "id": "tokyo-disneyland",
+    "name": "東京ディズニーランド",
+    "prefecture": "千葉県",
+    "city": "浦安市",
+    "category": "tv",
+    "relatedWorks": [
+      "王様のブランチ（2026/10/3）トレンド部 ディズニー・ハロウィーン徹底調査"
+    ],
+    "members": [
+      "NAOYA",
+      "HAYATO"
+    ],
+    "addressOrArea": "千葉県浦安市舞浜1-1",
+    "lat": 35.6329,
+    "lng": 139.8804,
+    "sourceUrls": [
+      "https://datazoo.jp/tv/%E7%8E%8B%E6%A7%98%E3%81%AE%E3%83%96%E3%83%A9%E3%83%B3%E3%83%81/1896972"
+    ],
+    "notes": "",
+    "visitTips": "番組ではスウィートハート・カフェのハロウィーン限定メニューを実食／ヴィランズ・ハロウィーン“Into the Frenzy”は1日1回・夕方",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "日により異なる（公式カレンダー）",
+      "fee": "日付指定チケット制（変動価格）",
+      "closed": "なし",
+      "notes": [
+        "番組ではスウィートハート・カフェのハロウィーン限定メニューを実食",
+        "ヴィランズ・ハロウィーン“Into the Frenzy”は1日1回・夕方"
+      ]
+    }
   }
 ]
