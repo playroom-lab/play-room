@@ -16,7 +16,7 @@ const nums = n => Array.from({length:n}, (_, k) => String(k + 1).padStart(2, '0'
 /* ---------- members (static) ---------- */
 // アー写編の写真（01〜18）は mazzel-gacha に入っている。ここではパフォ衣装編を足す
 const PERF = 'https://raw.githubusercontent.com/rikomuze/mazzel-best-visual-performance/main/images/';
-const PERF_MEMBER = ['13','14','15','16','17','18','01','02','03','04','05','06','07','08','09','10','11','19']; // 12枚目は使わない
+const PERF_MEMBER = ['13','14','15','16','17','18','01','02','03','04','05','06','07','08','09','10','11','19','20','21']; // 12枚目は使わない。新しい写真は必ず末尾に足す
 const PERF_GROUP = nums(9);
 const NAMES = ['KAIRYU','NAOYA','RAN','SEITO','RYUKI','TAKUTO','HAYATO','EIKI'];
 const MEMBERS = NAMES.map((name, i) => ({
