@@ -68,7 +68,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .ph .ph-credit{display:none;position:absolute;left:0;right:0;bottom:0;z-index:1;padding:14px 10px 6px;font-family:var(--f-mono);font-size:10px;line-height:1.4;color:#fff;text-decoration:none;background:linear-gradient(transparent,rgba(0,0,0,.55));overflow-wrap:anywhere}
 .ph.has .ph-credit{display:block}
 a.ph-credit:hover{text-decoration:underline}
-.pick .ph .ph-credit{font-size:9px;padding:10px 6px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pick .ph .ph-credit,.toc .ph .ph-credit{font-size:9px;padding:10px 6px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ============ COVER ============ */
 .cover{position:relative;color:var(--on-blue);background:var(--blue);overflow:hidden}
@@ -605,12 +605,15 @@ function renderTally(){
   document.getElementById("seal-n").textContent = doneCount(SPOTS);
   renderToc();
 }
+/* contents photo: the first spot in that area that has a photo, MV/drama/movie first */
+const REP_ORDER = ["mv","drama","movie","event","live","tv"];
+const areaRep = items => items.filter(s=>s.photoThumb||s.photoPath).sort((x,y)=>REP_ORDER.indexOf(x.category)-REP_ORDER.indexOf(y.category))[0] || null;
 function renderToc(){
   const toc = document.getElementById("toc"); toc.textContent = "";
   for (const [pref, items] of d3.groups(SPOTS, s=>s.prefecture)){
     const a = items[0].no, b = items[items.length-1].no;
     toc.append(h("a",{href:"#ch-"+pref,onclick:e=>{ e.preventDefault(); resetFilters(); document.getElementById("ch-"+pref)?.scrollIntoView({behavior:"smooth"}); }},
-      photoFrame(PHOTO_DIR+"area-"+pref+".jpg", a===b ? `No.${pad(a)}` : `No.${pad(a)}–${pad(b)}`),
+      (rep => photoFrame(rep ? spotThumb(rep) : null, a===b ? `No.${pad(a)}` : `No.${pad(a)}–${pad(b)}`, rep ? creditTag(rep) : null))(areaRep(items)),
       h("div",null, h("div",{class:"nm"},pref), h("div",{class:"meta"}, `${items.length}か所 ／ 巡礼 ${doneCount(items)}`))));
   }
 }
