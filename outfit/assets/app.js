@@ -4,7 +4,7 @@
  *   箱推しモード:   各メンバー4衣装ずつ計32衣装 → 4択8問（1問に4人ちがうメンバー）→ 8衣装 → 決勝でTOP5
  * 写真: 最強9マスの「アー写編」と「パフォ衣装編」と同じ写真から、毎回ランダムに選ぶ
  *   アー写編  : mazzel-best-visual/images/<member>/01〜15.png ＋ new-20260918/<member>-1〜3.png
- *   パフォ衣装: mazzel-best-visual-performance/images/<member>/01〜11・13〜18.png（12枚目は使わない）
+ *   パフォ衣装: mazzel-best-visual-performance/images/<member>/01〜11・13〜21.png（12枚目は使わない）
  */
 (() => {
 'use strict';
@@ -21,7 +21,7 @@ const pad2 = n => String(n).padStart(2, '0');
 // 写真の候補（メンバー共通の番号）。'a..' はアー写編、'p..' はパフォ衣装編
 const POOL = [
   ...range(15).map(n => 'a' + pad2(n)), 'n1', 'n2', 'n3',
-  ...[19, 13, 14, 15, 16, 17, 18, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(n => 'p' + pad2(n))
+  ...[20, 21, 19, 13, 14, 15, 16, 17, 18, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(n => 'p' + pad2(n))
 ];
 const rawSrc = s => {
   const BV = 'https://raw.githubusercontent.com/rikomuze/mazzel-best-visual/main/images/';
