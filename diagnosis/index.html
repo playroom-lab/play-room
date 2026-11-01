@@ -409,6 +409,12 @@ var QUESTIONS = [
 var PAGE_URL = (location.protocol.indexOf('http') === 0) ? location.origin + location.pathname.replace(/index\.html$/,'') : 'PLAY ROOM';
 var answers = [], orders = [], qi = 0, photo = null, R = null, busy = false;
 function $(id){ return document.getElementById(id); }
+/* 画面を切り替えたときの位置合わせ。ページの先頭(0)までは戻さず、なめらかスクロールもしない。
+   Xのアプリ内ブラウザは上に戻る動きのたびに元ポストのシートを引き出してしまうため */
+function toEl(el){
+  var y = el.getBoundingClientRect().top + window.scrollY - 8;
+  window.scrollTo(0, Math.max(1, Math.round(y)));
+}
 function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
 function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;} return a; }
 
@@ -418,7 +424,7 @@ function startQuiz(){
   qi = 0;
   $('intro').hidden = true; $('result').hidden = true; $('actions').hidden = true; $('quiz').hidden = false;
   renderQ();
-  $('quiz').scrollIntoView({behavior:'smooth', block:'start'});
+  toEl($('quiz'));
 }
 function renderQ(){
   var q = QUESTIONS[qi];
@@ -473,7 +479,7 @@ function finish(){
   renderResult();
   $('quiz').hidden = true; $('result').hidden = false; $('actions').hidden = false;
   markList();
-  $('result').scrollIntoView({behavior:'smooth', block:'start'});
+  toEl($('result'));
 }
 function renderResult(){
   var w = WHAT[R.what[0].k], h = HOW[R.how[0].k], sub = R.how[1], pair = HOW[h.pair];
