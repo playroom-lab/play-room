@@ -223,6 +223,7 @@ function renderResult() {
     <button class="btn" id="save">画像で保存・シェア</button>
     <button class="btn ghost" id="again">もう一回</button>
     <button class="btn ghost" id="home">${S.mode === 'box' ? '推しメンで選ぶ' : 'ほかのメンバーで'}</button>
+    <a class="btn ghost" href="../">他の遊びも見てみる</a>
   </div>`;
   $('save').onclick = saveImage;
   $('again').onclick = () => S.mode === 'box' ? startBox() : startMember(S.member);
