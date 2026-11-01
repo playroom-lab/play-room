@@ -44,7 +44,13 @@ let history = [];
 const snap = () => JSON.parse(JSON.stringify(S));
 function go(next, keepHistory = true) {
   if (keepHistory) history.push(snap()); else history = [];
-  S = next; render(); window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+  S = next; render(); toApp();
+}
+/* 画面を切り替えたときの位置合わせ。ページの先頭(0)までは戻さず、選手権エリアの上端で止める。
+   Xのアプリ内ブラウザは先頭に戻るたびに元ポストのシートを引き出してしまうため */
+function toApp() {
+  const y = app.getBoundingClientRect().top + window.scrollY - 8;
+  window.scrollTo({ top: Math.max(1, Math.round(y)), behavior: 'instant' in window ? 'instant' : 'auto' });
 }
 function undo() { if (history.length) { S = history.pop(); render(); } }
 
