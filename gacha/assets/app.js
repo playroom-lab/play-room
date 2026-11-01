@@ -34,6 +34,13 @@ MEMBERS.push({ id: 'mazzel-secret', name: 'MAZZEL 集合', order: 99, secret: tr
     ...PERF_GROUP.map(x => PRfast(`${PERF}group/${x}.png`, 640))
   ] });
 const M = id => MEMBERS.find(m => m.id === id);
+/* 画面を切り替えたときの位置合わせ。ページの先頭(0)までは戻さず、開封スペースの上端で止める。
+   Xのアプリ内ブラウザは先頭に戻るたびに元ポストのシートを引き出してしまうため */
+function toStage() {
+  const el = $('stage'); if (!el) return;
+  const y = el.getBoundingClientRect().top + window.scrollY - 8;
+  window.scrollTo(0, Math.max(1, Math.round(y)));
+}
 const NORMALS = MEMBERS.filter(m => !m.secret);
 const SECRETS = MEMBERS.filter(m => m.secret);
 const SHOT_TOTAL = MEMBERS.reduce((s, m) => s + m.shots.length, 0);
@@ -126,7 +133,7 @@ async function route() {
   if (play === 'solo') { mode = 'local'; loadLocal(); }
   else if (play === 'friends') { mode = 'friends'; players = {}; }
   else { mode = 'start'; players = {}; }
-  renderAll(); window.scrollTo(0, 0);
+  renderAll(); toStage();
 }
 async function enterRoom(code) {
   leaveRoom(); resetView();
@@ -150,7 +157,7 @@ async function enterRoom(code) {
     if (view.inviting && next[me]?.pulls > 0) view.inviting = false; // もう開け始めている人には招待画面を出さない
     announce(next); players = next; renderAll();
   }, dead));
-  renderAll(); window.scrollTo(0, 0);
+  renderAll(); toStage();
 }
 async function createRoom() {
   if (!(await fbReady)) { toast('共有サーバーにつながりません'); return; }
@@ -222,7 +229,7 @@ function renderTop() {
         ${joined && !view.inviting ? '<button class="btn ghost" id="openInvite">お友達を招待</button>' : ''}
         <button class="linkbtn" data-go="start">出る</button>
       </div>`;
-    const oi = $('openInvite'); if (oi) oi.onclick = () => { view.inviting = true; renderAll(); $('stage').scrollIntoView({ block: 'start' }); };
+    const oi = $('openInvite'); if (oi) oi.onclick = () => { view.inviting = true; renderAll(); toStage(); };
   } else if (mode === 'local' && joined) {
     rb.hidden = false;
     rb.innerHTML = `<div class="invite compact">
@@ -312,7 +319,7 @@ function renderJoin() {
     e.preventDefault(); if (!f.dataset.oshi) { toast('推しを選んでください'); return; }
     const n = solo ? 'わたし' : $('jn').value.trim(); if (!n) return;
     const prev = mine() || {};
-    players[me] = normPlayer({ ...prev, name: n, oshi: f.dataset.oshi }); saveMe(); renderAll(); window.scrollTo(0, 0);
+    players[me] = normPlayer({ ...prev, name: n, oshi: f.dataset.oshi }); saveMe(); renderAll(); toStage();
   };
 }
 // 開封所を作った人：お友達を招待しよう
@@ -490,7 +497,7 @@ function doAct(act) {
     case 'buy5': p.queue += 5; view.stage = 'pack'; tearLockUntil = Date.now() + 400; saveMe(); break;
     case 'next': view.stage = 'pack'; break;
     case 'restock': view.stage = 'pack'; break;
-    case 'start': view.inviting = false; window.scrollTo(0, 0); break;
+    case 'start': view.inviting = false; toStage(); break;
     case 'tear': tear(true); return;
     case 'sharecard': shareCard(); return;
     default: return;
