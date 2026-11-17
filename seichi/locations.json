@@ -2383,5 +2383,98 @@
         "ヴィランズ・ハロウィーン“Into the Frenzy”は1日1回・夕方"
       ]
     }
+  },
+  {
+    "id": "ginza-marui",
+    "name": "銀座 鮨処 まる伊",
+    "prefecture": "東京都",
+    "city": "中央区",
+    "category": "tv",
+    "relatedWorks": [
+      "ヒルナンデス！（2026/11/10）くちコミコンプリート旅 in 東銀座"
+    ],
+    "members": [
+      "NAOYA"
+    ],
+    "addressOrArea": "東京都中央区銀座3-8-15",
+    "lat": 35.6716,
+    "lng": 139.7676,
+    "sourceUrls": [],
+    "notes": "",
+    "visitTips": "NAOYAは名物「づけあなちらし」と旬にぎりセットを食べた／づけまぐろと炙り穴子がのった丼",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "店に確認",
+      "fee": "づけあなちらし（ランチ）2,500円",
+      "closed": "店に確認",
+      "notes": [
+        "NAOYAは名物「づけあなちらし」と旬にぎりセットを食べた",
+        "づけまぐろと炙り穴子がのった丼"
+      ]
+    }
+  },
+  {
+    "id": "paris-wine-shokudo",
+    "name": "パリのワイン食堂",
+    "prefecture": "東京都",
+    "city": "中央区",
+    "category": "tv",
+    "relatedWorks": [
+      "ヒルナンデス！（2026/11/10）くちコミコンプリート旅 in 東銀座"
+    ],
+    "members": [
+      "RAN"
+    ],
+    "addressOrArea": "東京都中央区銀座3-13-11",
+    "lat": 35.6704,
+    "lng": 139.7694,
+    "sourceUrls": [],
+    "notes": "",
+    "visitTips": "RANはワイン・キッシュ・ステーキを食べた",
+    "confidence": "high",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "店に確認",
+      "fee": "メニューによる",
+      "closed": "店に確認",
+      "notes": [
+        "RANはワイン・キッシュ・ステーキを食べた"
+      ]
+    }
+  },
+  {
+    "id": "ginza-hitsujiya-hanare",
+    "name": "銀座羊屋 はなれ",
+    "prefecture": "東京都",
+    "city": "中央区",
+    "category": "tv",
+    "relatedWorks": [
+      "ヒルナンデス！（2026/11/10）くちコミコンプリート旅 in 東銀座"
+    ],
+    "members": [
+      "NAOYA",
+      "RAN"
+    ],
+    "addressOrArea": "東京都中央区銀座3-8-8",
+    "lat": 35.6718,
+    "lng": 139.7679,
+    "sourceUrls": [],
+    "notes": "",
+    "visitTips": "一行でネギ塩ラムなどを食べた回／MAZZELの2人が食べたかは番組情報でははっきりしない",
+    "confidence": "medium",
+    "access": "open",
+    "visit": {
+      "status": "open",
+      "hours": "店に確認",
+      "fee": "メニューによる",
+      "closed": "店に確認",
+      "notes": [
+        "一行でネギ塩ラムなどを食べた回",
+        "MAZZELの2人が食べたかは番組情報でははっきりしない"
+      ]
+    }
   }
 ]
