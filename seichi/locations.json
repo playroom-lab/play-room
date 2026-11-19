@@ -34,10 +34,17 @@
         "ステージ跡など見学ルート外は立入禁止"
       ]
     },
-    "photoPath": "photos/oya-museum/01.jpg",
-    "photoCredit": "The Voice Dance Performance Video 切り抜き（大谷資料館）",
-    "photoSourceUrl": "https://www.youtube.com/watch?v=IrGzenqeMxo",
-    "photoThumb": "photos/oya-museum/thumb.jpg"
+    "photoPath": "https://commons.wikimedia.org/wiki/Special:FilePath/Inside_of_the_Oya_History_Museum_20251012b.jpg?width=1280",
+    "photoThumb": "https://commons.wikimedia.org/wiki/Special:FilePath/Inside_of_the_Oya_History_Museum_20251012b.jpg?width=500",
+    "photoCredit": "掬茶／CC BY-SA 4.0（Wikimedia Commons）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Inside_of_the_Oya_History_Museum_20251012b.jpg",
+    "embeds": [
+      {
+        "type": "youtube",
+        "id": "IrGzenqeMxo",
+        "title": "The Voice（Dance Performance Video）"
+      }
+    ]
   },
   {
     "id": "kenchoji",
@@ -239,10 +246,17 @@
         "祈りの場なので、礼拝中の撮影はしない"
       ]
     },
-    "photoPath": "photos/yodobashi-church/01.jpg",
-    "photoCredit": "Only You MV YouTubeサムネ（教会外観の一次写真が弱いため）",
-    "photoSourceUrl": "https://www.youtube.com/watch?v=pVLkSsnde9U",
-    "photoThumb": "photos/yodobashi-church/thumb.jpg"
+    "photoPath": "https://commons.wikimedia.org/wiki/Special:FilePath/Yodobashi_Church.JPG?width=1280",
+    "photoThumb": "https://commons.wikimedia.org/wiki/Special:FilePath/Yodobashi_Church.JPG?width=500",
+    "photoCredit": "Evangelical／CC BY-SA 3.0（Wikimedia Commons）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Yodobashi_Church.JPG",
+    "embeds": [
+      {
+        "type": "youtube",
+        "id": "pVLkSsnde9U",
+        "title": "Only You（MV）"
+      }
+    ]
   },
   {
     "id": "line-cube-shibuya",
@@ -510,10 +524,18 @@
         "ドラマで出たゴーカートなどは乗り物券が必要"
       ]
     },
-    "photoPath": "photos/tobu-zoo-park/01.jpg",
-    "photoCredit": "ドラマ『セラピーゲーム』予告切り抜き（東武動物公園）",
-    "photoSourceUrl": "https://www.youtube.com/watch?v=oyY3ljHtx5c",
-    "photoThumb": "photos/tobu-zoo-park/thumb.jpg"
+    "embeds": [
+      {
+        "type": "youtube",
+        "id": "oyY3ljHtx5c",
+        "title": "ドラマ『セラピーゲーム』予告"
+      },
+      {
+        "type": "x",
+        "url": "https://x.com/mazzel_official/status/1988570595710431609",
+        "title": "MAZZEL公式X（セラピーゲーム第3話）"
+      }
+    ]
   },
   {
     "id": "jogashima-area",
@@ -548,7 +570,14 @@
     "photoPath": "photos/jogashima-area/01.jpg",
     "photoCredit": "Wikimedia Commons（城ヶ島）",
     "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Jogashima.jpg",
-    "photoThumb": "photos/jogashima-area/thumb.jpg"
+    "photoThumb": "photos/jogashima-area/thumb.jpg",
+    "embeds": [
+      {
+        "type": "x",
+        "url": "https://x.com/mazzel_official/status/2001261305593008616",
+        "title": "MAZZEL公式X（セラピーゲーム第8話）"
+      }
+    ]
   },
   {
     "id": "hattori-bokujo",
@@ -582,10 +611,10 @@
         "動物にさわる前後は手洗いを"
       ]
     },
-    "photoPath": "photos/hattori-bokujo/01.jpg",
-    "photoCredit": "服部牧場公式サイト（遊牧／施設写真・ドラマ明確カット未発見）",
-    "photoSourceUrl": "https://kanagawa-hattoribokujou.com/facility-information",
-    "photoThumb": "photos/hattori-bokujo/thumb.jpg"
+    "photoPath": "https://commons.wikimedia.org/wiki/Special:FilePath/%E6%9C%8D%E9%83%A8%E7%89%A7%E5%A0%B4_-_panoramio.jpg?width=1280",
+    "photoThumb": "https://commons.wikimedia.org/wiki/Special:FilePath/%E6%9C%8D%E9%83%A8%E7%89%A7%E5%A0%B4_-_panoramio.jpg?width=500",
+    "photoCredit": "hideki higano／CC BY-SA 3.0（Wikimedia Commons）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:%E6%9C%8D%E9%83%A8%E7%89%A7%E5%A0%B4_-_panoramio.jpg"
   },
   {
     "id": "toyomon-park",
@@ -619,10 +648,13 @@
         "カフェを利用すると豊門会館の入館料が無料に"
       ]
     },
-    "photoPath": "photos/toyomon-park/01.jpg",
-    "photoCredit": "施設外観（豊門公園西洋館周辺・ドラマ明確カット未発見）",
-    "photoSourceUrl": "",
-    "photoThumb": "photos/toyomon-park/thumb.jpg"
+    "embeds": [
+      {
+        "type": "x",
+        "url": "https://x.com/mazzel_official/status/1993643398402838576",
+        "title": "MAZZEL公式X（セラピーゲーム第5話）"
+      }
+    ]
   },
   {
     "id": "shiokaze-park",
@@ -693,10 +725,17 @@
         "表参道駅B1出口すぐ"
       ]
     },
-    "photoPath": "photos/aoyama-spiral-garden/01.jpg",
-    "photoCredit": "J.O.K.E.R. MV関連スチル／スパイラル",
-    "photoSourceUrl": "https://www.youtube.com/watch?v=HLTMBZ6bZTA",
-    "photoThumb": "photos/aoyama-spiral-garden/thumb.jpg"
+    "photoPath": "https://commons.wikimedia.org/wiki/Special:FilePath/Spiral_Building.jpg?width=1280",
+    "photoThumb": "https://commons.wikimedia.org/wiki/Special:FilePath/Spiral_Building.jpg?width=500",
+    "photoCredit": "Wiiii／CC BY-SA 3.0（Wikimedia Commons）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Spiral_Building.jpg",
+    "embeds": [
+      {
+        "type": "youtube",
+        "id": "HLTMBZ6bZTA",
+        "title": "J.O.K.E.R.（MV）"
+      }
+    ]
   },
   {
     "id": "hifi-disco-bar-chaos",
@@ -728,10 +767,13 @@
         "音楽を聴く店なので、大声や長時間の撮影は控える"
       ]
     },
-    "photoPath": "photos/hifi-disco-bar-chaos/01.jpg",
-    "photoCredit": "So Strawberry MV 切り抜き（Hi-Fi Disco Bar Chaos）",
-    "photoSourceUrl": "https://www.youtube.com/watch?v=76lNhpUKrEc",
-    "photoThumb": "photos/hifi-disco-bar-chaos/thumb.jpg"
+    "embeds": [
+      {
+        "type": "youtube",
+        "id": "76lNhpUKrEc",
+        "title": "So Strawberry（MV）"
+      }
+    ]
   },
   {
     "id": "osteria-azzurro",
@@ -771,11 +813,7 @@
         "予約は電話のみ。席数が少ないので早めに",
         "宝町駅・銀座一丁目駅から徒歩圏"
       ]
-    },
-    "photoPath": "photos/osteria-azzurro/01.jpg",
-    "photoCredit": "まぜべや関連／店舗外看板写真（オステリア アズーロ）",
-    "photoSourceUrl": "https://x.com/search?q=%E3%82%AA%E3%82%B9%E3%83%86%E3%83%AA%E3%82%A2%20%E3%82%A2%E3%82%BA%E3%83%BC%E3%83%AD%20MAZZEL&src=typed_query",
-    "photoThumb": "photos/osteria-azzurro/thumb.jpg"
+    }
   },
   {
     "id": "kozushima",
@@ -810,10 +848,17 @@
         "天候で欠航しやすい。帰りの便に余裕を"
       ]
     },
-    "photoPath": "photos/kozushima/01.jpg",
-    "photoCredit": "映画『アオショー！』予告切り抜き（神津島・島遠景）",
-    "photoSourceUrl": "https://www.youtube.com/watch?v=qGhmdK6frz8",
-    "photoThumb": "photos/kozushima/thumb.jpg"
+    "photoPath": "https://commons.wikimedia.org/wiki/Special:FilePath/Kozushima_Tako_Bay_2005.jpg?width=1280",
+    "photoThumb": "https://commons.wikimedia.org/wiki/Special:FilePath/Kozushima_Tako_Bay_2005.jpg?width=500",
+    "photoCredit": "Mkill／CC BY 2.5（Wikimedia Commons）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Kozushima_Tako_Bay_2005.jpg",
+    "embeds": [
+      {
+        "type": "youtube",
+        "id": "qGhmdK6frz8",
+        "title": "映画『アオショー！』予告"
+      }
+    ]
   },
   {
     "id": "moriso-port",
@@ -845,10 +890,17 @@
         "路上駐車はしない"
       ]
     },
-    "photoPath": "photos/moriso-port/01.jpg",
-    "photoCredit": "映画『アオショー！』予告切り抜き（諸磯港／連絡船乗り場シーン）",
-    "photoSourceUrl": "https://www.youtube.com/watch?v=qGhmdK6frz8",
-    "photoThumb": "photos/moriso-port/thumb.jpg"
+    "photoPath": "https://commons.wikimedia.org/wiki/Special:FilePath/Moroiso_uplift_coast_strata_A.jpg?width=1280",
+    "photoThumb": "https://commons.wikimedia.org/wiki/Special:FilePath/Moroiso_uplift_coast_strata_A.jpg?width=500",
+    "photoCredit": "さかおり／CC BY-SA 4.0（Wikimedia Commons）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Moroiso_uplift_coast_strata_A.jpg",
+    "embeds": [
+      {
+        "type": "youtube",
+        "id": "qGhmdK6frz8",
+        "title": "映画『アオショー！』予告"
+      }
+    ]
   },
   {
     "id": "tsurugisaki-lighthouse",
@@ -922,10 +974,17 @@
         "イベント日はとても混む"
       ]
     },
-    "photoPath": "photos/shimizu-dream-plaza/01.jpg",
-    "photoCredit": "映画『アオショー！』予告切り抜き（清水港／エスパルス周辺）",
-    "photoSourceUrl": "https://www.youtube.com/watch?v=LVSrZ3JIor0",
-    "photoThumb": "photos/shimizu-dream-plaza/thumb.jpg"
+    "photoPath": "https://commons.wikimedia.org/wiki/Special:FilePath/S-pulse_dream_plaza_01.jpg?width=1280",
+    "photoThumb": "https://commons.wikimedia.org/wiki/Special:FilePath/S-pulse_dream_plaza_01.jpg?width=500",
+    "photoCredit": "Halowand／CC BY-SA 4.0（Wikimedia Commons）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:S-pulse_dream_plaza_01.jpg",
+    "embeds": [
+      {
+        "type": "youtube",
+        "id": "LVSrZ3JIor0",
+        "title": "映画『アオショー！』予告"
+      }
+    ]
   },
   {
     "id": "hatsuhara-bocchi-school",
@@ -957,10 +1016,13 @@
         "道路から外観を見るだけにして、敷地に入る前に施設へ問い合わせを"
       ]
     },
-    "photoPath": "photos/hatsuhara-bocchi-school/01.jpg",
-    "photoCredit": "映画『アオショー！』予告切り抜き（初原ぼっちの学校＝折高）",
-    "photoSourceUrl": "https://www.youtube.com/watch?v=LVSrZ3JIor0",
-    "photoThumb": "photos/hatsuhara-bocchi-school/thumb.jpg"
+    "embeds": [
+      {
+        "type": "youtube",
+        "id": "LVSrZ3JIor0",
+        "title": "映画『アオショー！』予告"
+      }
+    ]
   },
   {
     "id": "konosu-motearakawa-sakura",
@@ -1034,10 +1096,13 @@
         "店内の撮影は店の方に確認を"
       ]
     },
-    "photoPath": "photos/horaiya-ueno/01.jpg",
-    "photoCredit": "ヒルナンデス！公式告知動画切り抜き（蓬莱屋・ヒレカツ）",
-    "photoSourceUrl": "https://x.com/i/status/2112136689686872572",
-    "photoThumb": "photos/horaiya-ueno/thumb.jpg"
+    "embeds": [
+      {
+        "type": "x",
+        "url": "https://x.com/i/status/2112136689686872572",
+        "title": "ヒルナンデス！公式告知"
+      }
+    ]
   },
   {
     "id": "kokkogo-ueno",
@@ -1071,10 +1136,13 @@
         "アメ横の中の小さな店。通路をふさがないように並ぶ"
       ]
     },
-    "photoPath": "photos/kokkogo-ueno/01.jpg",
-    "photoCredit": "ヒルナンデス！公式告知動画切り抜き（黒工号・仙草ゼリー）",
-    "photoSourceUrl": "https://x.com/i/status/2112136689686872572",
-    "photoThumb": "photos/kokkogo-ueno/thumb.jpg"
+    "embeds": [
+      {
+        "type": "x",
+        "url": "https://x.com/i/status/2112136689686872572",
+        "title": "ヒルナンデス！公式告知"
+      }
+    ]
   },
   {
     "id": "inokashira-park-zoo",
@@ -1112,10 +1180,10 @@
         "吉祥寺駅から徒歩約12分"
       ]
     },
-    "photoPath": "photos/inokashira-park-zoo/01.jpg",
-    "photoCredit": "カイセイさんぽ／現地（井の頭自然文化園）",
-    "photoSourceUrl": "https://x.com/search?q=%E3%82%AB%E3%82%A4%E3%82%BB%E3%82%A4%E3%81%95%E3%82%93%E3%81%BD%20%E4%BA%95%E3%81%AE%E9%A0%AD&src=typed_query",
-    "photoThumb": "photos/inokashira-park-zoo/thumb.jpg"
+    "photoPath": "https://commons.wikimedia.org/wiki/Special:FilePath/Inokashira_Park_Zoo_PC053178.jpg?width=1280",
+    "photoThumb": "https://commons.wikimedia.org/wiki/Special:FilePath/Inokashira_Park_Zoo_PC053178.jpg?width=500",
+    "photoCredit": "Kestrel／CC BY-SA 4.0（Wikimedia Commons）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Inokashira_Park_Zoo_PC053178.jpg"
   },
   {
     "id": "yaogin-kichijoji",
@@ -1150,11 +1218,7 @@
         "地元の八百屋さん。買い物のお客さん優先で",
         "店頭のステッカーを撮るときはひと声かけて"
       ]
-    },
-    "photoPath": "photos/yaogin-kichijoji/01.jpg",
-    "photoCredit": "カイセイさんぽ／店舗外観（八百銀商店）",
-    "photoSourceUrl": "https://x.com/search?q=%E5%85%AB%E7%99%BE%E9%8A%80%20%E3%82%AB%E3%82%A4%E3%82%BB%E3%82%A4&src=typed_query",
-    "photoThumb": "photos/yaogin-kichijoji/thumb.jpg"
+    }
   },
   {
     "id": "inokashira-park-boat",
@@ -1191,10 +1255,10 @@
         "売店前は混むので列をふさがない"
       ]
     },
-    "photoPath": "photos/inokashira-park-boat/01.jpg",
-    "photoCredit": "カイセイさんぽ／井の頭公園ボート周辺",
-    "photoSourceUrl": "https://x.com/search?q=%E4%BA%95%E3%81%AE%E9%A0%AD%E5%85%AC%E5%9C%92%20%E3%83%9C%E3%83%BC%E3%83%88%20%E3%82%AB%E3%82%A4%E3%82%BB%E3%82%A4&src=typed_query",
-    "photoThumb": "photos/inokashira-park-boat/thumb.jpg"
+    "photoPath": "https://commons.wikimedia.org/wiki/Special:FilePath/Inokashira_pond_boat_landing_in_the_permanently_closed.JPG?width=1280",
+    "photoThumb": "https://commons.wikimedia.org/wiki/Special:FilePath/Inokashira_pond_boat_landing_in_the_permanently_closed.JPG?width=500",
+    "photoCredit": "ITA-ATU／CC BY-SA 4.0（Wikimedia Commons）",
+    "photoSourceUrl": "https://commons.wikimedia.org/wiki/File:Inokashira_pond_boat_landing_in_the_permanently_closed.JPG"
   },
   {
     "id": "pattaya-thailand",
@@ -1262,10 +1326,13 @@
         "長い撮影や混む時間の長居は控える"
       ]
     },
-    "photoPath": "photos/kashiwo-shokudo/01.jpg",
-    "photoCredit": "ドラマ『君がトクベツ』予告切り抜き（かしを食堂）",
-    "photoSourceUrl": "https://www.youtube.com/watch?v=GfZbAnhAq_E",
-    "photoThumb": "photos/kashiwo-shokudo/thumb.jpg"
+    "embeds": [
+      {
+        "type": "youtube",
+        "id": "GfZbAnhAq_E",
+        "title": "ドラマ『君がトクベツ』予告"
+      }
+    ]
   },
   {
     "id": "cafe-giang-chinatown",
@@ -1301,10 +1368,18 @@
         "エッグコーヒーと中華風バインミーが番組の2品"
       ]
     },
-    "photoPath": "photos/cafe-giang-chinatown/01.jpg",
-    "photoCredit": "めざましmedia「リポーターやってください」横浜中華街かけ算グルメ切り抜き（カフェジャン）",
-    "photoSourceUrl": "https://www.youtube.com/watch?v=gY5unuRi__c",
-    "photoThumb": "photos/cafe-giang-chinatown/thumb.jpg"
+    "embeds": [
+      {
+        "type": "youtube",
+        "id": "gY5unuRi__c",
+        "title": "めざましmedia「リポーターやってください」"
+      },
+      {
+        "type": "x",
+        "url": "https://x.com/cx_mezamashi/status/1983821185730093491",
+        "title": "めざましテレビ公式X"
+      }
+    ]
   },
   {
     "id": "jukei-charo-chinatown",
@@ -1339,10 +1414,18 @@
         "食事どきは混む。番組のメニューは時期で変わることあり"
       ]
     },
-    "photoPath": "photos/jukei-charo-chinatown/01.jpg",
-    "photoCredit": "めざましmedia「リポーターやってください」横浜中華街かけ算グルメ切り抜き（重慶茶樓）",
-    "photoSourceUrl": "https://www.youtube.com/watch?v=gY5unuRi__c",
-    "photoThumb": "photos/jukei-charo-chinatown/thumb.jpg"
+    "embeds": [
+      {
+        "type": "youtube",
+        "id": "gY5unuRi__c",
+        "title": "めざましmedia「リポーターやってください」"
+      },
+      {
+        "type": "x",
+        "url": "https://x.com/cx_mezamashi/status/1983821185730093491",
+        "title": "めざましテレビ公式X"
+      }
+    ]
   },
   {
     "id": "patissieres-jogenro",
@@ -1378,10 +1461,18 @@
         "1階が売場、2階がカフェ"
       ]
     },
-    "photoPath": "photos/patissieres-jogenro/01.jpg",
-    "photoCredit": "めざましmedia「リポーターやってください」横浜中華街かけ算グルメ切り抜き（パティシエール JOGENRO）",
-    "photoSourceUrl": "https://www.youtube.com/watch?v=gY5unuRi__c",
-    "photoThumb": "photos/patissieres-jogenro/thumb.jpg"
+    "embeds": [
+      {
+        "type": "youtube",
+        "id": "gY5unuRi__c",
+        "title": "めざましmedia「リポーターやってください」"
+      },
+      {
+        "type": "x",
+        "url": "https://x.com/cx_mezamashi/status/1983821185730093491",
+        "title": "めざましテレビ公式X"
+      }
+    ]
   },
   {
     "id": "hosho-chinatown",
@@ -1416,10 +1507,18 @@
         "香港路の小さな店。並ぶときは道をふさがない"
       ]
     },
-    "photoPath": "photos/hosho-chinatown/01.jpg",
-    "photoCredit": "めざましmedia「リポーターやってください」横浜中華街かけ算グルメ切り抜き（保昌）",
-    "photoSourceUrl": "https://www.youtube.com/watch?v=gY5unuRi__c",
-    "photoThumb": "photos/hosho-chinatown/thumb.jpg"
+    "embeds": [
+      {
+        "type": "youtube",
+        "id": "gY5unuRi__c",
+        "title": "めざましmedia「リポーターやってください」"
+      },
+      {
+        "type": "x",
+        "url": "https://x.com/cx_mezamashi/status/1983821185730093491",
+        "title": "めざましテレビ公式X"
+      }
+    ]
   },
   {
     "id": "sun-lives-here-sangenjaya",
@@ -1452,11 +1551,7 @@
         "三軒茶屋駅から少し歩く住宅街のカフェ。周りは静かに",
         "「飲むティラミス」は番組のメニュー"
       ]
-    },
-    "photoPath": "photos/sun-lives-here-sangenjaya/01.jpg",
-    "photoCredit": "cafe The SUN LIVES HERE 公式ストア写真（三軒茶屋本店外観）",
-    "photoSourceUrl": "https://www.cafethesunliveshere.com/store",
-    "photoThumb": "photos/sun-lives-here-sangenjaya/thumb.jpg"
+    }
   },
   {
     "id": "caldo-nishishinjuku",
@@ -1488,11 +1583,7 @@
       "notes": [
         "行列ができやすい。予約できるか店に確認を"
       ]
-    },
-    "photoPath": "photos/caldo-nishishinjuku/01.jpg",
-    "photoCredit": "Caldo（カルド）公式サイト 店内写真",
-    "photoSourceUrl": "https://caldo-shinjuku.jp/",
-    "photoThumb": "photos/caldo-nishishinjuku/thumb.jpg"
+    }
   },
   {
     "id": "hakuzan-daimaru-tokyo",
@@ -1570,7 +1661,14 @@
     "photoPath": "photos/shumai-no-jo-shinjuku/01.jpg",
     "photoCredit": "公式X 有吉ゼミ出演御礼（焼売のジョー店内ロゴ壁）",
     "photoSourceUrl": "https://x.com/i/status/2114691679898964398",
-    "photoThumb": "photos/shumai-no-jo-shinjuku/thumb.jpg"
+    "photoThumb": "photos/shumai-no-jo-shinjuku/thumb.jpg",
+    "embeds": [
+      {
+        "type": "x",
+        "url": "https://x.com/ariyoshiseminar/status/2114561430397809041",
+        "title": "有吉ゼミ公式X"
+      }
+    ]
   },
   {
     "id": "hotel-springs-makuhari",
@@ -1600,11 +1698,7 @@
         "ふだんはロビーなどホテルの共用部のみ。公開日はホテルの公式サイトで確認を"
       ]
     },
-    "access": "limited",
-    "photoPath": "photos/hotel-springs-makuhari/01.jpg",
-    "photoCredit": "公式 BANQUET BANG 1000万再生マイルストーン（宴会場カット・Daya提供）",
-    "photoSourceUrl": "",
-    "photoThumb": "photos/hotel-springs-makuhari/thumb.jpg"
+    "access": "limited"
   },
   {
     "id": "yoyogi-national-gymnasium",
@@ -1662,11 +1756,7 @@
         "差し入れされたのは「わなか」のたこ焼き。どの店舗かはわからないため本店を掲載",
         "店頭は行列ができやすい。歩道をふさがないように並ぶ"
       ]
-    },
-    "photoPath": "photos/wanaka-sennichimae/01.jpg",
-    "photoCredit": "たこ焼道楽 わなか 公式店舗写真（千日前本店外観）",
-    "photoSourceUrl": "https://www.takoyaki-wanaka.com/kr/04_tenpo.html",
-    "photoThumb": "photos/wanaka-sennichimae/thumb.jpg"
+    }
   },
   {
     "id": "nakamuraya-tenjinbashi",
@@ -1698,11 +1788,7 @@
         "2人がコロッケを買って店の前で食べた場所（ファンの巡礼報告より）",
         "人気店で行列ができる。売り切れることもある"
       ]
-    },
-    "photoPath": "photos/nakamuraya-tenjinbashi/01.jpg",
-    "photoCredit": "中村屋（天神橋筋）店舗外観",
-    "photoSourceUrl": "https://onetabi.com/nakamuraya/",
-    "photoThumb": "photos/nakamuraya-tenjinbashi/thumb.jpg"
+    }
   },
   {
     "id": "tenjinbashisuji-shotengai",
@@ -1801,11 +1887,7 @@
         "2人の名前が入った期間限定メニュー「春らんまん北々亭のたっく3盛り」は2025年5月で終了",
         "回転寿司店。混む時間は順番待ちの列ができる"
       ]
-    },
-    "photoPath": "photos/hokuhokutei-yamahana/01.jpg",
-    "photoCredit": "北々亭 山鼻店 料理写真（Domingo記事掲載）",
-    "photoSourceUrl": "https://domingo.ne.jp/article/35197",
-    "photoThumb": "photos/hokuhokutei-yamahana/thumb.jpg"
+    }
   },
   {
     "id": "sapporo-hitaru",
@@ -1831,11 +1913,7 @@
         "館内に入れるのは公演の日だけ。それ以外は外観のみ",
         "建物の1階・2階の交流スペースは公演日以外も入れる"
       ]
-    },
-    "photoPath": "photos/sapporo-hitaru/01.jpg",
-    "photoCredit": "施設外観（札幌市民交流プラザ／hitaru）",
-    "photoSourceUrl": "https://commons.wikimedia.org/wiki/Category:Sapporo_Community_Plaza",
-    "photoThumb": "photos/sapporo-hitaru/thumb.jpg"
+    }
   },
   {
     "id": "marine-messe-fukuoka",
