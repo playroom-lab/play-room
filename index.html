@@ -6,11 +6,11 @@
   <title>PLAY ROOM｜推し活の遊び場</title>
   <link rel="icon" href="./icon-192.png">
   <link rel="apple-touch-icon" href="./apple-touch-icon.png">
-  <meta name="description" content="推しガチャ、衣装選手権、ライブ帰りシミュレーター、推しビジュ6選、最強9マス、オタク沼診断をまとめた推し活の遊び場。">
+  <meta name="description" content="推しガチャ、衣装選手権、ライブ帰りシミュレーター、推しビジュ6選、最強9マス、オタク沼診断、おまかせ再生、着せ替えステッカーをまとめた推し活の遊び場。">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="PLAY ROOM">
   <meta property="og:title" content="PLAY ROOM｜推し活の遊び場">
-  <meta property="og:description" content="推しガチャ、衣装選手権、ライブ帰りシミュレーター、推しビジュ6選、最強9マス、オタク沼診断をまとめた推し活の遊び場。">
+  <meta property="og:description" content="推しガチャ、衣装選手権、ライブ帰りシミュレーター、推しビジュ6選、最強9マス、オタク沼診断、おまかせ再生、着せ替えステッカーをまとめた推し活の遊び場。">
   <meta property="og:url" content="https://playroom-lab.github.io/play-room/">
   <meta property="og:image" content="https://playroom-lab.github.io/play-room/assets/ogp/top.png">
   <meta property="og:image:width" content="1200">
@@ -56,6 +56,8 @@
     .best9-performance .preview{background:#ece5ff}
     .diagnosis .preview{background:#fff0c9}
     .odds .preview{background:var(--violet)}
+    .mazzel .preview{background:#ffe7ef}
+    .sticker .preview{background:var(--lime)}
     .photo{display:block;width:100%;height:100%;object-fit:cover;object-position:center;border:6px solid #fff;box-shadow:0 3px 7px #28253626}
     .gacha .photo{transform:rotate(-5deg);max-width:250px;object-position:center 34%}
     .outfit .photo{transform:rotate(4deg);width:128px;object-position:center 30%}
@@ -141,7 +143,7 @@
         <h1>推し活の<span>あそび場。</span></h1>
         <p class="hero-note">ちょっと寄り道、推しと遊ぼう。</p>
       </div>
-      <p class="room-number">TOOLS<strong>08</strong></p>
+      <p class="room-number">TOOLS<strong>10</strong></p>
     </header>
     <main>
       <div class="tools" aria-label="遊びツール一覧">
@@ -246,6 +248,32 @@
             <h2 id="odds-title">ランダム期待値チェッカー</h2>
             <p class="tool-desc" id="odds-desc">ランダムグッズを何枚買えば推しがそろう？ そろう確率と必要な枚数を計算。</p>
             <span class="open">計算する</span>
+          </div>
+        </a>
+
+        <a class="tool mazzel" href="./mazzel/" aria-labelledby="mazzel-title" aria-describedby="mazzel-desc">
+          <div class="preview" aria-hidden="true">
+            <img class="shot" src="./assets/thumbs/mazzel.jpg" alt="" width="390" height="560" loading="lazy" decoding="async">
+            <span class="preview-label">何が流れるかはお楽しみ</span>
+          </div>
+          <div class="tool-copy">
+            <p class="eyebrow"><span class="number">09</span> RANDOM PLAY</p>
+            <h2 id="mazzel-title">MAZZELおまかせ再生</h2>
+            <p class="tool-desc" id="mazzel-desc">押すたびに、MV・ダンプラ・ダンスパフォーマンス・ライブのどれかへ。</p>
+            <span class="open">おまかせで見る</span>
+          </div>
+        </a>
+
+        <a class="tool sticker" href="./sticker/" aria-labelledby="sticker-title" aria-describedby="sticker-desc">
+          <div class="preview" aria-hidden="true">
+            <img class="shot" src="./assets/thumbs/sticker.jpg" alt="" width="559" height="560" loading="lazy" decoding="async">
+            <span class="preview-label">推しの画像にペタッと</span>
+          </div>
+          <div class="tool-copy">
+            <p class="eyebrow"><span class="number">10</span> STICKER</p>
+            <h2 id="sticker-title">着せ替えステッカー</h2>
+            <p class="tool-desc" id="sticker-desc">手持ちの推しの画像に、帽子や小物、文字のステッカーを貼って着せ替え。</p>
+            <span class="open">ステッカーを貼る</span>
           </div>
         </a>
       </div>
