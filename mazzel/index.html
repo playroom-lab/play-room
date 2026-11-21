@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MAZZELおまかせ表示｜PLAY ROOM</title>
+<meta name="description" content="押すたびにMAZZELのMV・ダンプラ・ライブ映像のどれかへ。PLAY ROOMのおまかせ表示。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PLAY ROOM">
+<meta property="og:title" content="MAZZELおまかせ表示｜PLAY ROOM">
+<meta property="og:description" content="押すたびにMAZZELのMV・ダンプラ・ライブ映像のどれかへ。">
+<meta property="og:url" content="https://playroom-lab.github.io/play-room/mazzel/">
+<meta name="twitter:card" content="summary">
+<meta name="robots" content="noindex">
+<link rel="icon" href="../icon-192.png"><link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+/*
+VOICE: PLAY ROOM と同じ、紙とペンの手づくり感
+IDEA: Wikipedia「おまかせ表示」のMAZZEL版。リンク1つだけ
+PICTURE: 影つきの白いカード1枚＝大きなリンク
+COLOUR and TYPE: PLAY ROOM の paper/ink/pink、Zen Kaku Gothic New + Klee One
+LAYOUT: ナビ → 見出し → カード → 次の行き先
+*/
+:root{color-scheme:light dark;--paper:light-dark(#f7f5ed,#1f1d29);--ink:light-dark(#282536,#f3f0e6);--muted:light-dark(#625f6d,#b9b4c4);
+--card:light-dark(#fff,#2b2838);--pink:light-dark(#ffd5df,#7a3c55);--line:light-dark(#d5d1d9,#3e3a4c);
+--hand:'Klee One','Hiragino Sans',sans-serif;--font:'Zen Kaku Gothic New','Hiragino Sans','Yu Gothic',sans-serif}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.7;overflow-x:clip}
+a{color:inherit;text-decoration:none}
+.wrap{width:min(100% - 40px,640px);margin-inline:auto}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:22px 0;border-bottom:1px solid var(--line)}
+.brand{font-size:14px;font-weight:700;letter-spacing:.045em}
+.back{font-family:var(--hand);font-weight:600;font-size:14px;border-bottom:1px solid var(--ink)}
+.label{display:inline-block;margin:44px 0 12px;padding:3px 10px;background:var(--ink);color:var(--paper);font-size:14px;font-weight:700;letter-spacing:.12em;transform:rotate(-3deg)}
+h1{margin:0;font-size:clamp(34px,8vw,48px);font-weight:900;line-height:1.2}
+h1 span{position:relative;isolation:isolate}
+h1 span:after{content:'';position:absolute;z-index:-1;left:-2%;right:-2%;bottom:7%;height:24%;background:var(--pink);transform:rotate(-1.8deg)}
+.note{margin:12px 0 30px;font-family:var(--hand);font-weight:600}
+.go{display:block;background:var(--card);border:1.5px solid var(--ink);border-radius:5px;box-shadow:4px 5px 0 var(--ink);
+padding:34px 24px;text-align:center;transition:transform .18s ease,box-shadow .18s ease}
+.go:hover{transform:translateY(-4px);box-shadow:4px 9px 0 var(--ink)}
+.go:active{transform:translate(3px,3px);box-shadow:1px 2px 0 var(--ink)}
+.go:focus-visible{outline:3px solid #8051bd;outline-offset:6px}
+.go strong{display:block;font-size:clamp(24px,6vw,30px);font-weight:900}
+.go small{display:block;margin-top:6px;font-family:var(--hand);font-size:15px;color:var(--muted)}
+.next{margin:22px 0 60px;font-size:14px;color:var(--muted);text-align:center}
+.next b{color:var(--ink)}
+@media (prefers-reduced-motion:reduce){.go{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="nav"><span class="brand">PLAY ROOM</span><a class="back" href="../">遊び場にもどる</a></nav>
+<p class="label">RANDOM</p>
+<h1><span>MAZZEL</span>おまかせ表示</h1>
+<p class="note">公式YouTubeの <span id="count"></span> から、MV・ダンプラ・ライブのどれかに飛びます。</p>
+<a class="go" id="go" href="https://www.youtube.com/@MAZZEL_official" target="_blank" rel="noopener">
+<strong>おまかせで見る</strong><small>押すたびに別の動画が開きます</small></a>
+</div>
+<script>
+{
+const V=[["Touch", "DN5JpXHDrLk", "MV", "Music Video"], ["So Strawberry", "76lNhpUKrEc", "MV", "Music Video"], ["Get Up And Dance", "Nw3eh9LurOM", "MV", "Music Video"], ["BANQUET BANG", "KmWhrWESKPU", "MV", "Music Video"], ["Only You", "pVLkSsnde9U", "MV", "Music Video"], ["DANGER", "AUhNm_ZR0L0", "MV", "Music Video"], ["King Kila Game", "jUlAbq1lfdo", "MV", "Music Video"], ["J.O.K.E.R.", "HLTMBZ6bZTA", "MV", "Music Video"], ["MAZQUERADE", "Q5LtRzAYJ_c", "MV", "Music Video"], ["Seaside Story", "rooVEy0Qo-0", "MV", "Music Video"], ["Counterattack", "gmTaYQlWn_I", "MV", "Music Video"], ["ICE feat. REIKO", "MgyCerb44lI", "MV", "Music Video"], ["Parade", "SuLNr2WlOK4", "MV", "Music Video"], ["Waterfall", "ectqcx3hnTI", "MV", "Music Video"], ["Carnival", "lIYPx6fTf8I", "MV", "Music Video"], ["Vivid", "oT_f2l3RScU", "MV", "Music Video"], ["MISSION", "LV2YZetiyHE", "MV", "Music Video"], ["Touch", "jDkc1MzHYG4", "ダンプラ", "Dance Practice"], ["So Strawberry", "s5N3o7KdnxA", "ダンプラ", "Dance Practice"], ["So Strawberry", "hNhGDMnfuR8", "ダンプラ", "Dance Performance Video"], ["The Voice", "IrGzenqeMxo", "ダンプラ", "Dance Performance Video"], ["Get Up And Dance", "ZUyKgkmdqa4", "ダンプラ", "Dance Practice"], ["BANQUET BANG", "lDyaplEIaHQ", "ダンプラ", "Dance Practice"], ["Only You", "dx4XsqUGm10", "ダンプラ", "Dance Practice"], ["Only You", "C8fRi3byOww", "ダンプラ", "Dance Performance"], ["DANGER", "yHhJsqtVGKg", "ダンプラ", "Dance Practice"], ["I'm yours, You're mine", "sFEkSY_dyMY", "ダンプラ", "Performance Video"], ["HERO SUIT", "UMknX5ZBoMM", "ダンプラ", "Performance Video"], ["to me", "6Ysau95qWyI", "ダンプラ", "Performance Video"], ["King Kila Game", "CHUgRqXSFqE", "ダンプラ", "Dance Practice"], ["J.O.K.E.R.", "Q3AzrhpWLZM", "ダンプラ", "Dance Practice"], ["MAZQUERADE", "QQGPnuKOQkE", "ダンプラ", "Dance Practice Moving ver."], ["MAZQUERADE", "icF7arAE9OQ", "ダンプラ", "Dance Practice Fix ver."], ["K&K", "g4UNun1zGyw", "ダンプラ", "Dance Practice"], ["Seaside Story", "S3C5ZedUAo4", "ダンプラ", "Dance Performance"], ["Counterattack", "uXI9uYWq8oc", "ダンプラ", "Dance Practice"], ["ICE feat. REIKO", "j5vpd2Y50No", "ダンプラ", "Dance Performance"], ["Parade", "d-fseqkcFh4", "ダンプラ", "Dance Practice Fix ver."], ["Parade", "Pmyrbbi2108", "ダンプラ", "Dance Practice Moving ver."], ["Waterfall", "YavEcqFbacs", "ダンプラ", "Dance Practice Fix ver."], ["Waterfall", "yR7vMuQwhWE", "ダンプラ", "Dance Practice Moving ver."], ["Fire", "6PAEczbmt2M", "ダンプラ", "Dance Performance Video"], ["Fire", "dlSb062mkVU", "ダンプラ", "Dance Performance Video Fix ver."], ["Carnival", "V8eF9VN2KUU", "ダンプラ", "Dance Practice Moving ver."], ["Carnival", "DIa_urittU8", "ダンプラ", "Dance Practice Fix ver."], ["Carnival", "Yj6LKQwY9ms", "ダンプラ", "Dance Performance"], ["LIGHTNING", "bAhRrmpQFHM", "ダンプラ", "Choreography Video Moving ver."], ["LIGHTNING", "PQeybPFZkXE", "ダンプラ", "Choreography Video Fix ver."], ["LIGHTNING", "8sQXnlMYzI4", "ダンプラ", "Dance Performance Video"], ["Vivid", "WloaFZjKJ7w", "ダンプラ", "Dance Practice Moving ver."], ["Vivid", "eEC0Ru3H8bo", "ダンプラ", "Dance Practice Fix ver."], ["Vivid", "wB0UjJjAp2U", "ダンプラ", "Dance Performance"], ["MISSION", "QtGxrnS5XBU", "ダンプラ", "Dance Practice Moving ver."], ["MISSION", "_VBbdqWF9Gc", "ダンプラ", "Dance Practice Fix ver."], ["So Strawberry", "B0-OaM9fmOs", "ライブ", "1st Arena Tour 2026"], ["Trap", "D-6zWGgatX8", "ライブ", "D.U.N.K. Showcase 2026"], ["J.O.K.E.R.", "Xay_gUI-Quw", "ライブ", "BMSG FES'25"], ["Holiday", "cMsKEJyR-xk", "ライブ", "2nd One Man Tour 2025"], ["Fantasy", "yVmZvKrL00w", "ライブ", "2nd One Man Tour 2025"], ["King Kila Game", "OYWifAyndsE", "ライブ", "2nd One Man Tour 2025"], ["DANGER", "LsG4PZe7fBQ", "ライブ", "2nd One Man Tour 2025"], ["Only You", "Y7pBD-U6-Pc", "ライブ", "Special Live Performance"], ["Vivid", "UYEmJFV0Urc", "ライブ", "VIVA LA ROCK 2025"], ["MISSION", "fNCfV6t8qL8", "ライブ", "One Man Tour 2024"], ["Parade", "eSc2iIH-wVU", "ライブ", "One Man Tour 2024"], ["Get Down", "tO0iiinmrTg", "ライブ", "One Man Tour 2024"], ["K&K", "sFTrDl-a7LQ", "ライブ", "One Man Tour 2024"], ["ICE", "rPCVKK4PpQ0", "ライブ", "One Man Tour 2024"], ["Waterfall", "hldEiAn8Xk4", "ライブ", "One Man Tour 2024"], ["Seaside Story", "0GAKiobewjI", "ライブ", "One Man Tour 2024"], ["Counterattack", "qIZJraMmF3Q", "ライブ", "BMSG FES'24"], ["Fire", "9EOjctmVWYs", "ライブ", "D.U.N.K. Showcase 京セラドーム大阪"], ["Holiday", "9G6h1tK8cuY", "ライブ", "SHOWCASE \"Carnival\""], ["Get Down", "bh4yNRRD6YU", "ライブ", "1st Fan Meeting"], ["CAME TO DANCE", "bGpM_S1KWug", "ライブ", "1st Fan Meeting"], ["Carnival", "XFNqvCJ_FJ8", "ライブ", "BMSG FES'23"], ["Vivid", "bFjEO_otDq8", "ライブ", "DEBUT SHOWCASE \"Vivid\""]];
+const a=document.getElementById('go');
+document.getElementById('count').textContent=V.length+'本・'+new Set(V.map(v=>v[0])).size+'曲';
+let last='';
+function pick(){let i;do{i=Math.floor(Math.random()*V.length)}while(V[i][1]===last&&V.length>1);last=V[i][1];a.href='https://www.youtube.com/watch?v='+last}
+pick();
+a.addEventListener('click',()=>setTimeout(pick,300));
+addEventListener('pageshow',pick);
+}
+</script>
+</body>
+</html>
