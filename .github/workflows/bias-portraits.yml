@@ -1,0 +1,55 @@
+name: Cache bias portraits
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/bias-portraits.yml'
+permissions:
+  contents: write
+jobs:
+  cache:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install Pillow
+      - name: Download and validate portraits
+        run: |
+          python - <<'PY'
+          import io,json,re,urllib.request
+          from pathlib import Path
+          from PIL import Image,ImageOps
+          page=Path('bmsg-bias/index.html')
+          html=page.read_text()
+          match=re.search(r'const portraits=(\{.*?\});const groups=',html,re.S)
+          sources=json.loads(match.group(1))
+          out=Path('bmsg-bias/portraits')
+          out.mkdir(exist_ok=True)
+          for name,url in sources.items():
+              if not url.startswith('https://'):
+                  continue
+              filename=re.sub(r'[^a-z0-9_-]+','-',name.lower())+'.webp'
+              try:
+                  request=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+                  with urllib.request.urlopen(request,timeout=20) as response:
+                      raw=response.read(20*1024*1024+1)
+                  if len(raw)>20*1024*1024: raise ValueError('image too large')
+                  with Image.open(io.BytesIO(raw)) as image:
+                      image=ImageOps.exif_transpose(image).convert('RGB')
+                      if min(image.size)<150: raise ValueError('image too small')
+                      image.thumbnail((1200,1600))
+                      image.save(out/filename,'WEBP',quality=88)
+                  sources[name]='./portraits/'+filename
+                  print('OK',name)
+              except Exception as e:
+                  print('FAILED',name,str(e))
+          page.write_text(html[:match.start(1)]+json.dumps(sources,ensure_ascii=False,separators=(',',':'))+html[match.end(1):])
+          PY
+      - name: Commit cached portraits
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add bmsg-bias
+          if ! git diff --cached --quiet; then
+            git commit -m 'Cache downloadable artist portraits locally'
+            git push
+          fi
